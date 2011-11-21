@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>AL</key>
+	<string>Altitude</string>
+	<key>LO</key>
+	<string>GPS Estimated Longitude</string>
+	<key>LN</key>
+	<string>GSM Estimated longitude</string>
+	<key>LA</key>
+	<string>GPS Estimated Latitude</string>
+	<key>LT</key>
+	<string>GSM Estimated Longitude</string>
+	<key>VL</key>
+	<string>Velocity</string>
+	<key>TO</key>
+	<string>Temperature Outside</string>
+	<key>TI</key>
+	<string>Temperature Inside</string>
+	<key>HU</key>
+	<string>Humidity</string>
+	<key>PR</key>
+	<string>Barometric Pressure</string>
+	<key>LP</key>
+	<string>Liquified Petroleum</string>
+	<key>CO</key>
+	<string>Carbon Monoxide</string>
+	<key>GE</key>
+	<string>Geiger Counts in Last Minute</string>
+</dict>
+</plist>

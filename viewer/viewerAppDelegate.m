@@ -10,6 +10,8 @@
 
 @implementation viewerAppDelegate
 
+@synthesize mapNavController = _mapNavController;
+@synthesize statusNavController = _navController;
 @synthesize window = _window;
 @synthesize tabBarController = _tabBarController;
 
@@ -18,8 +20,17 @@
     // Override point for customization after application launch.
     // Add the tab bar controller's current view as a subview of the window
     self.window.rootViewController = self.tabBarController;
+    [SharedData instance];
+    StatView *statController = [[StatView alloc] initWithNibName:@"StatView" bundle:nil];
+    [[self statusNavController] pushViewController:statController animated:NO];
+    FlightViewController *mapController = [[FlightViewController alloc] initWithNibName:@"FlightViewController" bundle:nil];
+    [[self mapNavController] pushViewController:mapController animated:NO];
     [self.window makeKeyAndVisible];
     return YES;
+    
+    // use detachNewThreadSelector:toTarget:withObject:
+    // to start fetching from the server
+    // make sure to stop the connection when deallocating
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application
@@ -65,6 +76,8 @@
 {
     [_window release];
     [_tabBarController release];
+    [_navController release];
+    [_mapNavController release];
     [super dealloc];
 }
 
