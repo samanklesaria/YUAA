@@ -8,6 +8,7 @@
 
 #import "Connector.h"
 #import "IndirectInt.h"
+#import "GTMStringEncoding.h"
 
 @implementation Connector
 @synthesize delegate;
@@ -95,11 +96,13 @@ int buffidx = 0;
                 tag[0] = to_char(i+1);
                 tag[1] = to_char(j+1);
                 NSString *strTag = [NSString stringWithCString:tag encoding:NSASCIIStringEncoding];
+                NSString *strVal = [NSString stringWithCString:craft_info[i][j] encoding:NSASCIIStringEncoding];
                 free(tag);
                 if ([strTag isEqualToString: @"DI"]) {
-                    // replacement time.
+                    NSData *data = [[GTMStringEncoding rfc4648Base64StringEncoding] decode: strVal];
+                    [s.images addObject: data];
+                    return;
                 }
-                NSString *strVal = [NSString stringWithCString:craft_info[i][j] encoding:NSASCIIStringEncoding];
                 double doubleVal = [strVal doubleValue];
                 if (doubleVal != 0) {
                     if ([strTag isEqualToString: @"DL"]) {

@@ -7,9 +7,11 @@
 //
 
 #import "PicViewController.h"
+#import "SharedData.h"
 
 @implementation PicViewController
 @synthesize pageControl;
+@synthesize image;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -33,12 +35,20 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    // Do any additional setup after loading the view from its nib.
+    NSArray *images = [[SharedData instance] images];
+    pageControl.numberOfPages = [images count];
+    if ([images count] > 0) {
+        image.image = [UIImage imageWithData: [images objectAtIndex: 1]];
+        pageControl.currentPage = 0;
+    }
 }
+
+//swiping?
 
 - (void)viewDidUnload
 {
     [self setPageControl:nil];
+    [self setImage:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -51,9 +61,13 @@
 }
 
 - (IBAction)pageValueChanged:(id)sender {
+    NSArray *images = [[SharedData instance] images];
+    image.image = [UIImage imageWithData: [images objectAtIndex: pageControl.currentPage]];
 }
+
 - (void)dealloc {
     [pageControl release];
+    [image release];
     [super dealloc];
 }
 @end
