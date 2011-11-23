@@ -17,6 +17,7 @@
     self = [super init];
     if (self) {
         orientation = [[Orientation alloc] initWithNibName:@"Orientation" bundle:nil];
+        pictures = [[PicViewController alloc] initWithNibName:@"PicViewController" bundle:nil];
     }
     return self;
 }
@@ -59,7 +60,7 @@
         [shower showController: orientation withFrame:cell.frame view:cell.superview title: theText];
     } else {
         if (indexPath.row == 1) {
-            // nothin yet
+            [shower showController: pictures withFrame:cell.frame view:cell.superview title: theText];
         } else {
             SharedData *a = [SharedData instance];
             NSString *theText = [[cell textLabel] text];

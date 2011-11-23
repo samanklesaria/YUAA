@@ -101,14 +101,14 @@
 		228E85AE147AF21F009B03ED /* PicViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PicViewController.h; sourceTree = "<group>"; };
 		228E85AF147AF220009B03ED /* PicViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PicViewController.m; sourceTree = "<group>"; };
 		228E85B0147AF220009B03ED /* PicViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PicViewController.xib; sourceTree = "<group>"; };
-		228E85B4147AFD90009B03ED /* IndirectInt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IndirectInt.h; sourceTree = "<group>"; };
-		228E85B5147AFD91009B03ED /* IndirectInt.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IndirectInt.m; sourceTree = "<group>"; };
+		228E85B4147AFD90009B03ED /* IndirectInt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IndirectInt.h; path = viewer/IndirectInt.h; sourceTree = "<group>"; };
+		228E85B5147AFD91009B03ED /* IndirectInt.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = IndirectInt.m; path = viewer/IndirectInt.m; sourceTree = "<group>"; };
 		228E85B8147B1B46009B03ED /* GTMStringEncoding.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTMStringEncoding.m; sourceTree = "<group>"; };
 		228E85B9147B1B46009B03ED /* GTMStringEncoding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTMStringEncoding.h; sourceTree = "<group>"; };
 		228E85BB147B1CFB009B03ED /* GTMDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTMDefines.h; sourceTree = "<group>"; };
 		229C9D5D1470969A00F22300 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
-		229C9D6C14722A1000F22300 /* RotTabBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RotTabBarController.h; sourceTree = "<group>"; };
-		229C9D6D14722A1000F22300 /* RotTabBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RotTabBarController.m; sourceTree = "<group>"; };
+		229C9D6C14722A1000F22300 /* RotTabBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RotTabBarController.h; path = viewer/RotTabBarController.h; sourceTree = "<group>"; };
+		229C9D6D14722A1000F22300 /* RotTabBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RotTabBarController.m; path = viewer/RotTabBarController.m; sourceTree = "<group>"; };
 		22B0753B1479C328003FEC53 /* StatTableDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StatTableDelegate.h; sourceTree = "<group>"; };
 		22B0753C1479C328003FEC53 /* StatTableDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StatTableDelegate.m; sourceTree = "<group>"; };
 		22B075401479EB2C003FEC53 /* EAGLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EAGLView.h; sourceTree = "<group>"; };
