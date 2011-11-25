@@ -36,8 +36,6 @@
 		228E85AD147AEA99009B03ED /* ComponentsBackgroundBW.png in Resources */ = {isa = PBXBuildFile; fileRef = 228E85AC147AEA99009B03ED /* ComponentsBackgroundBW.png */; };
 		228E85B1147AF221009B03ED /* PicViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 228E85AF147AF220009B03ED /* PicViewController.m */; };
 		228E85B2147AF221009B03ED /* PicViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 228E85B0147AF220009B03ED /* PicViewController.xib */; };
-		228E85B6147AFD91009B03ED /* IndirectInt.m in Sources */ = {isa = PBXBuildFile; fileRef = 228E85B5147AFD91009B03ED /* IndirectInt.m */; };
-		228E85BA147B1B46009B03ED /* GTMStringEncoding.m in Sources */ = {isa = PBXBuildFile; fileRef = 228E85B8147B1B46009B03ED /* GTMStringEncoding.m */; };
 		229C9D5E1470969A00F22300 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 229C9D5D1470969A00F22300 /* MessageUI.framework */; };
 		229C9D6E14722A1000F22300 /* RotTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 229C9D6D14722A1000F22300 /* RotTabBarController.m */; };
 		22B0753D1479C328003FEC53 /* StatTableDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 22B0753C1479C328003FEC53 /* StatTableDelegate.m */; };
@@ -104,11 +102,6 @@
 		228E85AE147AF21F009B03ED /* PicViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PicViewController.h; sourceTree = "<group>"; };
 		228E85AF147AF220009B03ED /* PicViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PicViewController.m; sourceTree = "<group>"; };
 		228E85B0147AF220009B03ED /* PicViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PicViewController.xib; sourceTree = "<group>"; };
-		228E85B4147AFD90009B03ED /* IndirectInt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IndirectInt.h; path = viewer/IndirectInt.h; sourceTree = "<group>"; };
-		228E85B5147AFD91009B03ED /* IndirectInt.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = IndirectInt.m; path = viewer/IndirectInt.m; sourceTree = "<group>"; };
-		228E85B8147B1B46009B03ED /* GTMStringEncoding.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTMStringEncoding.m; sourceTree = "<group>"; };
-		228E85B9147B1B46009B03ED /* GTMStringEncoding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTMStringEncoding.h; sourceTree = "<group>"; };
-		228E85BB147B1CFB009B03ED /* GTMDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTMDefines.h; sourceTree = "<group>"; };
 		229C9D5D1470969A00F22300 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		229C9D6C14722A1000F22300 /* RotTabBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RotTabBarController.h; path = viewer/RotTabBarController.h; sourceTree = "<group>"; };
 		229C9D6D14722A1000F22300 /* RotTabBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RotTabBarController.m; path = viewer/RotTabBarController.m; sourceTree = "<group>"; };
@@ -364,9 +357,6 @@
 		226C195314679E1B00A7F87A /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				228E85BB147B1CFB009B03ED /* GTMDefines.h */,
-				228E85B8147B1B46009B03ED /* GTMStringEncoding.m */,
-				228E85B9147B1B46009B03ED /* GTMStringEncoding.h */,
 				228E85AC147AEA99009B03ED /* ComponentsBackgroundBW.png */,
 				2244C548146CF24F00E08F55 /* protocol.plist */,
 				2244C530146CDDE000E08F55 /* icon_list_bullets.png */,
@@ -403,16 +393,6 @@
 				228E85B0147AF220009B03ED /* PicViewController.xib */,
 			);
 			name = PicViewController;
-			sourceTree = "<group>";
-		};
-		228E85B7147AFD95009B03ED /* IndirectInt */ = {
-			isa = PBXGroup;
-			children = (
-				228E85B4147AFD90009B03ED /* IndirectInt.h */,
-				228E85B5147AFD91009B03ED /* IndirectInt.m */,
-			);
-			name = IndirectInt;
-			path = ..;
 			sourceTree = "<group>";
 		};
 		229C9D6F14722A1800F22300 /* RotTabViewController */ = {
@@ -458,7 +438,6 @@
 		22B075481479EEAD003FEC53 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				228E85B7147AFD95009B03ED /* IndirectInt */,
 				22C5CD8C1476B52D0017E928 /* StatPoint */,
 				22FE1E401468C74800403F43 /* DataPoint */,
 				2244C52C146B913C00E08F55 /* SharedData */,
@@ -785,8 +764,6 @@
 				22B0754D1479F4D5003FEC53 /* BalloonRenderer.m in Sources */,
 				228E85A4147AAADD009B03ED /* Orientation.m in Sources */,
 				228E85B1147AF221009B03ED /* PicViewController.m in Sources */,
-				228E85B6147AFD91009B03ED /* IndirectInt.m in Sources */,
-				228E85BA147B1B46009B03ED /* GTMStringEncoding.m in Sources */,
 				22636EC8147DE94E004B3851 /* BalloonMapLogic.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

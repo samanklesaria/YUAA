@@ -34,6 +34,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [[SharedData instance] setTable: statList];
 }
 
 - (void)viewDidUnload

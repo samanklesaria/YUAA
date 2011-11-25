@@ -41,7 +41,7 @@ Build-type:          Simple
 
 -- Constraint on the version of Cabal needed to build this package.
 Cabal-version:       >=1.2
-Build-depends:       network-fancy
+Build-depends:       network-fancy, base
 
 
 Executable yuaa-server
@@ -49,6 +49,7 @@ Executable yuaa-server
   Main-is: Server.hs
   C-sources: ../parser/parser.c
   include-dirs: ../parser/
+  Build-depends:       network-fancy, base
   
   -- Packages needed in order to build this package.
   -- Build-depends:       
@@ -61,7 +62,8 @@ Executable yuaa-server
 
 Executable yuaa-client
   -- .hs or .lhs file containing the Main module.
-  Main-is: Client.hs           
+  Main-is: Client.hs          
+  Build-depends:       network-fancy, base 
   
   -- Packages needed in order to build this package.
   -- Build-depends:       

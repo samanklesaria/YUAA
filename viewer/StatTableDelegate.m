@@ -40,6 +40,7 @@
         if (indexPath.row == 1)
              str = @"Pictures";
         else {
+            NSLog(@"Looking for label %@", [a.statArray objectAtIndex:indexPath.row -2]);
             str = [a.plistData objectForKey: [a.statArray objectAtIndex:indexPath.row -2]];
         }
     }

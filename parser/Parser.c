@@ -16,9 +16,15 @@ char to_char(int i) {
 }
 
 void update_tag(int a, int b, char *str, int len) {
-    char *data = (char *)malloc(sizeof(char) * (len + 1));
-    strncpy(data, str, len);
-    craft_info[a - 1][b - 1] = data;
+    if (craft_info[a - 1][b - 1]) {
+        free(craft_info[a - 1][b - 1]);
+    }
+    char *c = (char *)malloc(sizeof(char) * len);
+    strncpy(c, str, len);
+    data *d = (data *)malloc(sizeof(data));
+    d->length = len;
+    d->content = c;
+    craft_info[a - 1][b - 1] = d;
 }
 
 char crc8Table[255];
@@ -26,11 +32,13 @@ char crc8Table[255];
 void initCrc8()
 {
     //For each possible byte value...
-    for (int i = 0;i < 256;i++)
+    int i;
+    for (i = 0;i < 256;i++)
     {
         //For "each bit" in that value, from high to low
         int valueBits = i;
-        for (int j = 0;j < 8;j++)
+        int j;
+        for (j = 0;j < 8;j++)
         {
             //If that bit is set
             if (valueBits & 128)
@@ -56,7 +64,8 @@ void initCrc8()
 char crc8(const char* data, char initialChecksum, int length)
 {
     char checksum = initialChecksum;
-    for (int i=0;i<length; i++)
+    int i;
+    for (i=0;i<length; i++)
     {
         checksum = crc8Table[checksum ^ *(data + i)];
     }
@@ -86,17 +95,39 @@ int update_cache(char *init) {
         char checksum;
         char *colon;
         int len;
+        char *datastring;
+        int width;
+        int height;
         char *mystring = str;
+        
+        if (mystring[0] == 'D' && mystring[1] == 'I') {
+            int werr = sscanf(mystring + 2, "%4d", &width);
+            int herr = sscanf(mystring + 6, "%4d", &height);
+            if (!(herr && werr)) {
+                printf("Garbled image data");
+                return 1;
+            }
+            len = width*height*2;
+            datastring = mystring + 10;
+            colon = datastring + len;
+        } else {
+            colon = strchr(mystring, ':');
+            len = colon - (mystring + 2);
+            if (colon == NULL) {
+                printf("Couldn't find colon\n");
+                return 1;
+            }
+            datastring = mystring + 2;
+        }
+        
         int a = to_int(mystring[0]);
         int b = to_int(mystring[1]);
-        
-        colon = strchr(mystring, ':');
-        len = colon - (mystring + 2);
-        if (!(a && b) || colon == NULL) {
-            printf("Couldn't find colon\n");
+        if (!(a && b)) {
+            printf("Invalid tag\n");
             return 1;
         }
-        if (sscanf(colon + 1 , "%2x", &check) != 1) {
+        
+        if (sscanf(colon + 1 , "%2x", (unsigned int *)&check) != 1) {
             printf("Parsing hex failed\n");
             return 1;
         }
@@ -106,7 +137,15 @@ int update_cache(char *init) {
             printf("Checksum %x != checksum %x\n", (unsigned char)check, (unsigned char)checksum);
             return 1;
         }
-        update_tag(a,b,mystring+2,len);
+        
+        if (!tag_index) tag_index = 0;
+        if (tag_index < TAGLISTSIZE - 2) { // leave room for null
+            updated_tags[tag_index] = mystring[0];
+            updated_tags[tag_index + 1] = mystring[1];
+            tag_index += 2;
+        }
+
+        update_tag(a,b,datastring,len);
         str = colon + 3;
     }
     return 0;

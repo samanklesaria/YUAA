@@ -17,6 +17,7 @@
     
     //misc
     Grapher *grapher;
+    UITableView *table;
     id connectorDelegate;
     
     // prefs
@@ -37,8 +38,11 @@
     NSMutableArray *bayCloseData;
     NSMutableDictionary *balloonStats;
     NSMutableArray *statArray;
+    NSMutableSet *statSet;
 }
 
+@property (retain) NSMutableSet *statSet;
+@property (retain) UITableView *table;
 @property (retain) id connectorDelegate;
 @property float yaw;
 @property float pitch;

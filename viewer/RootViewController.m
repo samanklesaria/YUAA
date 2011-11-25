@@ -21,6 +21,7 @@
     self.contentSizeForViewInPopover = CGSizeMake(320, 450);
     stDelegate = [[StatTableDelegate alloc] init];
     stDelegate.shower = self;
+    [[SharedData instance] setTable: [self tableView]];
 }
 
 		

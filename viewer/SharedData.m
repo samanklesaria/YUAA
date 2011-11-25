@@ -29,6 +29,8 @@
 @synthesize plistData;
 @synthesize grapher;
 @synthesize connectorDelegate;
+@synthesize table;
+@synthesize statSet;
 
 - (id)init
 {
@@ -41,13 +43,14 @@
         server = @"localhost";
         mapType = MKMapTypeStandard;
         grapher = [[Grapher alloc] initWithNibName:@"Grapher" bundle:nil];
-        bayOpenData = [[NSMutableDictionary alloc] initWithCapacity:5];
-        bayCloseData = [[NSMutableDictionary alloc] initWithCapacity:5];
+        bayOpenData = [[NSMutableArray alloc] initWithCapacity:5];
+        bayCloseData = [[NSMutableArray alloc] initWithCapacity:5];
         images = [[NSMutableArray alloc] initWithCapacity:50];
         statArray = [[NSMutableArray alloc] initWithCapacity:10];
+        statSet = [[NSMutableSet alloc] initWithCapacity:10];
         balloonStats = [[NSMutableDictionary alloc] initWithCapacity:10];
         NSString *path = [[NSBundle mainBundle] bundlePath];
-        NSString *finalPath = [path stringByAppendingPathComponent:@"Info.plist"];
+        NSString *finalPath = [path stringByAppendingPathComponent:@"protocol.plist"];
         plistData = [[NSDictionary dictionaryWithContentsOfFile:finalPath] retain];
     }
     return self;

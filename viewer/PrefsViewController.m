@@ -35,7 +35,7 @@
 }
 
 - (void) updateConnector {
-    if (!([SharedData instance].server) && [[SharedData instance].server length] > 0 && !([SharedData instance].port)) {
+    if ([SharedData instance].server && [[SharedData instance].server length] > 0 && [SharedData instance].port) {
         [con release];
         con = [[Connector alloc] init];
     }
@@ -78,8 +78,13 @@
     return YES;
 }
 
-// should erase invalid ports
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
+    [textField resignFirstResponder];
+    return YES;
+}
+
+// should erase invalid ports
+- (void)textFieldDidEndEditing:(UITextField *)textField {
     if (textField == serverField) {
         [[SharedData instance] setServer: textField.text];
         [self updateConnector];
@@ -87,7 +92,7 @@
     if (textField == remoteServer)
         [[SharedData instance] setRemoteServer: textField.text];
     if (textField == portField) {
-        int a = [textField.text integerValue];
+        int a = [portField.text intValue];
         if (a != 0) {
             [[SharedData instance] setPort: a];
             [self updateConnector];
@@ -101,8 +106,6 @@
     }
     if (textField == phoneNumber)
         [[SharedData instance] setPhoneNumber: textField.text];
-    [textField resignFirstResponder];
-    return YES;
 }
 
 

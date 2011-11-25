@@ -21,7 +21,6 @@
         points = [[NSMutableArray alloc] initWithCapacity: 400];
         bayNumToPoints = [[NSMutableDictionary alloc] initWithCapacity: 400];
     }
-    
     return self;
 }
 
