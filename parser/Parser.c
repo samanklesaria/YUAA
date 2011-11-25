@@ -5,8 +5,6 @@
 #include <math.h>
 #include "Parser.h"
 
-char *craft_info[24][24];
-
 int to_int(char c) {
 	if (!isupper(c)) return 0;
 	return c - 'A' + 1;
@@ -18,7 +16,7 @@ char to_char(int i) {
 }
 
 void update_tag(int a, int b, char *str, int len) {
-    char *data = malloc(sizeof(char) * (len + 1));
+    char *data = (char *)malloc(sizeof(char) * (len + 1));
     strncpy(data, str, len);
     craft_info[a - 1][b - 1] = data;
 }
@@ -75,7 +73,7 @@ char* createProtocolMessage(const char* tag, const char* data)
     
     //Length = tag + data + ':' + checksum + '\0'
     int messageLength = strlen(tag) + len + 4;
-    char* message = malloc(sizeof(char) * messageLength);
+    char* message = (char *)malloc(sizeof(char) * messageLength);
     sprintf(message, "%s%s:%.2x", tag, data, (unsigned char)checksum);
     return message;
 }

@@ -16,6 +16,7 @@
 		2244C53D146CDE7300E08F55 /* StatView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2244C53B146CDE7200E08F55 /* StatView.m */; };
 		2244C53E146CDE7300E08F55 /* StatView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2244C53C146CDE7300E08F55 /* StatView.xib */; };
 		2244C549146CF25000E08F55 /* protocol.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2244C548146CF24F00E08F55 /* protocol.plist */; };
+		22636EC8147DE94E004B3851 /* BalloonMapLogic.m in Sources */ = {isa = PBXBuildFile; fileRef = 22636EC7147DE94E004B3851 /* BalloonMapLogic.m */; };
 		226C194D14679E1A00A7F87A /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 226C194C14679E1A00A7F87A /* UIKit.framework */; };
 		226C194F14679E1A00A7F87A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 226C194E14679E1A00A7F87A /* Foundation.framework */; };
 		226C195114679E1A00A7F87A /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 226C195014679E1A00A7F87A /* CoreGraphics.framework */; };
@@ -65,8 +66,8 @@
 		221FF03E146F0973002B1991 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		2244C529146B7CE500E08F55 /* SharedData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SharedData.h; sourceTree = "<group>"; };
 		2244C52A146B7CE500E08F55 /* SharedData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SharedData.m; sourceTree = "<group>"; };
-		2244C52D146C56DC00E08F55 /* Parser.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Parser.c; sourceTree = "<group>"; };
-		2244C52E146C56DC00E08F55 /* Parser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Parser.h; sourceTree = "<group>"; };
+		2244C52D146C56DC00E08F55 /* Parser.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = Parser.c; path = ../parser/Parser.c; sourceTree = "<group>"; };
+		2244C52E146C56DC00E08F55 /* Parser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Parser.h; path = ../parser/Parser.h; sourceTree = "<group>"; };
 		2244C530146CDDE000E08F55 /* icon_list_bullets.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_list_bullets.png; sourceTree = "<group>"; };
 		2244C536146CDE2900E08F55 /* icon_graph_bars.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_graph_bars.png; sourceTree = "<group>"; };
 		2244C538146CDE3200E08F55 /* icon_graph_lines.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_graph_lines.png; sourceTree = "<group>"; };
@@ -74,6 +75,8 @@
 		2244C53B146CDE7200E08F55 /* StatView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StatView.m; sourceTree = "<group>"; };
 		2244C53C146CDE7300E08F55 /* StatView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = StatView.xib; sourceTree = "<group>"; };
 		2244C548146CF24F00E08F55 /* protocol.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = protocol.plist; sourceTree = "<group>"; };
+		22636EC6147DE94E004B3851 /* BalloonMapLogic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BalloonMapLogic.h; sourceTree = "<group>"; };
+		22636EC7147DE94E004B3851 /* BalloonMapLogic.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BalloonMapLogic.m; sourceTree = "<group>"; };
 		226C194814679E1A00A7F87A /* viewer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = viewer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		226C194C14679E1A00A7F87A /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		226C194E14679E1A00A7F87A /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -305,6 +308,15 @@
 			name = StatView;
 			sourceTree = "<group>";
 		};
+		22636ECA147DE954004B3851 /* BalloonMapDelegate */ = {
+			isa = PBXGroup;
+			children = (
+				22636EC6147DE94E004B3851 /* BalloonMapLogic.h */,
+				22636EC7147DE94E004B3851 /* BalloonMapLogic.m */,
+			);
+			name = BalloonMapDelegate;
+			sourceTree = "<group>";
+		};
 		226C193D14679E1900A7F87A = {
 			isa = PBXGroup;
 			children = (
@@ -469,6 +481,7 @@
 		22B0754A1479EEFA003FEC53 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				22636ECA147DE954004B3851 /* BalloonMapDelegate */,
 				22B0753F1479C32C003FEC53 /* StatTableDelegate */,
 				22FE1E501468D1DF00403F43 /* Parser */,
 				22C5CD901476BBC70017E928 /* Connector */,
@@ -774,6 +787,7 @@
 				228E85B1147AF221009B03ED /* PicViewController.m in Sources */,
 				228E85B6147AFD91009B03ED /* IndirectInt.m in Sources */,
 				228E85BA147B1B46009B03ED /* GTMStringEncoding.m in Sources */,
+				22636EC8147DE94E004B3851 /* BalloonMapLogic.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -855,6 +869,7 @@
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "viewer/viewer-Prefix.pch";
+				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = "viewer/viewer-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				LIBRARY_SEARCH_PATHS = (
@@ -876,6 +891,7 @@
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "viewer/viewer-Prefix.pch";
+				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = "viewer/viewer-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				LIBRARY_SEARCH_PATHS = (

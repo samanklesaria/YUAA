@@ -11,7 +11,6 @@
 #import "GTMStringEncoding.h"
 
 @implementation Connector
-@synthesize delegate;
 
 - (id)init
 {
@@ -143,13 +142,17 @@ int buffidx = 0;
                         NSDictionary *point = [NSDictionary dictionaryWithObjectsAndKeys: idx, @"x", [NSNumber numberWithDouble: doubleVal] , @"y", NULL];
                         [stat.points addObject:point];
                         [stat.bayNumToPoints setObject:point forKey:bayNum];
-                        [delegate receivedTag: strTag withValue: doubleVal];
+                        id c = [[SharedData instance] connectorDelegate];
+                        if (c != NULL)
+                            [c receivedTag: strTag withValue: doubleVal];
                     }
                 }
             }
         }
     }
-    [delegate endOfTags];
+    id c = [[SharedData instance] connectorDelegate];
+    if (c != NULL)
+        [c endOfTags];
 }
 
 @end

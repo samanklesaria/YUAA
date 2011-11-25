@@ -17,11 +17,28 @@
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
+    SharedData *s = [SharedData instance];
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        // Custom initialization
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        s.server = [defaults stringForKey: @"localserver"];
+        serverField.text = s.server;
+        portField.text = [defaults objectForKey: @"localport"];
+        s.port = [portField.text integerValue];
+        s.remoteServer = [defaults stringForKey: @"remoteserver"];
+        remoteServer.text = s.remoteServer;
+        remotePort.text = [defaults objectForKey: @"remoteport"];
+        s.remotePort = [remotePort.text integerValue];
+        [self updateConnector];
     }
     return self;
+}
+
+- (void) updateConnector {
+    if (!([SharedData instance].server) && [[SharedData instance].server length] > 0 && !([SharedData instance].port)) {
+        [con release];
+        con = [[Connector alloc] init];
+    }
 }
 
 - (void)didReceiveMemoryWarning
@@ -63,14 +80,17 @@
 
 // should erase invalid ports
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
-    if (textField == serverField)
+    if (textField == serverField) {
         [[SharedData instance] setServer: textField.text];
+        [self updateConnector];
+    }
     if (textField == remoteServer)
         [[SharedData instance] setRemoteServer: textField.text];
     if (textField == portField) {
         int a = [textField.text integerValue];
         if (a != 0) {
             [[SharedData instance] setPort: a];
+            [self updateConnector];
         }
     }
     if (textField == remotePort) {
@@ -111,6 +131,12 @@ bool *autoAdjust;
 }
 
 - (void)dealloc {
+    SharedData *s = [SharedData instance];
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults setObject: s.server forKey:@"localserver"];
+    [defaults setObject: s.remoteServer forKey:@"remoteserver"];
+    [defaults setObject: [NSString stringWithFormat: @"%i", s.port] forKey:@"localport"];
+    [defaults setObject: [NSString stringWithFormat: @"%i", s.remotePort] forKey:@"remotePort"];
     [serverField release];
     [portField release];
     [phoneNumber release];

@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
-#include "../Parser.c" //bad practice? yep.
+#include "../parser/Parser.c"
 
 // should handle errors too
 

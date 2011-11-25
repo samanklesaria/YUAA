@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "SharedData.h"
 #import <MapKit/MapKit.h>
+#import "Connector.h"
 
 @interface PrefsViewController : UIViewController <UITextFieldDelegate> {
     UITextField *serverField;
@@ -17,6 +18,7 @@
     UITextField *remotePort;
     IBOutlet UIScrollView *scrollView;
     UITextField *phoneNumber;
+    Connector *con;
 }
 
 @property (nonatomic, retain) IBOutlet UITextField *phoneNumber;
@@ -27,4 +29,5 @@
 
 - (IBAction)adjustChanged:(id)sender;
 - (IBAction)mapChanged:(id)sender;
+- (void) updateConnector;
 @end

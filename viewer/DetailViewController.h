@@ -9,8 +9,12 @@
 #import <UIKit/UIKit.h>
 #import "SharedData.h"
 #import <MessageUI/MFMessageComposeViewController.h>
+#import "BalloonMapLogic.h"
 
-@interface DetailViewController : UIViewController <UIPopoverControllerDelegate, UISplitViewControllerDelegate>
+@interface DetailViewController : UIViewController <UIPopoverControllerDelegate, UISplitViewControllerDelegate> {
+    IBOutlet MKMapView *map;
+    BalloonMapLogic *balloonLogic;
+}
 
 - (IBAction)showSettings:(id)sender;
 - (IBAction)showLog:(id)sender;

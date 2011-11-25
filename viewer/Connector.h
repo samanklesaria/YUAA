@@ -21,13 +21,10 @@
 @interface Connector : NSObject <NSStreamDelegate> {
     bool shouldEndConnection;
     NSStream *mainstream;
-    id<ConnectorDelegate> delegate;
     int bayCounter;
 }
 
 - (void)updateData;
 - (void)handleIO;
-@property (nonatomic, retain) id<ConnectorDelegate> delegate;
-
 
 @end

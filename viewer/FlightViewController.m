@@ -21,15 +21,16 @@
 @synthesize bayButton;
 @synthesize tempButton;
 
+/*
 - (id)init
 {
     self = [super init];
     if (self) {
-        connector = [[Connector alloc] init];
-        [NSThread detachNewThreadSelector:@selector(handleIO) toTarget:self withObject:nil]; 
+
     }
     return self;
 }
+ */
 
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad
@@ -37,7 +38,8 @@
     [super viewDidLoad];
     [self setTitle:@"Flight Map"];
     previousRect = [[self.tabBarController.view.subviews objectAtIndex:0] frame];
-    
+    [SharedData instance].connectorDelegate = self;
+    balloonLogic = [[BalloonMapLogic alloc] initWithMap: map];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -67,60 +69,12 @@
 }
 
 - (void)dealloc {
-    [connector release];
     [map release];
     [altitudeBtn release];
     [tempButton release];
-    [selectedPoint release];
-    [currentPoint release];
     [ftInfo release];
     [bayInfo release];
     [super dealloc];
-}
-
-- (MKAnnotationView *)mapView:(MKMapView *)mV viewForAnnotation:(DataPoint *)annotation{
-    static NSString *defaultAnnotationID = @"datapoint";
-    
-    if ([annotation isKindOfClass:[MKUserLocation class]]) {
-        return nil;
-    }
-    
-    MKPinAnnotationView *annotationView = (MKPinAnnotationView *)[map dequeueReusableAnnotationViewWithIdentifier:defaultAnnotationID];
-    if (annotationView == nil) {
-        annotationView = [[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:defaultAnnotationID];
-        annotationView.canShowCallout = YES;
-        annotationView.calloutOffset = CGPointMake(-5, 5);
-    } else {
-        annotationView.annotation = annotation;
-    }
-    [annotationView setPinColor:annotation == currentPoint? MKPinAnnotationColorGreen:MKPinAnnotationColorRed];
-    
-    if (selectedPoint == annotation) {
-        [annotationView setPinColor:MKPinAnnotationColorPurple];
-    }
-    
-    return annotationView;
-}
-
-- (void)updateWithCurrentLocation:(CLLocationCoordinate2D)location {
-    DataPoint *p = [[DataPoint alloc] initWithCoordinate:location];
-    DataPoint *oldPoint = currentPoint;
-    currentPoint = p;    
-    if (oldPoint != nil) {
-        [map removeAnnotation:oldPoint];
-        [map addAnnotation:oldPoint];
-    }
-    [map addAnnotation:p];
-    if ([[SharedData instance] autoAdjust]) {
-        MKCoordinateRegion region;
-        MKCoordinateSpan span;
-        span.latitudeDelta=0.6;
-        span.longitudeDelta=0.6;
-        region.span=span;
-        region.center=location;
-        [map setRegion:region animated:TRUE];
-        [map regionThatFits:region];
-    }
 }
 
 - (IBAction)showAltTbl:(id)sender {
@@ -195,7 +149,7 @@
 - (void)endOfTags {
     if (lat && lon) {
         CLLocationCoordinate2D loc = {lat, lon};
-        [self updateWithCurrentLocation: loc];
+        [balloonLogic updateWithCurrentLocation: loc];
     }
     [altitudeBtn setTitle: [ftInfo stringByAppendingString: bayInfo]];
     lat = 0; lon = 0;

@@ -11,6 +11,7 @@
 @interface PicViewController : UIViewController {
     UIPageControl *pageControl;
     UIImageView *image;
+    
 }
 
 - (IBAction)pageValueChanged:(id)sender;

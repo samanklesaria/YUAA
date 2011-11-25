@@ -7,6 +7,7 @@
 //
 
 #import "SharedData.h"
+#import "Connector.h"
 
 @implementation SharedData
 @synthesize yaw;
@@ -27,6 +28,7 @@
 @synthesize statArray;
 @synthesize plistData;
 @synthesize grapher;
+@synthesize connectorDelegate;
 
 - (id)init
 {

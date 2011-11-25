@@ -15,12 +15,11 @@
 #import <CFNetwork/CFSocketStream.h>
 #import <MessageUI/MFMessageComposeViewController.h>
 #import "Connector.h"
+#import "BalloonMapLogic.h"
 
 @interface FlightViewController : UIViewController <ConnectorDelegate> {
     MKMapView *map;
     UIBarButtonItem *tempButton;
-    DataPoint *selectedPoint;
-    DataPoint *currentPoint;
     UIBarButtonItem *altitudeBtn;
     NSString *ftInfo;
     NSString *bayInfo;
@@ -28,7 +27,7 @@
     double lat;
     double lon;
     bool bay;
-    Connector *connector;
+    BalloonMapLogic *balloonLogic;
 }
 
 - (IBAction)showAltTbl:(id)sender;
@@ -39,7 +38,5 @@
 @property (nonatomic, retain) IBOutlet UIBarButtonItem *bayButton;
 @property (nonatomic, retain) IBOutlet UIBarButtonItem *tempButton;
 @property (nonatomic, retain) IBOutlet UIBarButtonItem *altitudeBtn;
-
-- (void)updateWithCurrentLocation:(CLLocationCoordinate2D)location;
 
 @end

@@ -67,16 +67,19 @@
 
 }
 
-/*
+
  // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    balloonLogic = [[BalloonMapLogic alloc] initWithMap: map];
 }
- */
+
 
 - (void)viewDidUnload
 {
+    [map release];
+    map = nil;
 	[super viewDidUnload];
 
 	// Release any retained subviews of the main view.
@@ -97,6 +100,8 @@
 - (void)dealloc
 {
     [_myPopoverController release];
+    [map release];
+    [balloonLogic release];
     [super dealloc];
 }
 

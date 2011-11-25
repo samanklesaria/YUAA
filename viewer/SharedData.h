@@ -15,6 +15,10 @@
     NSMutableArray *logData;
     NSDictionary *plistData;
     
+    //misc
+    Grapher *grapher;
+    id connectorDelegate;
+    
     // prefs
     NSString *server;
     NSString *remoteServer;
@@ -23,7 +27,6 @@
     MKMapType mapType;
     bool autoAdjust;
     NSString *phoneNumber;
-    Grapher *grapher;
     
     // stats
     float yaw;
@@ -36,6 +39,7 @@
     NSMutableArray *statArray;
 }
 
+@property (retain) id connectorDelegate;
 @property float yaw;
 @property float pitch;
 @property float roll;
