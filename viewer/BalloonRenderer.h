@@ -19,16 +19,10 @@
     // The pixel dimensions of the CAEAGLLayer
     GLint backingWidth;
     GLint backingHeight;
-	
-	
     
     // The OpenGL ES names for the framebuffer and renderbuffer used to render to this view
     GLuint defaultFramebuffer, colorRenderbuffer;
 	GLuint depthRenderbuffer;
-	
-	float rotationX;
-	float rotationY;
-	BOOL rotates;
 	
 	GLuint texture;
 	
@@ -42,14 +36,9 @@
 -(void)setOBJColorComponent:(int)c value:(float)v;
 
 -(void)adjustScale:(float)z;
--(void)toggleRotation;
--(void)appendRotationX:(float)x rotationY:(float)y;
 
 - (void)render;
 - (BOOL)resizeFromLayer:(CAEAGLLayer *)layer;
-
-@property (nonatomic, assign) BOOL rotates;
-
 @end
 
 void drawBackground(void);

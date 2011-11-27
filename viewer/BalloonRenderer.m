@@ -9,9 +9,9 @@
 #import "BalloonRenderer.h"
 #include "OpenGLCommon.h"
 #import "PlaneBody.h"
+#import "SharedData.h"
 
 @implementation BalloonRenderer
-@synthesize rotates;
 
 static GLuint texture = 0;
 
@@ -193,10 +193,6 @@ void setUpView(GLint backingWidth, GLuint backingHeight) {
 	[texData release];
 }
 
--(void)toggleRotation {
-	rotates = !rotates;
-}
-
 // Create an OpenGL ES 1.1 context
 - (id)init
 {
@@ -223,9 +219,6 @@ void setUpView(GLint backingWidth, GLuint backingHeight) {
 		
 		
 		setUpView(backingWidth, backingHeight);
-		rotates = YES;
-		rotationX = 0;
-		rotationY = 0;
 		transZ = 0;
     }
     
@@ -291,30 +284,17 @@ void drawPlaneBody() {
 	glClearColor(1.0, 1.0, 1.0, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	
-	
 	drawBackground();
 	
 	
 	glLoadIdentity();
 	glScalef(0.5f, 0.5f, 0.5f);
 	
-	glTranslatef(0.0f,0.0f,-4.0f+transZ);
-	glRotatef(rotationY, 0.0f, 1.0f, 0.0f);
-	glRotatef(rotationX, 1.0f, 0.0f, 0.0f);
-	
-	
-	
-	
-	
-	// 0 Plane Body
-	// 1 Arduino
-	// 2 Large Fan
-	// 3 Small Fan
-	// 4 ESC
-	// 5 Large Battery
-	// 6 Small Battery
-	// 7 Servo
-	
+	glTranslatef(-2.5f,-2.5f,-10.0f+transZ); // glTranslatef(0.0f,0.0f,-4.0f+transZ);
+    SharedData *s = [SharedData instance];
+	glRotatef(s.rotationY, 0.0f, 1.0f, 0.0f);
+	glRotatef(s.rotationX, 1.0f, 0.0f, 0.0f);
+    glRotatef(s.rotationZ, 0.0f, 0.0f, 1.0f);
 	
 	GLfloat ambientAndDiffuse[] = {0.0, 0.1, 0.9, 1.0};
     glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, ambientAndDiffuse);
@@ -325,9 +305,6 @@ void drawPlaneBody() {
 	
 	glColor4f(0.1f, 0.1f, 0.1f, 1.0);
     drawPlaneBody();
-	if(rotates) {
-		rotationY+=0.075;
-	}
 	
 	// This application only creates a single color renderbuffer which is already bound at this point.
     // This call is redundant, but needed if dealing with multiple renderbuffers.
@@ -356,12 +333,6 @@ void drawPlaneBody() {
     }
     
     return YES;
-}
-
-
--(void)appendRotationX:(float)x rotationY:(float)y {
-	rotationX+=x;
-	rotationY+=y;
 }
 
 -(void)adjustScale:(float)z {

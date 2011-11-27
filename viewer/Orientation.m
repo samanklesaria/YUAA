@@ -8,6 +8,8 @@
 
 #import "Orientation.h"
 
+// We might want to kill this class, as it does nothing.
+
 @implementation Orientation
 @synthesize glView;
 
@@ -33,10 +35,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-    glView.rotates = YES;
-    [glView startAnimation];
-     
 }
 
 - (void)viewDidUnload

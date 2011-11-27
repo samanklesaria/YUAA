@@ -10,9 +10,9 @@
 #import "Connector.h"
 
 @implementation SharedData
-@synthesize yaw;
-@synthesize pitch;
-@synthesize roll;
+@synthesize rotationX;
+@synthesize rotationY;
+@synthesize rotationZ;
 @synthesize mapType;
 @synthesize server;
 @synthesize port;
@@ -52,6 +52,9 @@
         NSString *path = [[NSBundle mainBundle] bundlePath];
         NSString *finalPath = [path stringByAppendingPathComponent:@"protocol.plist"];
         plistData = [[NSDictionary dictionaryWithContentsOfFile:finalPath] retain];
+        rotationX = 0;
+        rotationY = 0;
+        rotationZ = 0;
     }
     return self;
 }

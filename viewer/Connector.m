@@ -72,7 +72,6 @@ int buffidx = 0;
                     buffer[buffidx] = '\0';
                     buffidx = 0;
                     [LogViewController logString: [@"Received string: " stringByAppendingString: [NSString stringWithCString: buffer encoding: NSASCIIStringEncoding]]];
-                    printf("Buffer is %s\n", buffer);
                     update_cache(buffer);
                     [self updateData];
                     return;
@@ -83,6 +82,7 @@ int buffidx = 0;
         }
         case NSStreamEventEndEncountered:
         {
+            [LogViewController logString: @"Encountered end of input stream."];
             [stream close];
             [stream removeFromRunLoop:[NSRunLoop currentRunLoop]
                               forMode:NSDefaultRunLoopMode];
@@ -92,6 +92,7 @@ int buffidx = 0;
         }
         case NSStreamEventErrorOccurred:
         {
+            [LogViewController logString: @"Encountered streaming error."];
             [stream performSelector: @selector(close) withObject: nil afterDelay: 4];
             [stream close];
             [stream removeFromRunLoop:[NSRunLoop currentRunLoop]
@@ -146,15 +147,15 @@ int buffidx = 0;
                         }
                         [LogViewController logString: [NSString stringWithFormat:@"Updating tag %@ with value %@", strTag, strVal]];
                         if ([strTag isEqualToString: @"YA"]) {
-                            s.yaw = doubleVal;
+                            s.rotationZ = doubleVal;
                             continue;
                         }
                         if ([strTag isEqualToString: @"PI"]) {
-                            s.pitch = doubleVal;
+                            s.rotationY = doubleVal;
                             continue;
                         }
                         if ([strTag isEqualToString: @"RO"]) {
-                            s.roll = doubleVal;
+                            s.rotationX = doubleVal;
                             continue;
                         }
                         if (!([strTag isEqualToString: @"LA"] || [strTag isEqualToString: @"LN"])) {

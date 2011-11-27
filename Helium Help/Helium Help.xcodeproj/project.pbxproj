@@ -1,0 +1,278 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		22FF93C51482DC6400CA6613 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 22FF93C41482DC6400CA6613 /* UIKit.framework */; };
+		22FF93C71482DC6400CA6613 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 22FF93C61482DC6400CA6613 /* Foundation.framework */; };
+		22FF93C91482DC6400CA6613 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 22FF93C81482DC6400CA6613 /* CoreGraphics.framework */; };
+		22FF93CF1482DC6400CA6613 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 22FF93CD1482DC6400CA6613 /* InfoPlist.strings */; };
+		22FF93D11482DC6400CA6613 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 22FF93D01482DC6400CA6613 /* main.m */; };
+		22FF93D51482DC6400CA6613 /* Helium_HelpAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 22FF93D41482DC6400CA6613 /* Helium_HelpAppDelegate.m */; };
+		22FF94211482DD9700CA6613 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 22FF941F1482DD9700CA6613 /* MainWindow.xib */; };
+		22FF94291482F38900CA6613 /* MainWindow-iPod.xib in Resources */ = {isa = PBXBuildFile; fileRef = 22FF94281482F38900CA6613 /* MainWindow-iPod.xib */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		22FF93C01482DC6400CA6613 /* Helium Help.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Helium Help.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		22FF93C41482DC6400CA6613 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		22FF93C61482DC6400CA6613 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		22FF93C81482DC6400CA6613 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		22FF93CC1482DC6400CA6613 /* Helium Help-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Helium Help-Info.plist"; sourceTree = "<group>"; };
+		22FF93CE1482DC6400CA6613 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		22FF93D01482DC6400CA6613 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		22FF93D21482DC6400CA6613 /* Helium Help-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Helium Help-Prefix.pch"; sourceTree = "<group>"; };
+		22FF93D31482DC6400CA6613 /* Helium_HelpAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Helium_HelpAppDelegate.h; sourceTree = "<group>"; };
+		22FF93D41482DC6400CA6613 /* Helium_HelpAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Helium_HelpAppDelegate.m; sourceTree = "<group>"; };
+		22FF94201482DD9700CA6613 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainWindow.xib; sourceTree = "<group>"; };
+		22FF94281482F38900CA6613 /* MainWindow-iPod.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = "MainWindow-iPod.xib"; path = "../MainWindow-iPod.xib"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		22FF93BD1482DC6400CA6613 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				22FF93C51482DC6400CA6613 /* UIKit.framework in Frameworks */,
+				22FF93C71482DC6400CA6613 /* Foundation.framework in Frameworks */,
+				22FF93C91482DC6400CA6613 /* CoreGraphics.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		22FF93B51482DC6400CA6613 = {
+			isa = PBXGroup;
+			children = (
+				22FF93CA1482DC6400CA6613 /* Helium Help */,
+				22FF93C31482DC6400CA6613 /* Frameworks */,
+				22FF93C11482DC6400CA6613 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		22FF93C11482DC6400CA6613 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				22FF93C01482DC6400CA6613 /* Helium Help.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		22FF93C31482DC6400CA6613 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				22FF93C41482DC6400CA6613 /* UIKit.framework */,
+				22FF93C61482DC6400CA6613 /* Foundation.framework */,
+				22FF93C81482DC6400CA6613 /* CoreGraphics.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		22FF93CA1482DC6400CA6613 /* Helium Help */ = {
+			isa = PBXGroup;
+			children = (
+				22FF94281482F38900CA6613 /* MainWindow-iPod.xib */,
+				22FF941F1482DD9700CA6613 /* MainWindow.xib */,
+				22FF93D31482DC6400CA6613 /* Helium_HelpAppDelegate.h */,
+				22FF93D41482DC6400CA6613 /* Helium_HelpAppDelegate.m */,
+				22FF93CB1482DC6400CA6613 /* Supporting Files */,
+			);
+			path = "Helium Help";
+			sourceTree = "<group>";
+		};
+		22FF93CB1482DC6400CA6613 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				22FF93CC1482DC6400CA6613 /* Helium Help-Info.plist */,
+				22FF93CD1482DC6400CA6613 /* InfoPlist.strings */,
+				22FF93D01482DC6400CA6613 /* main.m */,
+				22FF93D21482DC6400CA6613 /* Helium Help-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		22FF93BF1482DC6400CA6613 /* Helium Help */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 22FF93E11482DC6400CA6613 /* Build configuration list for PBXNativeTarget "Helium Help" */;
+			buildPhases = (
+				22FF93BC1482DC6400CA6613 /* Sources */,
+				22FF93BD1482DC6400CA6613 /* Frameworks */,
+				22FF93BE1482DC6400CA6613 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Helium Help";
+			productName = "Helium Help";
+			productReference = 22FF93C01482DC6400CA6613 /* Helium Help.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		22FF93B71482DC6400CA6613 /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = 22FF93BA1482DC6400CA6613 /* Build configuration list for PBXProject "Helium Help" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 22FF93B51482DC6400CA6613;
+			productRefGroup = 22FF93C11482DC6400CA6613 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				22FF93BF1482DC6400CA6613 /* Helium Help */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		22FF93BE1482DC6400CA6613 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				22FF93CF1482DC6400CA6613 /* InfoPlist.strings in Resources */,
+				22FF94211482DD9700CA6613 /* MainWindow.xib in Resources */,
+				22FF94291482F38900CA6613 /* MainWindow-iPod.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		22FF93BC1482DC6400CA6613 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				22FF93D11482DC6400CA6613 /* main.m in Sources */,
+				22FF93D51482DC6400CA6613 /* Helium_HelpAppDelegate.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		22FF93CD1482DC6400CA6613 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				22FF93CE1482DC6400CA6613 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		22FF941F1482DD9700CA6613 /* MainWindow.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				22FF94201482DD9700CA6613 /* en */,
+			);
+			name = MainWindow.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		22FF93DF1482DC6400CA6613 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_UNIVERSAL_IPHONE_OS)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 2;
+			};
+			name = Debug;
+		};
+		22FF93E01482DC6400CA6613 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_UNIVERSAL_IPHONE_OS)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 2;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		22FF93E21482DC6400CA6613 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Helium Help/Helium Help-Prefix.pch";
+				INFOPLIST_FILE = "Helium Help/Helium Help-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		22FF93E31482DC6400CA6613 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Helium Help/Helium Help-Prefix.pch";
+				INFOPLIST_FILE = "Helium Help/Helium Help-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		22FF93BA1482DC6400CA6613 /* Build configuration list for PBXProject "Helium Help" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				22FF93DF1482DC6400CA6613 /* Debug */,
+				22FF93E01482DC6400CA6613 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		22FF93E11482DC6400CA6613 /* Build configuration list for PBXNativeTarget "Helium Help" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				22FF93E21482DC6400CA6613 /* Debug */,
+				22FF93E31482DC6400CA6613 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 22FF93B71482DC6400CA6613 /* Project object */;
+}

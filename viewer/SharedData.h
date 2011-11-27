@@ -30,9 +30,9 @@
     NSString *phoneNumber;
     
     // stats
-    float yaw;
-    float pitch;
-    float roll;
+    float rotationX;
+    float rotationY;
+    float rotationZ;
     NSMutableArray *images;
     NSMutableArray *bayOpenData;
     NSMutableArray *bayCloseData;
@@ -44,9 +44,9 @@
 @property (retain) NSMutableSet *statSet;
 @property (retain) UITableView *table;
 @property (retain) id connectorDelegate;
-@property float yaw;
-@property float pitch;
-@property float roll;
+@property float rotationX;
+@property float rotationY;
+@property float rotationZ;
 @property (retain) Grapher *grapher;
 @property (retain) NSDictionary *plistData;
 @property (retain) NSString *phoneNumber;

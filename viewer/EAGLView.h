@@ -11,10 +11,7 @@
 
 @interface EAGLView : UIView {
     id <ESRenderer> renderer;
-    NSInteger animationFrameInterval;
     id displayLink;
-    NSTimer *animationTimer;
-	BOOL animating;
 	int touchesCount;
 	BOOL isPinching;
     UITouch *touch1;
@@ -22,10 +19,6 @@
 
 }
 
-- (void)startAnimation;
-- (void)stopAnimation;
 - (void)drawView:(id)sender;
-
-@property (nonatomic, assign) BOOL rotates;
 
 @end

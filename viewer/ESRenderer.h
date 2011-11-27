@@ -15,8 +15,5 @@
 
 - (void)render;
 - (BOOL)resizeFromLayer:(CAEAGLLayer *)layer;
-- (void)toggleRotation;
 - (void)adjustScale:(float)scale;
-- (void)appendRotationX:(float)xrot rotationY:(float)yrot;
-- (BOOL)rotates;
 @end
