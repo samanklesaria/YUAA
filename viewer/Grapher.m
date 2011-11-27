@@ -102,9 +102,6 @@
 }
 
 -(void)showDataSource: (StatPoint *)stat named: (NSString *)name {
-    // you need to remove the other plots if we're reusing the graph object.
-    // ensure the car updates and the balloon updates stay in the same frame
-    // take backup into account
     [dataForPlot release];
     dataForPlot = stat;
     [dataForPlot retain];

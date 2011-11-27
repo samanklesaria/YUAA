@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		221FF03F146F0973002B1991 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 221FF03E146F0973002B1991 /* CFNetwork.framework */; };
+		223045FA14820C1100A4EA48 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 223045F914820C1100A4EA48 /* CoreLocation.framework */; };
 		2244C52B146B7CE500E08F55 /* SharedData.m in Sources */ = {isa = PBXBuildFile; fileRef = 2244C52A146B7CE500E08F55 /* SharedData.m */; };
 		2244C52F146C56DC00E08F55 /* Parser.c in Sources */ = {isa = PBXBuildFile; fileRef = 2244C52D146C56DC00E08F55 /* Parser.c */; };
 		2244C531146CDDE000E08F55 /* icon_list_bullets.png in Resources */ = {isa = PBXBuildFile; fileRef = 2244C530146CDDE000E08F55 /* icon_list_bullets.png */; };
@@ -62,6 +63,7 @@
 /* Begin PBXFileReference section */
 		221FF037146F0913002B1991 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		221FF03E146F0973002B1991 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
+		223045F914820C1100A4EA48 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		2244C529146B7CE500E08F55 /* SharedData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SharedData.h; sourceTree = "<group>"; };
 		2244C52A146B7CE500E08F55 /* SharedData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SharedData.m; sourceTree = "<group>"; };
 		2244C52D146C56DC00E08F55 /* Parser.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = Parser.c; path = ../parser/Parser.c; sourceTree = "<group>"; };
@@ -224,6 +226,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				223045FA14820C1100A4EA48 /* CoreLocation.framework in Frameworks */,
 				22B075451479ED3F003FEC53 /* OpenGLES.framework in Frameworks */,
 				229C9D5E1470969A00F22300 /* MessageUI.framework in Frameworks */,
 				221FF03F146F0973002B1991 /* CFNetwork.framework in Frameworks */,
@@ -330,6 +333,7 @@
 		226C194B14679E1A00A7F87A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				223045F914820C1100A4EA48 /* CoreLocation.framework */,
 				22B075441479ED3F003FEC53 /* OpenGLES.framework */,
 				229C9D5D1470969A00F22300 /* MessageUI.framework */,
 				221FF03E146F0973002B1991 /* CFNetwork.framework */,

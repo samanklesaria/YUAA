@@ -79,6 +79,27 @@ int buffidx = 0;
                 }
                 if (!(buffidx == BUFLEN - 1)) buffer[buffidx++] = c;
             }
+            break;
+        }
+        case NSStreamEventEndEncountered:
+        {
+            [stream close];
+            [stream removeFromRunLoop:[NSRunLoop currentRunLoop]
+                              forMode:NSDefaultRunLoopMode];
+            [stream release];
+            [self handleIO];
+            break;
+        }
+        case NSStreamEventErrorOccurred:
+        {
+            [stream performSelector: @selector(close) withObject: nil afterDelay: 4];
+            [stream close];
+            [stream removeFromRunLoop:[NSRunLoop currentRunLoop]
+                              forMode:NSDefaultRunLoopMode];
+            [stream release];
+            [self handleIO];
+            break;
+
         }
     }
 }
