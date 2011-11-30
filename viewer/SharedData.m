@@ -53,12 +53,6 @@
         rotationX = 0;
         rotationY = 0;
         rotationZ = 0;
-        StatPoint *ALstat = [[StatPoint alloc] init];
-        ALstat.minval = 0; ALstat.maxval = 100;
-        StatPoint *TIstat = [[StatPoint alloc] init];
-        TIstat.minval = 10; TIstat.maxval = 11;
-        [balloonStats setObject: ALstat forKey: @"AL"];
-        [balloonStats setObject: TIstat forKey: @"TI"];
     }
     return self;
 }

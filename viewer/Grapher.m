@@ -136,7 +136,6 @@
     x.orthogonalCoordinateDecimal = CPTDecimalFromDouble(minval);
     y.orthogonalCoordinateDecimal = CPTDecimalFromDouble(0);
     
-    [x.labelExclusionRanges release];
     NSArray *xexclusionRanges = [NSArray arrayWithObjects:
                                  [CPTPlotRange plotRangeWithLocation:CPTDecimalFromFloat(0) length:CPTDecimalFromFloat(-1*backupx)], 
                                  [CPTPlotRange plotRangeWithLocation:CPTDecimalFromFloat(backupx) length:CPTDecimalFromFloat(minval)],

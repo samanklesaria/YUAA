@@ -81,16 +81,26 @@
 
 - (IBAction)showAltTbl:(id)sender {
     SharedData *mydata = [SharedData instance];
-    [[self navigationController] pushViewController:mydata.grapher animated:YES];
     StatPoint *alt = [mydata.balloonStats objectForKey: @"AL"];
-    [mydata.grapher showDataSource: alt named: @"Altitude"];
+    if (alt != NULL) {
+        [[self navigationController] pushViewController:mydata.grapher animated:YES];
+        [mydata.grapher showDataSource: alt named: @"Altitude"];
+    } else {
+        UIAlertView *err = [[UIAlertView alloc] initWithTitle: @"No Altitude Data" message: @"No altitude information has been received from the balloon." delegate: nil cancelButtonTitle: @"Okay" otherButtonTitles: nil];
+        [err show];
+    }
 }
 
 - (IBAction)showTempTbl:(id)sender {
     SharedData *mydata = [SharedData instance];
-    [[self navigationController] pushViewController:mydata.grapher animated:YES];
-    StatPoint *tmp = [mydata.balloonStats objectForKey: @"TI"];
-    [mydata.grapher showDataSource: tmp named: @"Temperature Inside"];
+    StatPoint *alt = [mydata.balloonStats objectForKey: @"TI"];
+    if (alt != NULL) {
+        [[self navigationController] pushViewController:mydata.grapher animated:YES];
+        [mydata.grapher showDataSource: alt named: @"Temperature"];
+    } else {
+        UIAlertView *err = [[UIAlertView alloc] initWithTitle: @"No Temperature Data" message: @"No temperature information has been received from the balloon." delegate: nil cancelButtonTitle: @"Okay" otherButtonTitles: nil];
+        [err show];
+    }
    
 }
 
