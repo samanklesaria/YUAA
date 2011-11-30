@@ -40,8 +40,11 @@
         if (indexPath.row == 1)
              str = @"Pictures";
         else {
+            NSString *tag = [a.statArray objectAtIndex:indexPath.row -2];
+            StatPoint *stat = [a.balloonStats objectForKey: tag];
+            NSNumber *n = [(NSDictionary *)[(NSArray *)[stat points] lastObject] objectForKey: @"y"];
             NSLog(@"Looking for label %@", [a.statArray objectAtIndex:indexPath.row -2]);
-            str = [a.plistData objectForKey: [a.statArray objectAtIndex:indexPath.row -2]];
+            str = [NSString stringWithFormat: @"%@ (%@)", [a.plistData objectForKey: [a.statArray objectAtIndex:indexPath.row -2]], n];
         }
     }
     NSString *cellid = @"Cell";
@@ -67,10 +70,9 @@
             NSString *theText = [[cell textLabel] text];
             NSString *tag = [a.statArray objectAtIndex:indexPath.row -2];
             
-            SharedData *mydata = [SharedData instance];
-            [shower showController: mydata.grapher withFrame:cell.frame view:cell.superview title: theText];
-            StatPoint *tmp = [mydata.balloonStats objectForKey: tag];
-            [mydata.grapher showDataSource: tmp named: theText];
+            [shower showController: a.grapher withFrame:cell.frame view:cell.superview title: theText];
+            StatPoint *tmp = [a.balloonStats objectForKey: tag];
+            [a.grapher showDataSource: tmp named: theText];
         }
     }
     return nil;   

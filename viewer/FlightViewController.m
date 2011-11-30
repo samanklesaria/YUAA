@@ -37,6 +37,8 @@
 {
     [super viewDidLoad];
     [self setTitle:@"Flight Map"];
+    bayInfo = @"(Bay Open)";
+    ftInfo = @"0 ft ";
     previousRect = [[self.tabBarController.view.subviews objectAtIndex:0] frame];
     [SharedData instance].connectorDelegate = self;
     balloonLogic = [[BalloonMapLogic alloc] initWithMap: map];
@@ -125,34 +127,32 @@
     }
 }
 
-- (void)receivedTag:(NSString *)tag withValue:(double)val {
-    if ([tag isEqualToString: @"LA"]) {
-        lat = val;
-        return;
-    }
-    if ([tag isEqualToString: @"LN"]) {
-        lon = val;
-        return;
-    }
-    if ([tag isEqualToString: @"TI"])
-        [altitudeBtn setTitle: [NSString stringWithFormat:@"%2fº", val]];
-    if ([tag isEqualToString: @"AL"])
-        ftInfo = [NSString stringWithFormat: @"%f ft" , val];
-    if ([tag isEqualToString: @"BB"]) {
-        if (bay == 1)
-            bayInfo = @"(Bay Closed)";
-        else
-            bayInfo = @"(Bay Open)";
-    }    
-}
-
-- (void)endOfTags {
+- (void) updateLoc {
     if (lat && lon) {
         CLLocationCoordinate2D loc = {lat, lon};
         [balloonLogic updateWithCurrentLocation: loc];
     }
-    [altitudeBtn setTitle: [ftInfo stringByAppendingString: bayInfo]];
-    lat = 0; lon = 0;
+}
+
+- (void)receivedTag:(NSString *)tag withValue:(double)val {
+    if ([tag isEqualToString: @"LA"]) {
+        lat = val;
+        [self updateLoc];
+    } else if ([tag isEqualToString: @"LN"]) {
+        lon = val;
+        [self updateLoc];
+    } else if ([tag isEqualToString: @"TI"])
+        [tempButton setTitle: [NSString stringWithFormat:@"%2fº", val]];
+    else if ([tag isEqualToString: @"AL"]) {
+        ftInfo = [NSString stringWithFormat: @"%.2f ft " , val];
+        [altitudeBtn setTitle: [ftInfo stringByAppendingString: bayInfo]];
+    } else if ([tag isEqualToString: @"BB"]) {
+        if (bay == 1)
+            bayInfo = @"(Bay Closed)";
+        else
+            bayInfo = @"(Bay Open)";
+        [altitudeBtn setTitle: [ftInfo stringByAppendingString: bayInfo]];
+    }
 }
 
 - (IBAction)killBalloon:(id)sender {

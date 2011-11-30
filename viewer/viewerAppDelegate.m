@@ -7,6 +7,7 @@
 //
 
 #import "viewerAppDelegate.h"
+#import "Parser.h"
 
 @implementation viewerAppDelegate
 
@@ -20,12 +21,15 @@
     // Override point for customization after application launch.
     // Add the tab bar controller's current view as a subview of the window
     self.window.rootViewController = self.tabBarController;
-    [SharedData instance];
+    SharedData *s = [SharedData instance];
+    s.lshift = 0.0f;
+    s.vshift = -4.0f;
     StatView *statController = [[StatView alloc] initWithNibName:@"StatView" bundle:nil];
     [[self statusNavController] pushViewController:statController animated:NO];
     FlightViewController *mapController = [[FlightViewController alloc] initWithNibName:@"FlightViewController" bundle:nil];
     [[self mapNavController] pushViewController:mapController animated:NO];
     [self.window makeKeyAndVisible];
+    initCrc8();
     return YES;
     
     // use detachNewThreadSelector:toTarget:withObject:

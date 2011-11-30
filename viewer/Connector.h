@@ -15,7 +15,6 @@
 @protocol ConnectorDelegate
 @required
 -(void)receivedTag:(NSString *)theData withValue:(double)val;
--(void)endOfTags;
 @end
 
 @interface Connector : NSObject <NSStreamDelegate> {
@@ -24,7 +23,7 @@
     int bayCounter;
 }
 
-- (void)updateData;
+- (void)updateData: (char *)tag;
 - (void)handleIO;
 
 @end

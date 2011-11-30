@@ -11,13 +11,14 @@ main = do
         tag1 <- newCString "AL"
         value1 <- newCString "102"
         str1 <- peekCString (createProtocolMessage tag1 value1)
-        hPutStrLn h str1
+        hPutStr h str1
         hFlush h
         tag2 <- newCString "AL"
         value2 <- newCString "200"
         str2 <- peekCString (createProtocolMessage tag2 value2)
-        hPutStrLn h str2
-        hFlush h)
+        hPutStr h str2
+        hFlush h
+        sleepForever)
     sleepForever
     
 

@@ -290,8 +290,8 @@ void drawPlaneBody() {
 	glLoadIdentity();
 	glScalef(0.5f, 0.5f, 0.5f);
 	
-	glTranslatef(-2.5f,-2.5f,-10.0f+transZ); // glTranslatef(0.0f,0.0f,-4.0f+transZ);
     SharedData *s = [SharedData instance];
+	glTranslatef(s.lshift,s.lshift,s.vshift+transZ);
 	glRotatef(s.rotationY, 0.0f, 1.0f, 0.0f);
 	glRotatef(s.rotationX, 1.0f, 0.0f, 0.0f);
     glRotatef(s.rotationZ, 0.0f, 0.0f, 1.0f);

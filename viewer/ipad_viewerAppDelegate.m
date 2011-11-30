@@ -10,6 +10,7 @@
 
 #import "RootViewController.h"
 #import "SharedData.h"
+#import "Parser.h"
 
 @implementation ipad_viewerAppDelegate
 
@@ -23,8 +24,11 @@
     // Override point for customization after application launch.
     // Add the split view controller's view to the window and display.
     self.window.rootViewController = self.splitViewController;
-    [SharedData instance];
+    SharedData *s = [SharedData instance];
+    s.lshift = -2.5f;
+    s.vshift = -8.0f;
     [self.window makeKeyAndVisible];
+    initCrc8();
     return YES;
 }
 

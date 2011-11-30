@@ -22,3 +22,7 @@ void initCrc8(void);
 char crc8(const char* data, char initialChecksum, int length);
 
 char* createProtocolMessage(const char* tag, const char* data);
+
+void parse_string(char *c);
+
+char *handle_char(char c);

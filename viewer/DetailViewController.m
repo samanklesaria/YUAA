@@ -72,6 +72,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [SharedData instance].connectorDelegate = self;
     balloonLogic = [[BalloonMapLogic alloc] initWithMap: map];
 }
 
@@ -143,6 +144,23 @@
     self.popoverController.contentViewController = controller;
     [self.popoverController presentPopoverFromRect: rect inView:view
                                    permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+}
+
+- (void) updateLoc {
+    if (lat && lon) {
+        CLLocationCoordinate2D loc = {lat, lon};
+        [balloonLogic updateWithCurrentLocation: loc];
+    }
+}
+
+- (void)receivedTag:(NSString *)tag withValue:(double)val {
+    if ([tag isEqualToString: @"LA"]) {
+        lat = val;
+        [self updateLoc];
+    } else if ([tag isEqualToString: @"LN"]) {
+        lon = val;
+        [self updateLoc];
+    }
 }
 
 @end

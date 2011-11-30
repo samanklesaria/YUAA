@@ -102,7 +102,9 @@
 }
 
 -(void)showDataSource: (StatPoint *)stat named: (NSString *)name {
-    [dataForPlot release];
+    NSLog(@"showing data source");
+    if (dataForPlot)
+         [dataForPlot autorelease];
     dataForPlot = stat;
     [dataForPlot retain];
     double minval = stat.minval;
@@ -140,7 +142,9 @@
                                  [CPTPlotRange plotRangeWithLocation:CPTDecimalFromFloat(backupx) length:CPTDecimalFromFloat(minval)],
                                  nil];
 	x.labelExclusionRanges = xexclusionRanges;
+    NSLog(@"done setting up");
     [graph reloadData];
+    NSLog(@"done reloading");
 }
 
 - (NSMutableArray *)mkColorArray: (NSUInteger)length {
@@ -171,10 +175,11 @@
 }
 
 -(NSUInteger)numberOfRecordsForPlot:(CPTPlot *)plot {
+    NSLog(@"Doing the number thing");
     int idx = [(NSNumber *)plot.identifier intValue];
     SharedData *s = [SharedData instance];
     switch (idx) {
-        case -1: return [dataForPlot.points count];
+        case -1: { NSLog(@"Points: %i", [dataForPlot.points count]); return [dataForPlot.points count];}
         case 0: return [s.bayOpenData count]; 
         case 1: return [s.bayCloseData count];
     }
@@ -189,14 +194,17 @@
     NSDictionary *p;
     switch (idx) {
         case -1: {
+            NSLog(@"Giving number");
             p = [dataForPlot.points objectAtIndex: index];
             break;
         }
         case 0: {
+            NSLog(@"Giving bay open");
             p = [dataForPlot.bayNumToPoints objectForKey: [s.bayOpenData objectAtIndex: index]];
             break;
         }
         case 1: {
+            NSLog(@"Giving bay close");
             p = [dataForPlot.bayNumToPoints objectForKey: [s.bayCloseData objectAtIndex: index]];
             break;
         }

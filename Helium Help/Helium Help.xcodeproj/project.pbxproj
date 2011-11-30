@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2249EA101482FC80000F8EBD /* hh-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 2249EA0F1482FC80000F8EBD /* hh-icon.png */; };
+		22510C791482FE9B00E638B5 /* big-hh.png in Resources */ = {isa = PBXBuildFile; fileRef = 22510C781482FE9B00E638B5 /* big-hh.png */; };
 		22FF93C51482DC6400CA6613 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 22FF93C41482DC6400CA6613 /* UIKit.framework */; };
 		22FF93C71482DC6400CA6613 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 22FF93C61482DC6400CA6613 /* Foundation.framework */; };
 		22FF93C91482DC6400CA6613 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 22FF93C81482DC6400CA6613 /* CoreGraphics.framework */; };
@@ -18,6 +20,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2249EA0F1482FC80000F8EBD /* hh-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "hh-icon.png"; sourceTree = "<group>"; };
+		22510C781482FE9B00E638B5 /* big-hh.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "big-hh.png"; sourceTree = "<group>"; };
 		22FF93C01482DC6400CA6613 /* Helium Help.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Helium Help.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		22FF93C41482DC6400CA6613 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		22FF93C61482DC6400CA6613 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -49,6 +53,8 @@
 		22FF93B51482DC6400CA6613 = {
 			isa = PBXGroup;
 			children = (
+				22510C781482FE9B00E638B5 /* big-hh.png */,
+				2249EA0F1482FC80000F8EBD /* hh-icon.png */,
 				22FF93CA1482DC6400CA6613 /* Helium Help */,
 				22FF93C31482DC6400CA6613 /* Frameworks */,
 				22FF93C11482DC6400CA6613 /* Products */,
@@ -146,6 +152,8 @@
 				22FF93CF1482DC6400CA6613 /* InfoPlist.strings in Resources */,
 				22FF94211482DD9700CA6613 /* MainWindow.xib in Resources */,
 				22FF94291482F38900CA6613 /* MainWindow-iPod.xib in Resources */,
+				2249EA101482FC80000F8EBD /* hh-icon.png in Resources */,
+				22510C791482FE9B00E638B5 /* big-hh.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -271,6 +279,7 @@
 				22FF93E31482DC6400CA6613 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

@@ -10,6 +10,12 @@
 	<string>${EXECUTABLE_NAME}</string>
 	<key>CFBundleIconFile</key>
 	<string></string>
+	<key>CFBundleIconFiles</key>
+	<array>
+		<string>balloon.png</string>
+		<string>my-balloon.png</string>
+		<string>bigger-balloon.png</string>
+	</array>
 	<key>CFBundleIdentifier</key>
 	<string>yuaa.${PRODUCT_NAME:rfc1034identifier}</string>
 	<key>CFBundleInfoDictionaryVersion</key>

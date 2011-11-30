@@ -33,6 +33,7 @@
 - (IBAction)showAltTbl:(id)sender;
 - (IBAction)showTempTbl:(id)sender;
 - (IBAction)killBalloon:(id)sender;
+- (void) updateLoc;
 
 @property (nonatomic, retain) IBOutlet MKMapView *map;
 @property (nonatomic, retain) IBOutlet UIBarButtonItem *bayButton;

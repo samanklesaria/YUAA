@@ -5,15 +5,40 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
+#include <pt.h>
 #include "../parser/Parser.c"
 
-// should handle errors too
-
-// I think we can cut mcc/mnc updating and just do it once after initionalization
-// I think we can stop polling for lac/ cid and just wait for it in handle_texts
+void str_cache() {
+    int i;
+    for (i=0; i < 23; i++) {
+        int j;
+        for (j=0; j < 23; j++) {
+            if (craft_info[i][j]) {
+                data *d = craft_info[i][j];
+                char *tag = (char *)malloc(sizeof(char) * 3);
+                tag[0] = to_char(i+1);
+                tag[1] = to_char(j+1);
+                tag[2] = '\0';
+                char checksum = crc8(tag,0,2);
+                checksum = crc8(d->content, checksum, d->length);
+                Serial1.print(tag);
+                Serial1.write((uint8_t*)(d->content), d->length);
+                Serial1.print(':');
+                char *message = (char *)malloc(sizeof(char) * 3);
+                sprintf(message, "%.2x", (unsigned char)checksum);
+                Serial1.print(message);
+                free(message);
+                free(d);
+                free(tag);
+            }
+        }
+    }
+}
 
 #define BUFFSIZE 100
 char at_buffer[BUFFSIZE];
+
+static bool erring = 0;
 
 #define CMDLEN 30
 char cmd[CMDLEN];
@@ -72,13 +97,6 @@ void read_from(int (*avail)(), char (*reader)()) {
     }
 }
 
-void passthrough() {
-    while (1) {
-        read_from(cellAvailable, cellRead);
-        Serial.println(at_buffer);
-    }
-}
-
 void wait_for(char *a) {
     while (1) {
         read_from(cellAvailable, cellRead);
@@ -87,26 +105,56 @@ void wait_for(char *a) {
         if (strstr(at_buffer,a)) return;
         if (strstr(at_buffer,"ERROR")) {
             Serial.println("Could not proceed with operation");
-            passthrough();
             return;
         };
     }
 }
 
+void wait_for_byte(char a) {
+    Serial.println(a, BYTE);
+    while (1) {
+        if (Serial1.available() > 0) {
+            char inc = Serial1.read();
+            Serial.print("Waiting with char ");
+            Serial.println(inc, BYTE);
+            if (inc == a) return;
+        }
+    }
+}
+
+void passthrough() {
+    while (1) {
+        read_from(cellAvailable, cellRead);
+        Serial.println(at_buffer);
+    }
+}
+
 void startCall() {
-    Serial1.println("AT+CMGS=\"16517477993\"");
-    wait_for(">");
+    Serial1.print("AT+CMGS=\"16517477993\"");
+    Serial1.print('\r');
+    Serial.println("Sent the r");
+    wait_for_byte('>');
 }
 
 void endCall() {
-    Serial1.print(26,BYTE);
+    Serial1.print(26, BYTE);
+    Serial.println("Should be sending");
+    wait_for("OK");
 }
 
-void makeCall() {
+void makeCall () {
     startCall();
-    Serial1.print("done with that");
-    Serial1.print(0x1A, BYTE);
-    wait_for("OK");
+    str_cache();
+    endCall();
+}
+
+void store_lat_lon() {
+    char *lat = strstr("lat=\"",at_buffer) + 5;
+    int lat_len = strchr(lat,'"') - 1 - lat;
+    char *lon = strstr("lon=\"",lat) + 5;
+    int lon_len = strchr(lon,'"') - 1 - lon;
+    update_tag(LATTAG, lat, lat_len);
+    update_tag(LONTAG, lon, lon_len);
 }
 
 void store_mcc_mnc() {
@@ -114,10 +162,14 @@ void store_mcc_mnc() {
     read_from(cellAvailable, cellRead);
     read_from(cellAvailable, cellRead);
     char *mcc_mnc = strchr(strchr(at_buffer,',') +1,',') + 1;
-    Serial.print("mcc/mnc: ");
-    Serial.println(mcc_mnc);
     update_tag(MCCTAG, mcc_mnc, 3);
+    Serial.println("Mcc:");
+    Serial.write((uint8_t*)mcc_mnc, 3);
+    Serial.print("\r\n");
     update_tag(MNCTAG, mcc_mnc + 3, 2);
+    Serial.println("Mnc:");
+    Serial.write((uint8_t*)mcc_mnc + 3, 2);
+    Serial.print("\r\n");
     wait_for("OK");
 }
 
@@ -135,10 +187,9 @@ void store_lac_cid() {
     cid = strchr(lac, ',') + 1;
     Serial.print("lac/ cid: ");
     Serial.println(lac);
-    update_tag(LACTAG, lac, cid - lac);
+    update_tag(LACTAG, lac, cid - lac - 1);
     update_tag(CIDTAG, cid, strlen(cid));
     wait_for("OK");
-    Serial1.println("AT+CREG=0");
 }
 
 void startServer(char *host, int con) {
@@ -181,64 +232,98 @@ void update_loc() {
     */
 }
 
-// should we ignore all SIND messages?
-// should we build waiting for SIND 4 status into reading if a SIND appears
-
 void handle_text() {
-    Serial.println("Handling texts");
+	Serial.println("Handling texts");
     wait_for("+CMT");
-    Serial.print("Received: ");
-    Serial.println(at_buffer);
-    // while (strchr(at_buffer, '+'))
     read_from(cellAvailable, cellRead);
-    Serial.print("Received: ");
-    Serial.println(at_buffer);
-    if (strstr(at_buffer, INFOSIGNAL)) { delay(10000); makeCall(); }
-    // if (strstr(at_buffer, KILLSIGNAL)) { Serial.println("Got killed!"); }
-    // if (strstr(at_buffer, LOCSIGNAL)) { update_loc(); delay(1000); makeCall(); }
-    Serial.println("Done handling a text");
+    if (strstr(at_buffer, KILLSIGNAL)) if (!erring) {erring = 1; err_mode(); }
+    if (strstr(at_buffer, LOCSIGNAL)) { update_loc(); delay(1000); makeCall(); }
+    if (strstr(at_buffer, INFOSIGNAL)) { delay(1000); makeCall(); }
+}
+
+void do_texts() {
+    handle_text();
+    delay(1000);
+    Serial1.println("AT+CMGD=1,4");
+    wait_for("OK");
+}
+
+static struct pt waitThread, textThread;
+
+static int text(struct pt *pt) {
+  PT_BEGIN(pt);
+  while(1) do_texts();
+  PT_END(pt);
+}
+
+void blitzCalls() {
+    static unsigned long timestamp = 0;
+    while(1) {
+        PT_WAIT_UNTIL(pt, millis() - timestamp > 60000); // will this work here?
+        timestamp = millis();
+        update_loc();
+        delay(1000); // is there a thread version?
+        makeCall();
+    }  
+}
+
+static int wait(struct pt *pt) {
+    PT_BEGIN(pt);
+    while(1) {
+        // i2c stuff here. find out what.
+    }
+    PT_END(pt);
+}
+
+static int text(struct pt *pt) {
+    PT_BEGIN(pt);
+    while(1) do_texts();
+    PT_END(pt);
+}
+
+void err_mode() {
+    erring = 1;
+    Wire.beginTransmission();
+    Wire.send(KILLSIGNAL);
+    Wire.endTransmission();
+    blitzCalls();
 }
 
 void setup() {
-    // initCrc8();
+    PT_INIT(&waitThread);
+    PT_INIT(&textThread);
+    
     Serial.begin(9600);
+    initCrc8();
     Serial1.begin(9600);
+    Wire.begin();
     wait_for("+SIND: 4");
     Serial.println("Connected fine");
     Serial1.println("AT+CMGF=1");
     wait_for("OK");
-    Serial1.println("AT+SBAND=7");
-    wait_for("OK");
     Serial1.println("AT+CMGD=1,4");
     wait_for("OK");
+    
+    // this should work, but sometimes doesn't
+    /*
+    Serial1.println("AT+SBAND=7");
+    wait_for("OK");
+    */
+    
+    // experimental stuff
+    /*
+    cell.println("AT+COPS=0,2");
+    wait_for("OK");
+    cell.println("AT+CREG=2");
+    wait_for("OK");
+    */
+    
+    Serial.println("Everything set up");
     Serial1.println("AT+CNMI=3,3,0,0");
     wait_for("OK");
-    Serial.println("Everything set up");
-}
-
-void handle_texts() {
-    int i;
-    for (i=0; i < 3; i++) {
-        Serial1.println("AT+CMGF=1");
-        delay (1000);
-        Serial1.print("AT+CMGS=");
-        Serial1.print(34,BYTE);
-        Serial1.print("16517477993");
-        Serial1.println(34,BYTE);
-        delay (1000);
-        Serial1.print("Ha ");
-        Serial1.print(i);
-        Serial1.print(" ");
-        Serial1.println(26,BYTE);
-         delay (3000);
-        
-    }
 }
 
 void loop() {
-    handle_texts();
-    passthrough();
-    // Serial1.println("AT+CMGD=1,4");
-    // wait_for("OK");
-    // Serial.println("Done Deleting");
+    wait(&waitThread);
+    text(&textThread);
 }

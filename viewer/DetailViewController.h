@@ -10,10 +10,13 @@
 #import "SharedData.h"
 #import <MessageUI/MFMessageComposeViewController.h>
 #import "BalloonMapLogic.h"
+#import "Connector.h"
 
-@interface DetailViewController : UIViewController <UIPopoverControllerDelegate, UISplitViewControllerDelegate> {
+@interface DetailViewController : UIViewController <UIPopoverControllerDelegate, UISplitViewControllerDelegate, ConnectorDelegate> {
     IBOutlet MKMapView *map;
     BalloonMapLogic *balloonLogic;
+    double lat;
+    double lon;
 }
 
 - (IBAction)showSettings:(id)sender;

@@ -19,6 +19,8 @@
     Grapher *grapher;
     UITableView *table;
     id connectorDelegate;
+    float lshift;
+    float vshift;
     
     // prefs
     NSString *server;
@@ -38,10 +40,10 @@
     NSMutableArray *bayCloseData;
     NSMutableDictionary *balloonStats;
     NSMutableArray *statArray;
-    NSMutableSet *statSet;
 }
 
-@property (retain) NSMutableSet *statSet;
+@property float lshift;
+@property float vshift;
 @property (retain) UITableView *table;
 @property (retain) id connectorDelegate;
 @property float rotationX;

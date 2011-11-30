@@ -5,6 +5,27 @@
 #include <math.h>
 #include "Parser.h"
 
+#define CBUFSIZ (160*120*3) // must at least be this
+char contentbuf[CBUFSIZ];
+int contentidx = 0;
+
+char tagbuf[2];
+int tagidx = 0;
+
+char numbuf[2];
+int numidx = 0;
+
+#define PICBUFSIZ (160*120*3)
+
+enum parserState {
+   TAG,
+   CONTENT,
+   CHECKSUM,
+   PICTURE
+};
+
+static enum parserState state = TAG;
+
 int to_int(char c) {
 	if (!isupper(c)) return 0;
 	return c - 'A' + 1;
@@ -16,12 +37,13 @@ char to_char(int i) {
 }
 
 void update_tag(int a, int b, char *str, int len) {
+    data *d;
     if (craft_info[a - 1][b - 1]) {
-        free(craft_info[a - 1][b - 1]);
-    }
+        d = (craft_info[a - 1][b - 1]);
+        free(d->content);
+    } else d = (data *)malloc(sizeof(data));
     char *c = (char *)malloc(sizeof(char) * len);
     strncpy(c, str, len);
-    data *d = (data *)malloc(sizeof(data));
     d->length = len;
     d->content = c;
     craft_info[a - 1][b - 1] = d;
@@ -72,81 +94,95 @@ char crc8(const char* data, char initialChecksum, int length)
     return checksum;
 }
 
+
 char* createProtocolMessage(const char* tag, const char* data)
 {
-    int len = strlen(data);
+    int len = (int)strlen(data);
     
     //Find checksum
     char checksum = crc8(tag, 0, 2);
     checksum = crc8(data, checksum, len);
     
     //Length = tag + data + ':' + checksum + '\0'
-    int messageLength = strlen(tag) + len + 4;
+    int messageLength = (int)strlen(tag) + len + 4;
     char* message = (char *)malloc(sizeof(char) * messageLength);
     sprintf(message, "%s%s:%.2x", tag, data, (unsigned char)checksum);
     return message;
 }
 
 
-int update_cache(char *init) {
-    char *str = init;
-    while (str[0] != '\0') {
-        char check;
-        char checksum;
-        char *colon;
-        int len;
-        char *datastring;
-        int width;
-        int height;
-        char *mystring = str;
-        
-        if (mystring[0] == 'D' && mystring[1] == 'I') {
-            int werr = sscanf(mystring + 2, "%4d", &width);
-            int herr = sscanf(mystring + 6, "%4d", &height);
-            if (!(herr && werr)) {
-                printf("Garbled image data");
-                return 1;
+char *handle_char(char c) {
+    switch (state) {
+        case TAG: {
+            int a = to_int(c);
+            if (a) {
+                tagbuf[tagidx] = c;
+                tagidx++;
+                if (tagidx == 2) {
+                    tagidx = 0;
+                    if (tagbuf[0] == 'D' && tagbuf[1] == 'I') state = PICTURE;
+                    else state = CONTENT;
+                }
+            } else tagidx = 0;
+            break;
+        }
+        case CONTENT: {
+            if (c == ':')
+                state = CHECKSUM;
+            else {
+                if (contentidx < CBUFSIZ) {
+                    contentbuf[contentidx] = c;
+                    contentidx++;
+                }
             }
-            len = width*height*2;
-            datastring = mystring + 10;
-            colon = datastring + len;
-        } else {
-            colon = strchr(mystring, ':');
-            len = colon - (mystring + 2);
-            if (colon == NULL) {
-                printf("Couldn't find colon\n");
-                return 1;
+            break;
+        }
+        case CHECKSUM: {
+            numbuf[numidx] = c;
+            if (numidx == 0) {
+                numbuf[numidx] = c;
+                numidx++;
+            } else {
+                char check;
+                if (sscanf(numbuf, "%2x", (unsigned int *)&check) == 1) {
+                    char checksum = crc8(tagbuf,0,2);
+                    checksum = crc8(contentbuf, checksum, contentidx);
+                    printf("Checksum: %x\n", (unsigned char)checksum);
+                    printf("Check: %x\n", (unsigned char)check);
+                    if (checksum == check) {
+                        state = TAG;
+                        update_tag(to_int(tagbuf[0]), to_int(tagbuf[1]), contentbuf, contentidx);
+                        numidx = 0;
+                        contentidx = 0;
+                        return tagbuf;
+                    }
+                }
+                if (contentidx + 2 < CBUFSIZ) {
+                    strncpy(contentbuf + contentidx, numbuf, 2);
+                    contentidx += 2;
+                }
+                state = CONTENT;
             }
-            datastring = mystring + 2;
+            break;
         }
-        
-        int a = to_int(mystring[0]);
-        int b = to_int(mystring[1]);
-        if (!(a && b)) {
-            printf("Invalid tag\n");
-            return 1;
+        case PICTURE: {
+            if (contentidx == PICBUFSIZ) {
+                if (c == ':') state = CHECKSUM;
+                else state = TAG;
+                break;
+            }
+            contentbuf[contentidx] = c;
+            contentidx++;
+            break;
         }
-        
-        if (sscanf(colon + 1 , "%2x", (unsigned int *)&check) != 1) {
-            printf("Parsing hex failed\n");
-            return 1;
-        }
-        checksum = crc8(mystring,0,2);
-        checksum = crc8(mystring+2, checksum,len);
-        if ((unsigned char)check != (unsigned char)checksum) {
-            printf("Checksum %x != checksum %x\n", (unsigned char)check, (unsigned char)checksum);
-            return 1;
-        }
-        
-        if (!tag_index) tag_index = 0;
-        if (tag_index < TAGLISTSIZE - 2) { // leave room for null
-            updated_tags[tag_index] = mystring[0];
-            updated_tags[tag_index + 1] = mystring[1];
-            tag_index += 2;
-        }
-
-        update_tag(a,b,datastring,len);
-        str = colon + 3;
     }
-    return 0;
+    return NULL;
 }
+
+void parse_string(char *c) {
+    while (*c != '\0') {
+        handle_char(*c);
+        c++;
+    }
+}
+

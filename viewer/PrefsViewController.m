@@ -35,7 +35,7 @@
 }
 
 - (void) updateConnector {
-    if ([SharedData instance].server && [[SharedData instance].server length] > 0 && [SharedData instance].port) {
+    if ([SharedData instance].server && [[SharedData instance].server length] > 0 && [SharedData instance].port > 0) {
         [con release];
         con = [[Connector alloc] init];
     }

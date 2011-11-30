@@ -74,11 +74,14 @@
 - (void)dealloc
 {
     [_window release];
-    [_heightSlider release];
+    if (_heightSlider)
+        [_heightSlider release];
     [_heightField release];
-    [_pressureSlider release];
+    if (_pressureSlider)
+        [_pressureSlider release];
     [_pressureField release];
-    [_volumeSlider release];
+    if (_volumeSlider)
+        [_volumeSlider release];
     [_volumeField release];
     [_pessureOutput release];
     [_heliumOutput release];
@@ -120,6 +123,11 @@
     self.finalPressureOutput.text = [NSString stringWithFormat: @"%.3f pascals",finalPressure];
  
     
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+    [textField resignFirstResponder];
+    return YES;
 }
 
 - (IBAction)pressureChanged:(UISlider *)sender {
