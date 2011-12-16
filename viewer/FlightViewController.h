@@ -16,8 +16,9 @@
 #import <MessageUI/MFMessageComposeViewController.h>
 #import "Connector.h"
 #import "BalloonMapLogic.h"
+#import "PrefsViewController.h"
 
-@interface FlightViewController : UIViewController <ConnectorDelegate> {
+@interface FlightViewController : UIViewController <ConnectorDelegate, MFMessageComposeViewControllerDelegate> {
     MKMapView *map;
     UIBarButtonItem *tempButton;
     UIBarButtonItem *altitudeBtn;
@@ -28,6 +29,8 @@
     double lon;
     bool bay;
     BalloonMapLogic *balloonLogic;
+    PrefsViewController *prefs;
+    MFMessageComposeViewController *texter;
 }
 
 - (IBAction)showAltTbl:(id)sender;

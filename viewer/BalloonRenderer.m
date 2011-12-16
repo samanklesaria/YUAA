@@ -8,16 +8,16 @@
 
 #import "BalloonRenderer.h"
 #include "OpenGLCommon.h"
-#import "PlaneBody.h"
+#import "Arrow.h"
 #import "SharedData.h"
 
 @implementation BalloonRenderer
 
 static GLuint texture = 0;
 
-static float rColor = .945;
-static float gColor = .180;
-static float bColor = .820;
+static float rColor = 1; 
+static float gColor = 1; 
+static float bColor = 1;
 
 static float objectR = 0.1;
 static float objectG = 0.1;
@@ -258,17 +258,23 @@ void setUpView(GLint backingWidth, GLuint backingHeight) {
 }
 
 void drawPlaneBody() {
-	glColor4f(objectR, objectG, objectB, 1.0f);
+	
+    
+    
+    glColor4f(objectR, objectG, objectB, 1.0f);
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-	glEnableClientState(GL_NORMAL_ARRAY);
-	glVertexPointer(3, GL_FLOAT, sizeof(TexturedVertexData3D), &PlanebodyVertexData[0].vertex);
-	glNormalPointer(GL_FLOAT, sizeof(TexturedVertexData3D), &PlanebodyVertexData[0].normal);
-	glTexCoordPointer(2, GL_FLOAT, sizeof(TexturedVertexData3D), &PlanebodyVertexData[0].texCoord);
-	glDrawArrays(GL_TRIANGLES, 0, kPlanebodyNumberOfVertices);
+	//glEnableClientState(GL_NORMAL_ARRAY);
+	glVertexPointer(3, GL_FLOAT, sizeof(VertexData3D), &ArrowVertexData[0].vertex);
+	glNormalPointer(GL_FLOAT, sizeof(VertexData3D), &ArrowVertexData[0].normal);
+	//glTexCoordPointer(2, GL_FLOAT, sizeof(TexturedVertexData3D), &ArrowVertexData[0].texCoord);
+	glScalef(0.5, 0.5, 0.5);
+    glDrawArrays(GL_TRIANGLES, 0, kArrowNumberOfVertices);
 	glDisableClientState(GL_VERTEX_ARRAY);
-	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+	//glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 	glDisableClientState(GL_NORMAL_ARRAY);	
+    
+    
 }
 
 -(void)render
@@ -291,7 +297,7 @@ void drawPlaneBody() {
 	glScalef(0.5f, 0.5f, 0.5f);
 	
     SharedData *s = [SharedData instance];
-	glTranslatef(s.lshift,s.lshift,s.vshift+transZ);
+	glTranslatef(s.lshift,s.ushift,s.vshift);
 	glRotatef(s.rotationY, 0.0f, 1.0f, 0.0f);
 	glRotatef(s.rotationX, 1.0f, 0.0f, 0.0f);
     glRotatef(s.rotationZ, 0.0f, 0.0f, 1.0f);

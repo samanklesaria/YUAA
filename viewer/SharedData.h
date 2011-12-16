@@ -10,6 +10,14 @@
 #import <MapKit/MapKit.h>
 #import "Grapher.h"
 
+enum mapAdjust {
+    AUTO,
+    CAR,
+    MANUAL
+};
+
+@class LogViewController;
+
 @interface SharedData : NSObject {
     // arrays
     NSMutableArray *logData;
@@ -20,15 +28,15 @@
     UITableView *table;
     id connectorDelegate;
     float lshift;
+    float ushift;
     float vshift;
+    LogViewController * logViewController;
+    MKMapView *map;
     
     // prefs
     NSString *server;
-    NSString *remoteServer;
     NSInteger port;
-    NSInteger remotePort;
-    MKMapType mapType;
-    bool autoAdjust;
+    enum mapAdjust autoAdjust;
     NSString *phoneNumber;
     
     // stats
@@ -42,7 +50,11 @@
     NSMutableArray *statArray;
 }
 
+
+@property (retain) MKMapView *map;
+@property (retain) LogViewController *logViewController;
 @property float lshift;
+@property float ushift;
 @property float vshift;
 @property (retain) UITableView *table;
 @property (retain) id connectorDelegate;
@@ -53,11 +65,8 @@
 @property (retain) NSDictionary *plistData;
 @property (retain) NSString *phoneNumber;
 @property (retain) NSString *server;
-@property (retain) NSString *remoteServer;
 @property NSInteger port;
-@property NSInteger remotePort;
-@property MKMapType mapType;
-@property bool autoAdjust;
+@property enum mapAdjust autoAdjust;
 @property (retain) NSMutableArray *bayOpenData;
 @property (retain) NSMutableArray *bayCloseData;
 @property (retain) NSMutableArray *images;
@@ -66,5 +75,8 @@
 @property (retain) NSMutableArray *logData;
 
 + (SharedData *)instance;
+
++ (void)logString:(NSString *)logString;
+
 
 @end

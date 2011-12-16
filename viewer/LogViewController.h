@@ -13,7 +13,6 @@
     UITableView *logTable;
 }
 @property (nonatomic, retain) IBOutlet UITableView *logTable;
-
-+ (void)logString:(NSString*)str;
+- (void)reloadLog;
 
 @end

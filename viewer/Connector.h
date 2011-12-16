@@ -21,6 +21,7 @@
     bool shouldEndConnection;
     NSStream *mainstream;
     int bayCounter;
+    bool erred;
 }
 
 - (void)updateData: (char *)tag;

@@ -14,7 +14,7 @@
 @synthesize pressureSlider = _pressureSlider;
 @synthesize heightSlider = _heightSlider;
 @synthesize heightField = _heightField;
-@synthesize pressureField = _pressureField;
+@synthesize temperatureField = _pressureField;
 @synthesize volumeSlider = _volumeSlider;
 @synthesize volumeField = _volumeField;
 @synthesize heliumOutput = _heliumOutput;
@@ -95,32 +95,36 @@
     double l = .0065; 
     double h = [self.heightField.text doubleValue];
     double t = 196.5 + 0.001*h; // holds only above 20,000 m
-    double v = 325.47; // using 5m bursting radius at 100,000m
-    double to = 288.15; // kelvin
+    double v = [self.volumeField.text doubleValue]; // 325.47; // using 5m bursting radius at 100,000m
+    double to = [self.temperatureField.text doubleValue]; // 283.15; // kelvin
     double r = 8.31447;
     double m = 0.0289644;
     double g = 9.81;
     double po = 101325;
+    double testRunMoles = 50;
     
     double p1 = po * pow((1 - (l*11000)/to),(g*m/(r*l)));
     double p2 = p1 * pow((1 - (.001*22000)/to),(g*m/(r*0.001)));    
+    // pressure at altitude 32,000 m
     
     double moles = p2*v/(r*t);
     double vo = moles*r*to/po; // volume on the ground
     double radius = cbrt(3*vo/(4.0*3.14159));
     
-    double initialPressure = [self.pressureField.text doubleValue];
-    double tankVolume = [self.heightField.text doubleValue];
+    double initialPressure = 2500 * 6894.75729; // now in paslcals.  is 2500 psi
+    double tankVolume = 2;
     double initialMoles = initialPressure * tankVolume / (r*to);
     double finalMoles = initialMoles - moles;
+    double finalMolesTest = initialMoles - testRunMoles;
     double finalPressure = r*t * finalMoles / tankVolume;
+    double finalPressureTest = r*t * finalMolesTest / tankVolume;
     
-    self.pressureOutput.text = [NSString stringWithFormat: @"%.3f pascals", p2];
+    self.pressureOutput.text = [NSString stringWithFormat: @"%.3f psi", finalPressure / 6894.75729];
+    self.finalPressureOutput.text = [NSString stringWithFormat: @"%.3f psi",finalPressureTest / 6894.75729];
     
     self.heliumOutput.text = [NSString stringWithFormat: @"%.3f moles", moles];
     self.volumeOutput.text = [NSString stringWithFormat: @"%.3f meters^3" ,vo];
     self.radiusOutput.text = [NSString stringWithFormat: @"%.3f meters", radius];
-    self.finalPressureOutput.text = [NSString stringWithFormat: @"%.3f pascals",finalPressure];
  
     
 }
@@ -130,35 +134,46 @@
     return YES;
 }
 
-- (IBAction)pressureChanged:(UISlider *)sender {
+- (IBAction)temperatureChanged:(UISlider *)sender {
     float str = [sender value]; // not sure about this
-    self.pressureField.text = [NSString stringWithFormat: @"%3f", str];
+    self.temperatureField.text = [NSString stringWithFormat: @"%.3f", str];
     [self updateStats];
 }
 
 - (IBAction)heightChanged:(UISlider *)sender {
     float str = [sender value];
-    self.heightField.text = [NSString stringWithFormat: @"%3f", str];
+    self.heightField.text = [NSString stringWithFormat: @"%.3f", str];
     [self updateStats];
 }
 - (IBAction)volumeChanged:(UISlider *)sender {
-    float str = [sender value];
-    self.volumeField.text = [NSString stringWithFormat: @"%3f", str];
+    if (self.volumeSlider) {
+        float str = [sender value];
+        self.volumeField.text = [NSString stringWithFormat: @"%.3f", str];
+    }
     [self updateStats];
 }
 
 - (IBAction)heightFieldChanged:(UITextField *)sender {
-    [self.heightSlider setValue: [sender.text floatValue]];
+    if (self.heightSlider) {
+        [self.heightSlider setValue: [sender.text floatValue]];
+        [sender setText: [NSString stringWithFormat: @"%.3f", self.heightSlider.value]];
+    }
     [self updateStats];
 }
 
 - (IBAction)pressureFieldChanged:(UITextField *)sender {
-    [self.pressureSlider setValue: [sender.text floatValue]];
+    if (self.pressureSlider) {
+        [self.pressureSlider setValue: [sender.text floatValue]];
+        [sender setText: [NSString stringWithFormat: @"%.3f", self.pressureSlider.value]];
+    }
     [self updateStats];
 }
 
 - (IBAction)volumeFieldChanged:(UITextField *)sender {
-    [self.volumeSlider setValue: [sender.text floatValue]];
+    if (self.volumeSlider) {
+        [self.volumeSlider setValue: [sender.text floatValue]];
+        [sender setText: [NSString stringWithFormat: @"%.3f", self.volumeSlider.value]];
+    }
     [self updateStats];
 }
 @end

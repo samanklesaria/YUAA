@@ -12,27 +12,6 @@
 @synthesize phoneNumber;
 @synthesize serverField;
 @synthesize portField;
-@synthesize remoteServer;
-@synthesize remotePort;
-
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    SharedData *s = [SharedData instance];
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-        s.server = [defaults stringForKey: @"localserver"];
-        serverField.text = s.server;
-        portField.text = [defaults objectForKey: @"localport"];
-        s.port = [portField.text integerValue];
-        s.remoteServer = [defaults stringForKey: @"remoteserver"];
-        remoteServer.text = s.remoteServer;
-        remotePort.text = [defaults objectForKey: @"remoteport"];
-        s.remotePort = [remotePort.text integerValue];
-        [self updateConnector];
-    }
-    return self;
-}
 
 - (void) updateConnector {
     if ([SharedData instance].server && [[SharedData instance].server length] > 0 && [SharedData instance].port > 0) {
@@ -53,21 +32,39 @@
 
 - (void)viewDidLoad
 {
-    scrollView.contentSize = CGSizeMake(320, 450); //325 448
-	[scrollView flashScrollIndicators];
     [super viewDidLoad];
-    // Do any additional setup after loading the view from its nib.
+    SharedData *s = [SharedData instance];
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSString *serverString = [defaults stringForKey: @"server"];
+    if (serverString != nil) {
+        s.server = serverString;
+        serverField.text = s.server;
+    }
+    NSString *portString = [defaults objectForKey: @"port"];
+    if (portString != nil) {
+        portField.text = portString;
+        s.port = [portField.text integerValue];
+    }
+    NSString *phoneNum = [defaults objectForKey: @"phoneNumber"];
+    if (phoneNum != nil) {
+        phoneNumber.text = phoneNum;
+        s.phoneNumber = phoneNum;
+    }
+    NSInteger adjVal = [defaults integerForKey: @"autoAdjust"];
+    [autoUpdateControl setSelectedSegmentIndex: adjVal];
+    s.autoAdjust = (enum mapAdjust)adjVal;
+    [self updateConnector];
 }
 
 - (void)viewDidUnload
 {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults synchronize];
     [self setServerField:nil];
     [self setPortField:nil];
     [self setPhoneNumber:nil];
-    [scrollView release];
-    scrollView = nil;
-    [self setRemoteServer:nil];
-    [self setRemotePort:nil];
+    [autoUpdateControl release];
+    autoUpdateControl = nil;
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -83,69 +80,67 @@
     return YES;
 }
 
-// should erase invalid ports
 - (void)textFieldDidEndEditing:(UITextField *)textField {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    SharedData *s = [SharedData instance];
     if (textField == serverField) {
         [[SharedData instance] setServer: textField.text];
         [self updateConnector];
+        [defaults setObject: s.server forKey:@"server"];
     }
-    if (textField == remoteServer)
-        [[SharedData instance] setRemoteServer: textField.text];
     if (textField == portField) {
         int a = [portField.text intValue];
         if (a != 0) {
             [[SharedData instance] setPort: a];
             [self updateConnector];
+            [defaults setObject: [NSString stringWithFormat: @"%i", s.port] forKey:@"port"];
         }
     }
-    if (textField == remotePort) {
-        int a = [textField.text integerValue];
-        if (a != 0) {
-            [[SharedData instance] setRemotePort: a];
-        }
-    }
-    if (textField == phoneNumber)
+    if (textField == phoneNumber) {
         [[SharedData instance] setPhoneNumber: textField.text];
+        [defaults setObject: s.phoneNumber forKey:@"phoneNumber"];
+    }
 }
-
-
-- (IBAction)adjustChanged:(UISwitch *)sender {
-    [[SharedData instance] setAutoAdjust: sender.on];
-}
-
-NSMutableArray *logData;
-NSString *server;
-NSNumber *port;
-NSString *mapType;
-bool *autoAdjust;
 
 - (IBAction)mapChanged:(UISegmentedControl *)sender {
     switch ([sender selectedSegmentIndex]) {
         case 0: 
-            [[SharedData instance] setMapType: MKMapTypeStandard];
+            [[[SharedData instance] map] setMapType: MKMapTypeStandard];
             break;
         case 1: 
-            [[SharedData instance] setMapType: MKMapTypeSatellite];
+            [[[SharedData instance] map] setMapType: MKMapTypeSatellite];
             break;
         case 2: 
-            [[SharedData instance] setMapType: MKMapTypeHybrid];
+            [[[SharedData instance] map] setMapType: MKMapTypeHybrid];
             break;
     }
 }
 
-- (void)dealloc {
-    SharedData *s = [SharedData instance];
+- (IBAction)updateChanged:(UISegmentedControl *)sender {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    [defaults setObject: s.server forKey:@"localserver"];
-    [defaults setObject: s.remoteServer forKey:@"remoteserver"];
-    [defaults setObject: [NSString stringWithFormat: @"%i", s.port] forKey:@"localport"];
-    [defaults setObject: [NSString stringWithFormat: @"%i", s.remotePort] forKey:@"remotePort"];
+    SharedData *s = [SharedData instance];
+    switch ([sender selectedSegmentIndex]) {
+        case 0:
+            s.autoAdjust = AUTO;
+            [s.map setUserTrackingMode: MKUserTrackingModeNone];
+            break;
+        case 1:
+            s.autoAdjust = CAR;
+            [s.map setUserTrackingMode: MKUserTrackingModeFollowWithHeading animated: YES];
+            break;
+        case 2:
+            s.autoAdjust = MANUAL;
+            [s.map setUserTrackingMode: MKUserTrackingModeNone];
+            break;  
+    }
+    [defaults setInteger: (NSInteger)s.autoAdjust forKey: @"autoAdjust"];
+}
+
+- (void)dealloc {
     [serverField release];
     [portField release];
     [phoneNumber release];
-    [scrollView release];
-    [remoteServer release];
-    [remotePort release];
+    [autoUpdateControl release];
     [super dealloc];
 }
 @end

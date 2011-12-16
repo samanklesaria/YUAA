@@ -9,10 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "Orientation.h"
 #import "PicViewController.h"
-
-@protocol ControllerShower <NSObject>
-- (void)showController:(UIViewController *)controller withFrame: (CGRect)rect view: (UIView *)view title: (NSString *)title;
-@end
+#import "ControllerShower.h"
 
 
 @interface StatTableDelegate : NSObject  <UITableViewDataSource, UITableViewDelegate> {

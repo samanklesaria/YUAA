@@ -17,10 +17,6 @@
 		2244C53D146CDE7300E08F55 /* StatView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2244C53B146CDE7200E08F55 /* StatView.m */; };
 		2244C53E146CDE7300E08F55 /* StatView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2244C53C146CDE7300E08F55 /* StatView.xib */; };
 		2244C549146CF25000E08F55 /* protocol.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2244C548146CF24F00E08F55 /* protocol.plist */; };
-		22510C801482FF8C00E638B5 /* balloon.png in Resources */ = {isa = PBXBuildFile; fileRef = 22510C7F1482FF8C00E638B5 /* balloon.png */; };
-		22510C831482FFB400E638B5 /* big-balloon.png in Resources */ = {isa = PBXBuildFile; fileRef = 22510C821482FFB400E638B5 /* big-balloon.png */; };
-		22510C851483000F00E638B5 /* bigger-balloon.png in Resources */ = {isa = PBXBuildFile; fileRef = 22510C841483000F00E638B5 /* bigger-balloon.png */; };
-		22510C871483014800E638B5 /* my-balloon.png in Resources */ = {isa = PBXBuildFile; fileRef = 22510C861483014800E638B5 /* my-balloon.png */; };
 		22636EC8147DE94E004B3851 /* BalloonMapLogic.m in Sources */ = {isa = PBXBuildFile; fileRef = 22636EC7147DE94E004B3851 /* BalloonMapLogic.m */; };
 		226C194D14679E1A00A7F87A /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 226C194C14679E1A00A7F87A /* UIKit.framework */; };
 		226C194F14679E1A00A7F87A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 226C194E14679E1A00A7F87A /* Foundation.framework */; };
@@ -47,6 +43,9 @@
 		22B075421479EB2D003FEC53 /* EAGLView.m in Sources */ = {isa = PBXBuildFile; fileRef = 22B075411479EB2C003FEC53 /* EAGLView.m */; };
 		22B075451479ED3F003FEC53 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 22B075441479ED3F003FEC53 /* OpenGLES.framework */; };
 		22B0754D1479F4D5003FEC53 /* BalloonRenderer.m in Sources */ = {isa = PBXBuildFile; fileRef = 22B0754C1479F4D5003FEC53 /* BalloonRenderer.m */; };
+		22B9B96014869A11009B2829 /* hh-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 22B9B95F14869A11009B2829 /* hh-icon.png */; };
+		22B9B96214869A1F009B2829 /* big-hh.png in Resources */ = {isa = PBXBuildFile; fileRef = 22B9B96114869A1F009B2829 /* big-hh.png */; };
+		22B9B96414869A7A009B2829 /* ipad-hh.png in Resources */ = {isa = PBXBuildFile; fileRef = 22B9B96314869A7A009B2829 /* ipad-hh.png */; };
 		22C5CD1014749D6E0017E928 /* MainWindow-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 22C5CD0F14749D6E0017E928 /* MainWindow-iPad.xib */; };
 		22C5CD1414749D980017E928 /* ipad_viewerAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 22C5CD1314749D980017E928 /* ipad_viewerAppDelegate.m */; };
 		22C5CD1814749DC00017E928 /* DetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22C5CD1714749DC00017E928 /* DetailViewController.m */; };
@@ -79,10 +78,6 @@
 		2244C53B146CDE7200E08F55 /* StatView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StatView.m; sourceTree = "<group>"; };
 		2244C53C146CDE7300E08F55 /* StatView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = StatView.xib; sourceTree = "<group>"; };
 		2244C548146CF24F00E08F55 /* protocol.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = protocol.plist; sourceTree = "<group>"; };
-		22510C7F1482FF8C00E638B5 /* balloon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = balloon.png; path = ../balloon.png; sourceTree = "<group>"; };
-		22510C821482FFB400E638B5 /* big-balloon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "big-balloon.png"; path = "../big-balloon.png"; sourceTree = "<group>"; };
-		22510C841483000F00E638B5 /* bigger-balloon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "bigger-balloon.png"; path = "../bigger-balloon.png"; sourceTree = "<group>"; };
-		22510C861483014800E638B5 /* my-balloon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "my-balloon.png"; path = "../my-balloon.png"; sourceTree = "<group>"; };
 		22636EC6147DE94E004B3851 /* BalloonMapLogic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BalloonMapLogic.h; sourceTree = "<group>"; };
 		22636EC7147DE94E004B3851 /* BalloonMapLogic.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BalloonMapLogic.m; sourceTree = "<group>"; };
 		226C194814679E1A00A7F87A /* viewer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = viewer.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -105,6 +100,7 @@
 		226C19771467A28C00A7F87A /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		226C197F1467C3C100A7F87A /* icon_flag_1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_flag_1.png; sourceTree = "<group>"; };
 		226C19811467C3C100A7F87A /* icon_text_align_left.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_text_align_left.png; sourceTree = "<group>"; };
+		228BA276148946D30015DA9C /* Arrow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Arrow.h; sourceTree = "<group>"; };
 		228E85A1147AAADD009B03ED /* Orientation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Orientation.h; sourceTree = "<group>"; };
 		228E85A2147AAADD009B03ED /* Orientation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Orientation.m; sourceTree = "<group>"; };
 		228E85A3147AAADD009B03ED /* Orientation.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Orientation.xib; sourceTree = "<group>"; };
@@ -125,6 +121,9 @@
 		22B0754C1479F4D5003FEC53 /* BalloonRenderer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BalloonRenderer.m; sourceTree = "<group>"; };
 		22B0754F1479FADC003FEC53 /* OpenGLCommon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenGLCommon.h; sourceTree = "<group>"; };
 		22B075501479FB0C003FEC53 /* PlaneBody.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlaneBody.h; sourceTree = "<group>"; };
+		22B9B95F14869A11009B2829 /* hh-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "hh-icon.png"; path = "../hh-icon.png"; sourceTree = "<group>"; };
+		22B9B96114869A1F009B2829 /* big-hh.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "big-hh.png"; path = "../big-hh.png"; sourceTree = "<group>"; };
+		22B9B96314869A7A009B2829 /* ipad-hh.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ipad-hh.png"; path = "../ipad-hh.png"; sourceTree = "<group>"; };
 		22C5CD0F14749D6E0017E928 /* MainWindow-iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "MainWindow-iPad.xib"; sourceTree = "<group>"; };
 		22C5CD1214749D980017E928 /* ipad_viewerAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ipad_viewerAppDelegate.h; sourceTree = "<group>"; };
 		22C5CD1314749D980017E928 /* ipad_viewerAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ipad_viewerAppDelegate.m; sourceTree = "<group>"; };
@@ -227,6 +226,7 @@
 		22FE1E381468C22600403F43 /* PrefsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrefsViewController.h; sourceTree = "<group>"; };
 		22FE1E391468C22600403F43 /* PrefsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PrefsViewController.m; sourceTree = "<group>"; };
 		22FE1E3A1468C22600403F43 /* PrefsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PrefsViewController.xib; sourceTree = "<group>"; };
+		22FF50AF1488473B005498C0 /* ControllerShower.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ControllerShower.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -369,10 +369,9 @@
 		226C195314679E1B00A7F87A /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				22510C861483014800E638B5 /* my-balloon.png */,
-				22510C841483000F00E638B5 /* bigger-balloon.png */,
-				22510C821482FFB400E638B5 /* big-balloon.png */,
-				22510C7F1482FF8C00E638B5 /* balloon.png */,
+				22B9B96314869A7A009B2829 /* ipad-hh.png */,
+				22B9B96114869A1F009B2829 /* big-hh.png */,
+				22B9B95F14869A11009B2829 /* hh-icon.png */,
 				228E85AC147AEA99009B03ED /* ComponentsBackgroundBW.png */,
 				2244C548146CF24F00E08F55 /* protocol.plist */,
 				2244C530146CDDE000E08F55 /* icon_list_bullets.png */,
@@ -442,6 +441,7 @@
 		22B075471479EE21003FEC53 /* OpenGL */ = {
 			isa = PBXGroup;
 			children = (
+				228BA276148946D30015DA9C /* Arrow.h */,
 				22B075501479FB0C003FEC53 /* PlaneBody.h */,
 				22B0754F1479FADC003FEC53 /* OpenGLCommon.h */,
 				22B075461479EE19003FEC53 /* ESRenderer.h */,
@@ -476,6 +476,7 @@
 		22B0754A1479EEFA003FEC53 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				22FF50AF1488473B005498C0 /* ControllerShower.h */,
 				22636ECA147DE954004B3851 /* BalloonMapDelegate */,
 				22B0753F1479C32C003FEC53 /* StatTableDelegate */,
 				22FE1E501468D1DF00403F43 /* Parser */,
@@ -708,6 +709,9 @@
 /* Begin PBXProject section */
 		226C193F14679E1900A7F87A /* Project object */ = {
 			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0420;
+			};
 			buildConfigurationList = 226C194214679E1900A7F87A /* Build configuration list for PBXProject "viewer" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
@@ -749,10 +753,9 @@
 				228E85A5147AAADD009B03ED /* Orientation.xib in Resources */,
 				228E85AD147AEA99009B03ED /* ComponentsBackgroundBW.png in Resources */,
 				228E85B2147AF221009B03ED /* PicViewController.xib in Resources */,
-				22510C801482FF8C00E638B5 /* balloon.png in Resources */,
-				22510C831482FFB400E638B5 /* big-balloon.png in Resources */,
-				22510C851483000F00E638B5 /* bigger-balloon.png in Resources */,
-				22510C871483014800E638B5 /* my-balloon.png in Resources */,
+				22B9B96014869A11009B2829 /* hh-icon.png in Resources */,
+				22B9B96214869A1F009B2829 /* big-hh.png in Resources */,
+				22B9B96414869A7A009B2829 /* ipad-hh.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -866,6 +869,7 @@
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "viewer/viewer-Prefix.pch";
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = "viewer/viewer-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
@@ -888,6 +892,7 @@
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "viewer/viewer-Prefix.pch";
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = "viewer/viewer-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;

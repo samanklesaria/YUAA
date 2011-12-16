@@ -43,17 +43,16 @@
             NSString *tag = [a.statArray objectAtIndex:indexPath.row -2];
             StatPoint *stat = [a.balloonStats objectForKey: tag];
             NSNumber *n = [(NSDictionary *)[(NSArray *)[stat points] lastObject] objectForKey: @"y"];
-            NSLog(@"Looking for label %@", [a.statArray objectAtIndex:indexPath.row -2]);
             str = [NSString stringWithFormat: @"%@ (%@)", [a.plistData objectForKey: [a.statArray objectAtIndex:indexPath.row -2]], n];
         }
     }
     NSString *cellid = @"Cell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellid];
     if (cell == nil) {
-        cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:cellid] autorelease];
+        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellid] autorelease];
     }
     cell.textLabel.text = str;
-    cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
+    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     return cell;
 }
 

@@ -56,8 +56,8 @@
 {
     self.popoverController = pc;
     CGSize mysize;
-    mysize.width = 320;
-    mysize.height = 450;
+    mysize.width = 320; // 400
+    mysize.height = 450; // 560
     [pc setPopoverContentSize: mysize];
 }
 
@@ -82,6 +82,7 @@
     [map release];
     map = nil;
 	[super viewDidUnload];
+    [prefs release];
 
 	// Release any retained subviews of the main view.
 	// e.g. self.myOutlet = nil;
@@ -107,29 +108,41 @@
 }
 
 - (IBAction)showSettings:(id)sender {
+    if (prefs == nil) {
+        prefs = [[[PrefsViewController alloc] initWithNibName:@"PrefsViewController" bundle:nil] retain];
+    }
     [self.popoverController dismissPopoverAnimated:YES];
-    PrefsViewController *myPrefs =[[PrefsViewController alloc] initWithNibName:@"PrefsViewController" bundle:nil];
-    self.popoverController.contentViewController = myPrefs;
-    [myPrefs release];
+    self.popoverController.contentViewController = prefs;
     [self.popoverController presentPopoverFromBarButtonItem:sender
                                    permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
 }
 
 - (IBAction)showLog:(id)sender {
+    if ([[SharedData instance] logViewController] == nil) {
+        [[LogViewController alloc] initWithNibName:@"LogView" bundle:nil];
+    }
     [self.popoverController dismissPopoverAnimated:YES];
-    LogViewController *myPrefs =[[LogViewController alloc] initWithNibName:@"LogView" bundle:nil];
-    self.popoverController.contentViewController = myPrefs;
-    [myPrefs release];
+    self.popoverController.contentViewController = [[SharedData instance] logViewController];
     [self.popoverController presentPopoverFromBarButtonItem:sender
                                    permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
 }
 
+- (void)messageComposeViewController:(MFMessageComposeViewController *)controller didFinishWithResult:(MessageComposeResult)result {
+    [self.popoverController dismissPopoverAnimated:YES];
+}
+
+        
 - (IBAction)sendMessage:(id)sender {
     if ([MFMessageComposeViewController canSendText]) {
-        MFMessageComposeViewController *texter = [[MFMessageComposeViewController alloc]init];
-        [texter setRecipients: [NSArray arrayWithObject:[[SharedData instance] phoneNumber]]];
+        if (texter == nil) {
+            texter = [[MFMessageComposeViewController alloc]init];
+        }
+        NSString *pnum = [[SharedData instance] phoneNumber];
+        if (pnum) {
+            [texter setRecipients: [NSArray arrayWithObject: pnum]];
+            [texter setMessageComposeDelegate: self];
+        }
         self.popoverController.contentViewController = texter;
-        [texter release];
         [self.popoverController presentPopoverFromBarButtonItem:sender
                                        permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
     } else {

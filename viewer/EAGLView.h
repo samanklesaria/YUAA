@@ -13,7 +13,6 @@
     id <ESRenderer> renderer;
     id displayLink;
 	int touchesCount;
-	BOOL isPinching;
     UITouch *touch1;
 	UITouch *touch2;
 

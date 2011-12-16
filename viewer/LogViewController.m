@@ -15,7 +15,7 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        // Custom initialization
+        [SharedData instance].logViewController = self;
     }
     return self;
 }
@@ -72,19 +72,18 @@
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
-        cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:CellIdentifier] autorelease];
+        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
         [cell.textLabel setFont: [UIFont fontWithName: @"Arial" size:14]];
+        [cell.textLabel setTextColor: [UIColor greenColor]];
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
     }
     
     cell.textLabel.text = [a.logData objectAtIndex:indexPath.row];
     return cell;
 }
 
-+ (void)logString:(NSString*)str
-{
-    SharedData *a = [SharedData instance];
-    [a.logData addObject:str];
-    // do we need to reloadData on the table?
+-(void)reloadLog {
+    [logTable reloadData];
 }
 
 @end

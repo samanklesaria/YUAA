@@ -23,12 +23,13 @@
 {
     // Override point for customization after application launch.
     // Add the split view controller's view to the window and display.
+    initCrc8();
     self.window.rootViewController = self.splitViewController;
     SharedData *s = [SharedData instance];
-    s.lshift = -2.5f;
-    s.vshift = -8.0f;
+    s.lshift = -3.2f;
+    s.ushift = -5.0f;
+    s.vshift = -14.5f;
     [self.window makeKeyAndVisible];
-    initCrc8();
     return YES;
 }
 

@@ -1,52 +1,21 @@
-#include <string.h>
-#include <Time.h>
+#include <pt.h>
 #include <Wire.h>
+#include <string.h>
 #include <ctype.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
-#include <pt.h>
-#include "../parser/Parser.c"
-
-void str_cache() {
-    int i;
-    for (i=0; i < 23; i++) {
-        int j;
-        for (j=0; j < 23; j++) {
-            if (craft_info[i][j]) {
-                data *d = craft_info[i][j];
-                char *tag = (char *)malloc(sizeof(char) * 3);
-                tag[0] = to_char(i+1);
-                tag[1] = to_char(j+1);
-                tag[2] = '\0';
-                char checksum = crc8(tag,0,2);
-                checksum = crc8(d->content, checksum, d->length);
-                Serial1.print(tag);
-                Serial1.write((uint8_t*)(d->content), d->length);
-                Serial1.print(':');
-                char *message = (char *)malloc(sizeof(char) * 3);
-                sprintf(message, "%.2x", (unsigned char)checksum);
-                Serial1.print(message);
-                free(message);
-                free(d);
-                free(tag);
-            }
-        }
-    }
-}
+#include "Parser.h"
 
 #define BUFFSIZE 100
 char at_buffer[BUFFSIZE];
 
-static bool erring = 0;
-
 #define CMDLEN 30
 char cmd[CMDLEN];
 
-char req[] = "GET cell/get?key=f146d401108de36297356ce9d026c8c6&mnc=00&mcc=000&lac=000&cellid=000\r\nHost: www.opencellid.org\r\n\r\n";
-
-#define SERVERLOC "myserver.kolmaz.cz"
-#define APN "myapn"
+#define SERVERLOC "yuaa.kolmas.cz"
+#define APN "wap.voicestream.com"
+#define PREFIX "GET yuaa.kolmas.cz/store.php?data="
 
 #define KILLSIGNAL "KILL"
 #define LOCSIGNAL "LOC"
@@ -58,11 +27,7 @@ char req[] = "GET cell/get?key=f146d401108de36297356ce9d026c8c6&mnc=00&mcc=000&l
 #define MCCTAG to_int('M'), to_int('C')
 #define MNCTAG to_int('M'), to_int('N')
 #define CIDTAG to_int('C'), to_int('I')
-
-#define DOWNTIME 60000
-time_t lastCheck = 0;
-
-#define DELAYTIME 60000
+#define KILLTAG to_int('K'), to_int('L')
 
 char incoming_char=0; 
 
@@ -80,6 +45,14 @@ int serialAvailable() {
 
 char serialRead() {
     Serial.read();
+}
+
+void wireSend(uint8_t *c, int i) {
+    Wire.send(c, i);
+}
+
+void serialSend(uint8_t *c, int i) {
+    Serial1.write(c, i);
 }
 
 void read_from(int (*avail)(), char (*reader)()) {
@@ -129,6 +102,46 @@ void passthrough() {
     }
 }
 
+void printTag(int i, int j, void sender(uint8_t *c, int)) {
+    if ((get_info(i,j))->exists) {
+        data *d = get_info(i,j);
+        char *tag = (char *)malloc(sizeof(char) * 3);
+        tag[0] = to_char(i+1);
+        tag[1] = to_char(j+1);
+        tag[2] = '\0';
+        char checksum = crc8(tag,0,2);
+        checksum = crc8(d->content, checksum, d->length);
+        sender((uint8_t *)tag,2);
+        sender((uint8_t*)(d->content), d->length);
+        sender((uint8_t *)":",1);
+        char *message = (char *)malloc(sizeof(char) * 2);
+        sprintf(message, "%.2x", (unsigned char)checksum);
+        sender((uint8_t *)message,2);
+        free(message);
+        free(d);
+        free(tag);
+    }
+}
+
+void str_cache() {
+    int i;
+    for (i=0; i < 23; i++) {
+        int j;
+        for (j=0; j < 23; j++) {
+            printTag(i,j, serialSend);
+        }
+    }
+}
+
+bool isErring() {
+    get_info(to_int('K') -1, to_int('L') -1)->exists;
+}
+
+void setErring() {
+    update_tag(KILLTAG, "", 0);
+}
+
+// this should be so for all the numbers we use. Don't just use my phone.
 void startCall() {
     Serial1.print("AT+CMGS=\"16517477993\"");
     Serial1.print('\r');
@@ -146,15 +159,6 @@ void makeCall () {
     startCall();
     str_cache();
     endCall();
-}
-
-void store_lat_lon() {
-    char *lat = strstr("lat=\"",at_buffer) + 5;
-    int lat_len = strchr(lat,'"') - 1 - lat;
-    char *lon = strstr("lon=\"",lat) + 5;
-    int lon_len = strchr(lon,'"') - 1 - lon;
-    update_tag(LATTAG, lat, lat_len);
-    update_tag(LONTAG, lon, lon_len);
 }
 
 void store_mcc_mnc() {
@@ -178,7 +182,7 @@ void store_lac_cid() {
     char *cid;
     char *end_cid;
     
-    Serial1.println("AT+CREG=2");
+    Serial1.println("AT+CREG=2"); // actually, he returns the values too. can wait for +CREG:
     wait_for("OK");
     Serial1.println("AT+CREG?");
     read_from(cellAvailable, cellRead);
@@ -196,13 +200,14 @@ void startServer(char *host, int con) {
     sprintf(cmd,"AT+CGDCONT=1,\"IP\",\"%s\"", APN);
     Serial1.println(cmd);
     wait_for("OK");
-    sprintf(cmd,"AT+CGACT=%1d,1", &con);
+    sprintf(cmd,"AT+CGACT=1,%1d", &con);
     Serial1.println(cmd);
     wait_for("OK");
     sprintf(cmd,"AT+SDATACONF=1,\"TCP\",\"%s\",80", host);
     Serial1.println(cmd);
     wait_for("OK");
     Serial1.println("AT+SDATASTART=1,1");
+    wait_for("OK");
     Serial1.print("AT+SSTRSEND=1,\"");
 }
 
@@ -212,33 +217,35 @@ void endServer() {
 }
 
 void endConnection(int con) {
-    wait_for("+STCP");
     sprintf(cmd,"AT+SDATASTART=$1d,0", &con);
     Serial1.println(cmd);
+}
+
+void post_to_server() {
+    Serial1.print(PREFIX);
+    str_cache();
+    Serial1.print("\r\n\r\n"); // really?
 }
 
 void update_loc() {
     store_mcc_mnc();
     store_lac_cid();
-    /*
-    startServer(SERVERLOC, 2);
-    Serial1.print(req);
+    if (isErring())
+        makeCall();
+    startServer(SERVERLOC, 1);
+    post_to_server();
     endServer();
-    wait_for("+STCPD:1");
-    Serial1.println("AT+SDATAREAD=1");
-    read_from(cellAvailable, cellRead);
-    store_lat_lon();
-    endConnection(2);
-    */
+    wait_for("+STCPD");
+    endConnection(1);
 }
 
 void handle_text() {
 	Serial.println("Handling texts");
     wait_for("+CMT");
     read_from(cellAvailable, cellRead);
-    if (strstr(at_buffer, KILLSIGNAL)) if (!erring) {erring = 1; err_mode(); }
-    if (strstr(at_buffer, LOCSIGNAL)) { update_loc(); delay(1000); makeCall(); }
-    if (strstr(at_buffer, INFOSIGNAL)) { delay(1000); makeCall(); }
+    if (strstr(at_buffer, KILLSIGNAL)) if (isErring()) {setErring(); return; }
+    if (strstr(at_buffer, LOCSIGNAL)) { update_loc(); delay(1000); makeCall(); return; }
+    if (strstr(at_buffer, INFOSIGNAL)) { delay(1000); makeCall(); return; }
 }
 
 void do_texts() {
@@ -248,7 +255,7 @@ void do_texts() {
     wait_for("OK");
 }
 
-static struct pt waitThread, textThread;
+static struct pt updater, texter;
 
 static int text(struct pt *pt) {
   PT_BEGIN(pt);
@@ -256,47 +263,54 @@ static int text(struct pt *pt) {
   PT_END(pt);
 }
 
-void blitzCalls() {
+static int update(struct pt *pt) {
+    PT_BEGIN(pt);
     static unsigned long timestamp = 0;
     while(1) {
-        PT_WAIT_UNTIL(pt, millis() - timestamp > 60000); // will this work here?
+        update_loc;
+        PT_WAIT_UNTIL(pt, millis() - timestamp > 1000);
         timestamp = millis();
-        update_loc();
-        delay(1000); // is there a thread version?
-        makeCall();
-    }  
-}
-
-static int wait(struct pt *pt) {
-    PT_BEGIN(pt);
-    while(1) {
-        // i2c stuff here. find out what.
     }
     PT_END(pt);
 }
 
-static int text(struct pt *pt) {
-    PT_BEGIN(pt);
-    while(1) do_texts();
-    PT_END(pt);
+// sending num bytes first shouldn't be necessary, but ah well
+void wireCache() {
+    int16_t address = 0;
+    data *lac = get_info(to_int('L') -1,to_int('C')-1);
+    data *cid = get_info(to_int('M') -1,to_int('C')-1);
+    data *kill = get_info(to_int('K') -1,to_int('L')-1);
+    
+    if (lac->exists)
+        address += (lac->length + 5);
+    if (cid->exists)
+        address += (cid->length + 5);
+    if (kill->exists)
+        address += 5;
+    Wire.send((char)(address>>8));
+    Wire.send((char)(address));     
+    printTag(to_int('L') -1, to_int('C')-1, wireSend);
+    printTag(to_int('M') -1, to_int('C')-1, wireSend);
+    printTag(to_int('K') -1, to_int('L')-1, wireSend);
 }
 
-void err_mode() {
-    erring = 1;
-    Wire.beginTransmission();
-    Wire.send(KILLSIGNAL);
-    Wire.endTransmission();
-    blitzCalls();
+void receiveEvent(int howMany)
+{
+  Serial.println("I got something");
+  while(0 < Wire.available()) // loop through all but the last
+  {
+    char c = Wire.receive(); // receive byte as a character
+    handle_char(c);
+  }
 }
 
 void setup() {
-    PT_INIT(&waitThread);
-    PT_INIT(&textThread);
+    PT_INIT(&updater);
+    PT_INIT(&texter);
     
     Serial.begin(9600);
     initCrc8();
     Serial1.begin(9600);
-    Wire.begin();
     wait_for("+SIND: 4");
     Serial.println("Connected fine");
     Serial1.println("AT+CMGF=1");
@@ -305,25 +319,20 @@ void setup() {
     wait_for("OK");
     
     // this should work, but sometimes doesn't
-    /*
-    Serial1.println("AT+SBAND=7");
-    wait_for("OK");
-    */
+    // doesn't seem to matter
     
-    // experimental stuff
-    /*
-    cell.println("AT+COPS=0,2");
-    wait_for("OK");
-    cell.println("AT+CREG=2");
-    wait_for("OK");
-    */
+    // Serial1.println("AT+SBAND=7");
+    // wait_for("OK");
     
-    Serial.println("Everything set up");
     Serial1.println("AT+CNMI=3,3,0,0");
     wait_for("OK");
+    Serial.println("Everything set up");
+    Wire.begin(42);
+    Wire.onReceive(receiveEvent);
+    Wire.onRequest(wireCache);
 }
 
 void loop() {
-    wait(&waitThread);
-    text(&textThread);
+    update(&updater);
+    text(&texter);
 }

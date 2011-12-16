@@ -20,16 +20,18 @@
 {
     // Override point for customization after application launch.
     // Add the tab bar controller's current view as a subview of the window
+    initCrc8();
     self.window.rootViewController = self.tabBarController;
     SharedData *s = [SharedData instance];
     s.lshift = 0.0f;
-    s.vshift = -4.0f;
+    s.ushift = -2.0f;
+    // s.vshift = -4.0f;
+    s.vshift = -8.0f;
     StatView *statController = [[StatView alloc] initWithNibName:@"StatView" bundle:nil];
     [[self statusNavController] pushViewController:statController animated:NO];
     FlightViewController *mapController = [[FlightViewController alloc] initWithNibName:@"FlightViewController" bundle:nil];
     [[self mapNavController] pushViewController:mapController animated:NO];
     [self.window makeKeyAndVisible];
-    initCrc8();
     return YES;
     
     // use detachNewThreadSelector:toTarget:withObject:

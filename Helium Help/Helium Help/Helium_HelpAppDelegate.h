@@ -22,7 +22,7 @@
     UILabel *_pessureOutput;
     UILabel *_finalPressureOutput;
 }
-- (IBAction)pressureChanged:(UISlider *)sender;
+- (IBAction)temperatureChanged:(UISlider *)sender;
 
 - (IBAction)heightChanged:(UISlider *)sender;
 
@@ -32,7 +32,7 @@
 
 @property (nonatomic, retain) IBOutlet UITextField *heightField;
 
-@property (nonatomic, retain) IBOutlet UITextField *pressureField;
+@property (nonatomic, retain) IBOutlet UITextField *temperatureField;
 
 @property (nonatomic, retain) IBOutlet UISlider *volumeSlider;
 

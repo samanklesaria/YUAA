@@ -62,13 +62,13 @@
 - (void)stream:(NSInputStream *)stream handleEvent:(NSStreamEvent)eventCode {
     switch(eventCode) {
         case NSStreamEventHasBytesAvailable: {
+            NSLog(@"Got bytes!");
+            erred = 0;
             while ([stream hasBytesAvailable]) {
                 uint8_t readloc;
                 [stream read:&readloc maxLength:1];
-                NSLog(@"Got char %c", (char)readloc);
                 char *newtag = handle_char((char)readloc);
                 if (newtag) {
-                    NSLog(@"My tag is %.2s", newtag);
                     [self updateData: newtag];
                 }
             }
@@ -76,7 +76,7 @@
         }
         case NSStreamEventEndEncountered:
         {
-            [LogViewController logString: @"Encountered end of input stream."];
+            [SharedData logString: @"Encountered end of input stream."];
             [stream close];
             [stream removeFromRunLoop:[NSRunLoop currentRunLoop]
                               forMode:NSDefaultRunLoopMode];
@@ -86,8 +86,11 @@
         }
         case NSStreamEventErrorOccurred:
         {
-            NSLog(@"Got an error");
-            [LogViewController logString: @"Streaming Error. Trying again."];
+            NSLog(@"Error: %@", [[stream streamError] localizedDescription]);
+            if (!erred) {
+                [SharedData logString: @"Streaming Error. Trying again."];
+                erred = 1;
+            }
             [NSThread sleepForTimeInterval: 10];
             [stream close];
             [stream removeFromRunLoop:[NSRunLoop currentRunLoop]
@@ -112,23 +115,19 @@
         else
             [s.bayCloseData addObject: [NSNumber numberWithInt:bayCounter]];
     } else {
-        NSLog(@"Not a bay update");
         data *d = craft_info[to_int(tag[0])-1][to_int(tag[1])-1];
         NSString *strTag = [[NSString alloc] initWithBytes:tag length: 2 encoding:NSASCIIStringEncoding];
-        NSLog(@"Strtag is %@", strTag);
         if ([strTag isEqualToString: @"DI"]) {
             NSData *data = [NSData dataWithBytes: d->content length: (NSUInteger)(d->length)];
             [s.images addObject: data];
             return;
         }
         NSString *strVal = [[NSString alloc] initWithBytes: d->content length: (NSUInteger)(d->length) encoding:NSASCIIStringEncoding];
-        NSLog(@"StrVal is %@", strVal);
         double doubleVal = [strVal doubleValue];
         if (doubleVal != 0) {
-            NSLog(@"StrTag: %@, strVal: %@", strTag, strVal);
-            [LogViewController logString: [NSString stringWithFormat:@"Updating tag %@ with value %@", strTag, strVal]];
+            [SharedData logString: [NSString stringWithFormat:@"Updating tag %@ with value %@", strTag, strVal]];
             if ([strTag isEqualToString: @"DL"])
-                [LogViewController logString: [NSString stringWithFormat:@"Balloon log: %@", strVal]];
+                [SharedData logString: [NSString stringWithFormat:@"Balloon log: %@", strVal]];
             else if ([strTag isEqualToString: @"YA"])
                 s.rotationZ = doubleVal;
             else if ([strTag isEqualToString: @"PI"])
@@ -136,7 +135,6 @@
             else if ([strTag isEqualToString: @"RO"])
                 s.rotationX = doubleVal;
             else if (!([strTag isEqualToString: @"LA"] || [strTag isEqualToString: @"LN"])) {
-                NSLog(@"Major updating action");
                 StatPoint *stat = [s.balloonStats objectForKey: strTag];
                 if (![s.balloonStats objectForKey: strTag]) {
                     [s.statArray addObject: strTag];

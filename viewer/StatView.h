@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "SharedData.h"
 #import "StatTableDelegate.h"
+#import "ControllerShower.h"
 
 @interface StatView : UIViewController <ControllerShower, UITableViewDataSource> {
     UITableView *statList;

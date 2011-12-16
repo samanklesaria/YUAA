@@ -14,20 +14,16 @@
 @interface PrefsViewController : UIViewController <UITextFieldDelegate> {
     UITextField *serverField;
     UITextField *portField;
-    UITextField *remoteServer;
-    UITextField *remotePort;
-    IBOutlet UIScrollView *scrollView;
     UITextField *phoneNumber;
+    IBOutlet UISegmentedControl *autoUpdateControl;
     Connector *con;
 }
 
 @property (nonatomic, retain) IBOutlet UITextField *phoneNumber;
 @property (nonatomic, retain) IBOutlet UITextField *serverField;
 @property (nonatomic, retain) IBOutlet UITextField *portField;
-@property (nonatomic, retain) IBOutlet UITextField *remoteServer;
-@property (nonatomic, retain) IBOutlet UITextField *remotePort;
 
-- (IBAction)adjustChanged:(id)sender;
-- (IBAction)mapChanged:(id)sender;
+- (IBAction)mapChanged:(UISegmentedControl *)sender;
+- (IBAction)updateChanged:(UISegmentedControl *)sender;
 - (void) updateConnector;
 @end

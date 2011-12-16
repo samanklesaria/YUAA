@@ -11,12 +11,15 @@
 #import <MessageUI/MFMessageComposeViewController.h>
 #import "BalloonMapLogic.h"
 #import "Connector.h"
+#import "PrefsViewController.h"
 
-@interface DetailViewController : UIViewController <UIPopoverControllerDelegate, UISplitViewControllerDelegate, ConnectorDelegate> {
+@interface DetailViewController : UIViewController <UIPopoverControllerDelegate, UISplitViewControllerDelegate, ConnectorDelegate, MFMessageComposeViewControllerDelegate> {
     IBOutlet MKMapView *map;
     BalloonMapLogic *balloonLogic;
     double lat;
     double lon;
+    PrefsViewController *prefs;
+    MFMessageComposeViewController *texter;
 }
 
 - (IBAction)showSettings:(id)sender;

@@ -5,7 +5,8 @@
 #include <math.h>
 #include "Parser.h"
 
-#define CBUFSIZ (160*120*3) // must at least be this
+#define CBUFSIZ 57600
+// (160*120*3) must at least be this
 char contentbuf[CBUFSIZ];
 int contentidx = 0;
 
@@ -46,6 +47,7 @@ void update_tag(int a, int b, char *str, int len) {
     strncpy(c, str, len);
     d->length = len;
     d->content = c;
+    d->exists = 1;
     craft_info[a - 1][b - 1] = d;
 }
 
@@ -120,6 +122,7 @@ char *handle_char(char c) {
                 tagidx++;
                 if (tagidx == 2) {
                     tagidx = 0;
+                    printf("Handling tag %2s\n", tagbuf);
                     if (tagbuf[0] == 'D' && tagbuf[1] == 'I') state = PICTURE;
                     else state = CONTENT;
                 }
@@ -147,8 +150,7 @@ char *handle_char(char c) {
                 if (sscanf(numbuf, "%2x", (unsigned int *)&check) == 1) {
                     char checksum = crc8(tagbuf,0,2);
                     checksum = crc8(contentbuf, checksum, contentidx);
-                    printf("Checksum: %x\n", (unsigned char)checksum);
-                    printf("Check: %x\n", (unsigned char)check);
+                    printf("Checksum: %x, check: %x\n", (unsigned int)checksum, (unsigned int)check);
                     if (checksum == check) {
                         state = TAG;
                         update_tag(to_int(tagbuf[0]), to_int(tagbuf[1]), contentbuf, contentidx);

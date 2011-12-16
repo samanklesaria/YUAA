@@ -9,14 +9,11 @@
 #import <Foundation/Foundation.h>
 #import <MapKit/MapKit.h>
 #import "DataPoint.h"
-#import <CoreLocation/CoreLocation.h>
 
-@interface BalloonMapLogic : NSObject <MKMapViewDelegate, CLLocationManagerDelegate> {
+@interface BalloonMapLogic : NSObject <MKMapViewDelegate> {
     DataPoint *selectedPoint;
     DataPoint *currentPoint;
     CLLocationManager *locmanager;
-    CLLocationCoordinate2D carloc;
-    MKMapView *map;
 }
 
 - (id) initWithMap: (MKMapView *)map;
@@ -27,3 +24,5 @@
 - (void) updateView: (CLLocationCoordinate2D)location;
 
 @end
+
+double myabs(double a);

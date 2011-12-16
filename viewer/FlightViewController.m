@@ -165,10 +165,20 @@
     }
 }
 
+- (void)messageComposeViewController:(MFMessageComposeViewController *)controller didFinishWithResult:(MessageComposeResult)result {
+    [self dismissModalViewControllerAnimated: YES];
+}
+
 - (IBAction)killBalloon:(id)sender {
     if ([MFMessageComposeViewController canSendText]) {
-        MFMessageComposeViewController *texter = [[MFMessageComposeViewController alloc]init];
-        [texter setRecipients: [NSArray arrayWithObject:[[SharedData instance] phoneNumber]]];
+        if (texter == nil) {
+            texter = [[MFMessageComposeViewController alloc] init];
+            [texter setMessageComposeDelegate: self];
+        }
+        NSString *pnum = [[SharedData instance] phoneNumber];
+        if (pnum) {
+            [texter setRecipients: [NSArray arrayWithObject: pnum]];
+        }
         [self presentModalViewController: texter animated: YES];
     } else {
         UIAlertView *err = [[UIAlertView alloc] initWithTitle: @"Not Supported" message: @"Texting is not supported on this device. Your balloon is as good as lost." delegate: nil cancelButtonTitle: @"Fuck" otherButtonTitles: nil];

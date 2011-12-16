@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "Grapher.h"
 #import "StatTableDelegate.h"
+#import "ControllerShower.h"
 
 @class DetailViewController;
 

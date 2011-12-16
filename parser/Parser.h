@@ -1,13 +1,10 @@
 typedef struct data {
+    int exists;
     int length;
     char *content;
 } data;
 
 data *craft_info[24][24];
-
-#define TAGLISTSIZE 100
-char updated_tags[TAGLISTSIZE];
-int tag_index;
 
 int to_int(char c);
 

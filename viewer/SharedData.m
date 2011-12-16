@@ -11,14 +11,12 @@
 #import "StatPoint.h"
 
 @implementation SharedData
+@synthesize map;
 @synthesize rotationX;
 @synthesize rotationY;
 @synthesize rotationZ;
-@synthesize mapType;
 @synthesize server;
 @synthesize port;
-@synthesize remoteServer;
-@synthesize remotePort;
 @synthesize autoAdjust;
 @synthesize logData;
 @synthesize images;
@@ -33,14 +31,15 @@
 @synthesize table;
 @synthesize lshift;
 @synthesize vshift;
+@synthesize logViewController;
+@synthesize ushift;
 
 - (id)init
 {
     self = [super init];
     if (self) {
         logData = [[NSMutableArray alloc] initWithObjects:@"Starting app...", nil];
-        autoAdjust = YES;
-        mapType = MKMapTypeStandard;
+        autoAdjust = AUTO;
         grapher = [[Grapher alloc] initWithNibName:@"Grapher" bundle:nil];
         bayOpenData = [[NSMutableArray alloc] initWithCapacity:5];
         bayCloseData = [[NSMutableArray alloc] initWithCapacity:5];
@@ -57,7 +56,35 @@
     return self;
 }
 
+/*
+- (void)dealloc {
+    self.map = nil;
+    self.logViewController = nil;
+    self.table = nil;
+    self.connectorDelegate = nil;
+    self.grapher = nil;
+    self.plistData = nil;
+    self.phoneNumber = nil;
+    self.server = nil;
+    self.bayOpenData = nil;
+    self.bayCloseData = nil;
+    self.images = nil;
+    self.statArray = nil;
+    self.balloonStats = nil;
+    self.logData =  nil;
+}
+*/
+
 static SharedData *gInstance = NULL;
+
+
++ (void)logString:(NSString*)str
+{
+    SharedData *a = [SharedData instance];
+    [a.logData addObject: str]; // space leak? oh well.
+    [a.logViewController reloadLog];
+    // do we need to reloadData on the table?
+}
 
 + (SharedData *)instance
 {
