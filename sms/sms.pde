@@ -164,7 +164,7 @@ void str_cache() {
     }
 }
 
-bool isErring() {
+int isErring() {
     get_info(to_int('K') -1, to_int('L') -1)->exists;
 }
 
@@ -173,9 +173,10 @@ void setErring() {
 }
 
 // this should be so for all the numbers we use. Don't just use my phone.
-void startCall() {
-    Serial1.print("AT+CMGS=\"16517477993\"");
-    Serial1.print('\r');
+void startCall(char *phn) {
+    Serial1.print("AT+CMGS=\"");
+    Serial1.write((uint8_t*)phn, 10);
+    Serial1.print("\"\r");
     Serial.println("Sent the r");
     wait_for_byte('>');
 }
@@ -187,15 +188,21 @@ void endCall() {
 }
 
 void makeCall () {
-    startCall();
+  int i;
+  for (i = 0; i < numsidx; i += 10) {
+    startCall(numbers + i);
     str_cache();
     endCall();
+  }
 }
 
 void killCall() {
-  startCall();
-  Serial1.print("Getting killed");
-  endCall();
+  int i;
+  for (i = 0; i < numsidx; i += 10) {
+    startCall(numbers + i);
+    Serial1.print("Getting killed");
+    endCall();
+  }
 }
 
 void store_mcc_mnc() {
