@@ -17,6 +17,7 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         handleSwipe = NO;
+        imageIndex = 0;
     }
     return self;
 }
@@ -34,11 +35,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    NSArray *images = [[SharedData instance] images];
-    if ([images count] > 0) {
-        image.image = [images objectAtIndex: 0];
-        imageIndex = 0;
-    }
     UIPanGestureRecognizer *gesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleGesture:)];
     [gesture setMinimumNumberOfTouches:1];
 	[gesture setMaximumNumberOfTouches:1];
@@ -60,6 +56,12 @@
         }
         handleSwipe = NO;
     }
+}
+
+- (void) updatePics {
+    NSArray *images = [[SharedData instance] images];
+    if ([images count] > imageIndex)
+        image.image = [images objectAtIndex: imageIndex];
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {

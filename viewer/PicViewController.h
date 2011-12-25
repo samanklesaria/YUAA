@@ -14,6 +14,8 @@
     int imageIndex;
 }
 
+- (void) updatePics;
+
 @property (nonatomic, retain) IBOutlet UIImageView *image;
 
 @end

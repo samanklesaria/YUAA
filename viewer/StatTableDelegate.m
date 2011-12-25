@@ -63,6 +63,7 @@
         [shower showController: orientation withFrame:cell.frame view:cell.superview title: theText];
     } else {
         if (indexPath.row == 1) {
+            [pictures updatePics];
             [shower showController: pictures withFrame:cell.frame view:cell.superview title: theText];
         } else {
             SharedData *a = [SharedData instance];

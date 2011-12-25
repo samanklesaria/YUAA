@@ -39,6 +39,7 @@
 		228E85B2147AF221009B03ED /* PicViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 228E85B0147AF220009B03ED /* PicViewController.xib */; };
 		229C9D5E1470969A00F22300 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 229C9D5D1470969A00F22300 /* MessageUI.framework */; };
 		229C9D6E14722A1000F22300 /* RotTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 229C9D6D14722A1000F22300 /* RotTabBarController.m */; };
+		229D250914A7DEDF00E3F017 /* notification.png in Resources */ = {isa = PBXBuildFile; fileRef = 229D250814A7DEDF00E3F017 /* notification.png */; };
 		22B0753D1479C328003FEC53 /* StatTableDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 22B0753C1479C328003FEC53 /* StatTableDelegate.m */; };
 		22B075421479EB2D003FEC53 /* EAGLView.m in Sources */ = {isa = PBXBuildFile; fileRef = 22B075411479EB2C003FEC53 /* EAGLView.m */; };
 		22B075451479ED3F003FEC53 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 22B075441479ED3F003FEC53 /* OpenGLES.framework */; };
@@ -112,6 +113,7 @@
 		229C9D5D1470969A00F22300 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		229C9D6C14722A1000F22300 /* RotTabBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RotTabBarController.h; path = viewer/RotTabBarController.h; sourceTree = "<group>"; };
 		229C9D6D14722A1000F22300 /* RotTabBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RotTabBarController.m; path = viewer/RotTabBarController.m; sourceTree = "<group>"; };
+		229D250814A7DEDF00E3F017 /* notification.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = notification.png; sourceTree = "<group>"; };
 		22B0753B1479C328003FEC53 /* StatTableDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StatTableDelegate.h; sourceTree = "<group>"; };
 		22B0753C1479C328003FEC53 /* StatTableDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StatTableDelegate.m; sourceTree = "<group>"; };
 		22B075401479EB2C003FEC53 /* EAGLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EAGLView.h; sourceTree = "<group>"; };
@@ -372,6 +374,7 @@
 		226C195314679E1B00A7F87A /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				229D250814A7DEDF00E3F017 /* notification.png */,
 				22DCA73114A0FED00091A10E /* IPAddress.c */,
 				22DCA73214A0FED00091A10E /* IPAddress.h */,
 				22B9B96314869A7A009B2829 /* ipad-hh.png */,
@@ -761,6 +764,7 @@
 				22B9B96014869A11009B2829 /* hh-icon.png in Resources */,
 				22B9B96214869A1F009B2829 /* big-hh.png in Resources */,
 				22B9B96414869A7A009B2829 /* ipad-hh.png in Resources */,
+				229D250914A7DEDF00E3F017 /* notification.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
