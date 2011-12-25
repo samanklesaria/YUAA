@@ -33,6 +33,7 @@
 @synthesize vshift;
 @synthesize logViewController;
 @synthesize ushift;
+@synthesize deviceName;
 
 - (id)init
 {

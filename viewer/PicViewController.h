@@ -9,13 +9,11 @@
 #import <UIKit/UIKit.h>
 
 @interface PicViewController : UIViewController {
-    UIPageControl *pageControl;
     UIImageView *image;
-    
+    bool handleSwipe;
+    int imageIndex;
 }
 
-- (IBAction)pageValueChanged:(id)sender;
-@property (nonatomic, retain) IBOutlet UIPageControl *pageControl;
 @property (nonatomic, retain) IBOutlet UIImageView *image;
 
 @end

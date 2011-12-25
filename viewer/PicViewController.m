@@ -10,14 +10,13 @@
 #import "SharedData.h"
 
 @implementation PicViewController
-@synthesize pageControl;
 @synthesize image;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        // Custom initialization
+        handleSwipe = NO;
     }
     return self;
 }
@@ -36,18 +35,39 @@
 {
     [super viewDidLoad];
     NSArray *images = [[SharedData instance] images];
-    pageControl.numberOfPages = [images count];
     if ([images count] > 0) {
-        image.image = [UIImage imageWithData: [images objectAtIndex: 1]];
-        pageControl.currentPage = 0;
+        image.image = [images objectAtIndex: 0];
+        imageIndex = 0;
+    }
+    UIPanGestureRecognizer *gesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleGesture:)];
+    [gesture setMinimumNumberOfTouches:1];
+	[gesture setMaximumNumberOfTouches:1];
+    [image addGestureRecognizer:gesture];
+    [gesture release];
+}
+
+- (void)handleGesture: (UIPanGestureRecognizer *)gestureRecognizer {
+    if (handleSwipe) {
+        NSArray *images = [[SharedData instance] images];
+        if ([images count] > 0) {
+            if ([gestureRecognizer translationInView: image].x > 0) {
+                if ([images count] <= ++imageIndex) imageIndex = 0;
+            }
+            if ([gestureRecognizer translationInView: image].x < 0) {
+                if (--imageIndex < 0) imageIndex = [images count] - 1;
+            }
+            image.image = [images objectAtIndex: imageIndex];
+        }
+        handleSwipe = NO;
     }
 }
 
-//swiping?
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+    handleSwipe = YES;
+}
 
 - (void)viewDidUnload
 {
-    [self setPageControl:nil];
     [self setImage:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
@@ -60,13 +80,7 @@
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
-- (IBAction)pageValueChanged:(id)sender {
-    NSArray *images = [[SharedData instance] images];
-    image.image = [UIImage imageWithData: [images objectAtIndex: pageControl.currentPage]];
-}
-
 - (void)dealloc {
-    [pageControl release];
     [image release];
     [super dealloc];
 }

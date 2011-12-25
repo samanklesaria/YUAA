@@ -38,6 +38,7 @@ enum mapAdjust {
     NSInteger port;
     enum mapAdjust autoAdjust;
     NSString *phoneNumber;
+    NSString *deviceName;
     
     // stats
     float rotationX;
@@ -51,6 +52,7 @@ enum mapAdjust {
 }
 
 
+@property (retain) NSString *deviceName;
 @property (retain) MKMapView *map;
 @property (retain) LogViewController *logViewController;
 @property float lshift;

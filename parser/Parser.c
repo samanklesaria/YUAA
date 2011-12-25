@@ -5,7 +5,8 @@
 #include <math.h>
 #include "Parser.h"
 
-#define CBUFSIZ 57600
+#define CBUFSIZ (160*120*3)
+#define PICBUFSIZ (160*120*3)
 // (160*120*3) must at least be this
 char contentbuf[CBUFSIZ];
 int contentidx = 0;
@@ -15,8 +16,6 @@ int tagidx = 0;
 
 char numbuf[2];
 int numidx = 0;
-
-#define PICBUFSIZ (160*120*3)
 
 enum parserState {
    TAG,
@@ -44,7 +43,7 @@ void update_tag(int a, int b, char *str, int len) {
         free(d->content);
     } else d = (data *)malloc(sizeof(data));
     char *c = (char *)malloc(sizeof(char) * len);
-    strncpy(c, str, len);
+    memcpy(c, str, len);
     d->length = len;
     d->content = c;
     d->exists = 1;
@@ -88,27 +87,28 @@ void initCrc8()
 char crc8(const char* data, char initialChecksum, int length)
 {
     char checksum = initialChecksum;
+    
     int i;
-    for (i=0;i<length; i++)
-    {
-        checksum = crc8Table[checksum ^ *(data + i)];
+    for (i=0;i<length; i++) {
+        unsigned char index = (checksum ^ *(data + i));
+        checksum = *(crc8Table + index);
     }
     return checksum;
 }
 
 
-char* createProtocolMessage(const char* tag, const char* data)
-{
-    int len = (int)strlen(data);
-    
+char* createProtocolMessage(const char* tag, const char* data, int len)
+{   
     //Find checksum
     char checksum = crc8(tag, 0, 2);
     checksum = crc8(data, checksum, len);
     
-    //Length = tag + data + ':' + checksum + '\0'
-    int messageLength = (int)strlen(tag) + len + 4;
+    int messageLength = 2 + len + 3;
     char* message = (char *)malloc(sizeof(char) * messageLength);
-    sprintf(message, "%s%s:%.2x", tag, data, (unsigned char)checksum);
+    memcpy(message, tag, 2);
+    memcpy(message + 2, data, len);
+    sprintf(message + 2 + len, ":%.2x", (unsigned char)checksum);
+    
     return message;
 }
 
@@ -147,6 +147,7 @@ char *handle_char(char c) {
                 numidx++;
             } else {
                 char check;
+                // check is being bad. let's look @ him
                 if (sscanf(numbuf, "%2x", (unsigned int *)&check) == 1) {
                     char checksum = crc8(tagbuf,0,2);
                     checksum = crc8(contentbuf, checksum, contentidx);
@@ -160,7 +161,7 @@ char *handle_char(char c) {
                     }
                 }
                 if (contentidx + 2 < CBUFSIZ) {
-                    strncpy(contentbuf + contentidx, numbuf, 2);
+                    memcpy(contentbuf + contentidx, numbuf, 2);
                     contentidx += 2;
                 }
                 state = CONTENT;
@@ -169,6 +170,8 @@ char *handle_char(char c) {
         }
         case PICTURE: {
             if (contentidx == PICBUFSIZ) {
+                printf("Done with that!\n");
+                
                 if (c == ':') state = CHECKSUM;
                 else state = TAG;
                 break;

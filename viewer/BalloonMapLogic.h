@@ -21,7 +21,7 @@
 - (CLLocationCoordinate2D)midpointFrom:(CLLocationCoordinate2D)loca to: (CLLocationCoordinate2D)locb;
 - (MKCoordinateSpan)distanceFrom:(CLLocationCoordinate2D)loca to: (CLLocationCoordinate2D)locb;
 - (double)spanSize: (MKCoordinateSpan)rect;
-- (void) updateView: (CLLocationCoordinate2D)location;
+- (void) updateView;
 
 @end
 

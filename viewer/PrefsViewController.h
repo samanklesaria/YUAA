@@ -22,6 +22,7 @@
 @property (nonatomic, retain) IBOutlet UITextField *phoneNumber;
 @property (nonatomic, retain) IBOutlet UITextField *serverField;
 @property (nonatomic, retain) IBOutlet UITextField *portField;
+@property (retain, nonatomic) IBOutlet UITextField *nameField;
 
 - (IBAction)mapChanged:(UISegmentedControl *)sender;
 - (IBAction)updateChanged:(UISegmentedControl *)sender;

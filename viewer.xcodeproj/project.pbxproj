@@ -53,6 +53,7 @@
 		22C5CD1D14749DF00017E928 /* RootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22C5CD1C14749DF00017E928 /* RootViewController.m */; };
 		22C5CD8B1476B5260017E928 /* StatPoint.m in Sources */ = {isa = PBXBuildFile; fileRef = 22C5CD8A1476B5260017E928 /* StatPoint.m */; };
 		22C5CD8F1476BBBD0017E928 /* Connector.m in Sources */ = {isa = PBXBuildFile; fileRef = 22C5CD8E1476BBBD0017E928 /* Connector.m */; };
+		22DCA73314A0FED00091A10E /* IPAddress.c in Sources */ = {isa = PBXBuildFile; fileRef = 22DCA73114A0FED00091A10E /* IPAddress.c */; };
 		22FE1DB4146851EA00403F43 /* DataPoint.m in Sources */ = {isa = PBXBuildFile; fileRef = 22FE1DB3146851EA00403F43 /* DataPoint.m */; };
 		22FE1E071468845200403F43 /* libCorePlot-CocoaTouch.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 22FE1E061468845200403F43 /* libCorePlot-CocoaTouch.a */; };
 		22FE1E141468855B00403F43 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 22FE1E131468855B00403F43 /* QuartzCore.framework */; };
@@ -136,6 +137,8 @@
 		22C5CD8A1476B5260017E928 /* StatPoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StatPoint.m; sourceTree = "<group>"; };
 		22C5CD8D1476BBBD0017E928 /* Connector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Connector.h; sourceTree = "<group>"; };
 		22C5CD8E1476BBBD0017E928 /* Connector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Connector.m; sourceTree = "<group>"; };
+		22DCA73114A0FED00091A10E /* IPAddress.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = IPAddress.c; sourceTree = "<group>"; };
+		22DCA73214A0FED00091A10E /* IPAddress.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IPAddress.h; sourceTree = "<group>"; };
 		22FE1DB2146851EA00403F43 /* DataPoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataPoint.h; sourceTree = "<group>"; };
 		22FE1DB3146851EA00403F43 /* DataPoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataPoint.m; sourceTree = "<group>"; };
 		22FE1DB71468844400403F43 /* _CPTConstraintsFixed.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _CPTConstraintsFixed.h; sourceTree = "<group>"; };
@@ -369,6 +372,8 @@
 		226C195314679E1B00A7F87A /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				22DCA73114A0FED00091A10E /* IPAddress.c */,
+				22DCA73214A0FED00091A10E /* IPAddress.h */,
 				22B9B96314869A7A009B2829 /* ipad-hh.png */,
 				22B9B96114869A1F009B2829 /* big-hh.png */,
 				22B9B95F14869A11009B2829 /* hh-icon.png */,
@@ -788,6 +793,7 @@
 				228E85A4147AAADD009B03ED /* Orientation.m in Sources */,
 				228E85B1147AF221009B03ED /* PicViewController.m in Sources */,
 				22636EC8147DE94E004B3851 /* BalloonMapLogic.m in Sources */,
+				22DCA73314A0FED00091A10E /* IPAddress.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

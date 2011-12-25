@@ -12,6 +12,7 @@
 @synthesize phoneNumber;
 @synthesize serverField;
 @synthesize portField;
+@synthesize nameField;
 
 - (void) updateConnector {
     if ([SharedData instance].server && [[SharedData instance].server length] > 0 && [SharedData instance].port > 0) {
@@ -50,6 +51,11 @@
         phoneNumber.text = phoneNum;
         s.phoneNumber = phoneNum;
     }
+    NSString *devName = [defaults objectForKey: @"deviceName"];
+    if (devName != nil) {
+        nameField.text = devName;
+        s.deviceName = devName;
+    }
     NSInteger adjVal = [defaults integerForKey: @"autoAdjust"];
     [autoUpdateControl setSelectedSegmentIndex: adjVal];
     s.autoAdjust = (enum mapAdjust)adjVal;
@@ -65,6 +71,7 @@
     [self setPhoneNumber:nil];
     [autoUpdateControl release];
     autoUpdateControl = nil;
+    [self setNameField:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -87,6 +94,7 @@
         [[SharedData instance] setServer: textField.text];
         [self updateConnector];
         [defaults setObject: s.server forKey:@"server"];
+        return;
     }
     if (textField == portField) {
         int a = [portField.text intValue];
@@ -95,10 +103,17 @@
             [self updateConnector];
             [defaults setObject: [NSString stringWithFormat: @"%i", s.port] forKey:@"port"];
         }
+        return;
     }
     if (textField == phoneNumber) {
         [[SharedData instance] setPhoneNumber: textField.text];
         [defaults setObject: s.phoneNumber forKey:@"phoneNumber"];
+        return;
+    }
+    if (textField == nameField) {
+        [[SharedData instance] setDeviceName: textField.text];
+        [defaults setObject: s.deviceName forKey:@"deviceName"];
+        return;
     }
 }
 
@@ -141,6 +156,7 @@
     [portField release];
     [phoneNumber release];
     [autoUpdateControl release];
+    [nameField release];
     [super dealloc];
 }
 @end

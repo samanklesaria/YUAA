@@ -26,5 +26,6 @@
 
 - (void)updateData: (char *)tag;
 - (void)handleIO;
+- (NSString *)getTag: (char *)tag;
 
 @end

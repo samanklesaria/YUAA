@@ -21,7 +21,6 @@
         s.map = [newmap retain];
         [s.map setDelegate: self];
         s.map.showsUserLocation = YES;
-        
     }
     return self;
 }
@@ -34,8 +33,7 @@
 }
 
 - (void) mapView: (MKMapView *)map didUpdateUserLocation: (MKUserLocation *)userLocation {
-    if (currentPoint)
-        [self updateView: currentPoint.coordinate];
+    [self updateView];
 }
 
 
@@ -73,10 +71,10 @@ double myabs(double a) {
         [s.map addAnnotation:oldPoint];
     }
     [s.map addAnnotation:p];
-    [self updateView: location];
+    [self updateView];
 }
 
--(void) updateView: (CLLocationCoordinate2D)location  {
+-(void) updateView {
     SharedData *s = [SharedData instance];
     if ([s autoAdjust] == AUTO) {
         CLLocationCoordinate2D carloc = s.map.userLocation.location.coordinate;
@@ -85,13 +83,20 @@ double myabs(double a) {
         spanB.longitudeDelta=0.2;
         MKCoordinateRegion region;
         if (carloc.latitude && carloc.longitude) {
-            CLLocationCoordinate2D center = [self midpointFrom:location to:carloc];
-            MKCoordinateSpan spanA = [self distanceFrom: location to: carloc];
-            region.span = ([self spanSize: spanB] > [self spanSize: spanA]) ? spanB : spanA;
-            region.center=center;
-        } else {
-            region.center = location;
+            if (currentPoint != nil) {
+                CLLocationCoordinate2D center = [self midpointFrom:currentPoint.coordinate to:carloc];
+                MKCoordinateSpan spanA = [self distanceFrom: currentPoint.coordinate to: carloc];
+                region.span = ([self spanSize: spanB] > [self spanSize: spanA]) ? spanB : spanA;
+                region.center=center;
+            } else {
+                region.center = carloc;
+                region.span = spanB;
+            }
+        } else if (currentPoint != nil) {
+            region.center = currentPoint.coordinate;
             region.span = spanB;
+        } else {
+            return;
         }
         [s.map setRegion: [s.map regionThatFits: region] animated:TRUE];
     }

@@ -1,0 +1,1 @@
+char *mainString(void);
