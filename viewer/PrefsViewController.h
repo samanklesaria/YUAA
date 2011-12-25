@@ -26,5 +26,4 @@
 
 - (IBAction)mapChanged:(UISegmentedControl *)sender;
 - (IBAction)updateChanged:(UISegmentedControl *)sender;
-- (void) updateConnector;
 @end

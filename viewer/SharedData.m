@@ -34,6 +34,7 @@
 @synthesize logViewController;
 @synthesize ushift;
 @synthesize deviceName;
+@synthesize con;
 
 - (id)init
 {
@@ -54,7 +55,35 @@
         rotationY = 0;
         rotationZ = 0;
     }
+    
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSString *serverString = [defaults stringForKey: @"server"];
+    if (serverString != nil) {
+        self.server = serverString;
+    }
+    NSString *portString = [defaults objectForKey: @"port"];
+    if (portString != nil) {
+        self.port = [portString integerValue];
+    }
+    NSString *phoneNum = [defaults objectForKey: @"phoneNumber"];
+    if (phoneNum != nil) {
+        self.phoneNumber = phoneNum;
+    }
+    NSString *devName = [defaults objectForKey: @"deviceName"];
+    if (devName != nil) {
+        self.deviceName = devName;
+    }
+    NSInteger adjVal = [defaults integerForKey: @"autoAdjust"];
+    self.autoAdjust = (enum mapAdjust)adjVal;
+    [self updateConnector];
     return self;
+}
+
+- (void) updateConnector {
+    if (self.server && [self.server length] > 0 && self.port > 0) {
+        [self.con release];
+        [self setCon: [[[Connector alloc] init] autorelease]];
+    }
 }
 
 /*

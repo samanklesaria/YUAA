@@ -17,6 +17,7 @@ enum mapAdjust {
 };
 
 @class LogViewController;
+@class Connector;
 
 @interface SharedData : NSObject {
     // arrays
@@ -32,6 +33,7 @@ enum mapAdjust {
     float vshift;
     LogViewController * logViewController;
     MKMapView *map;
+    Connector *con;
     
     // prefs
     NSString *server;
@@ -51,7 +53,7 @@ enum mapAdjust {
     NSMutableArray *statArray;
 }
 
-
+@property (retain) Connector *con;
 @property (retain) NSString *deviceName;
 @property (retain) MKMapView *map;
 @property (retain) LogViewController *logViewController;
@@ -80,5 +82,6 @@ enum mapAdjust {
 
 + (void)logString:(NSString *)logString;
 
+- (void)updateConnector;
 
 @end

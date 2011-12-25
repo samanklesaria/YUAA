@@ -14,13 +14,6 @@
 @synthesize portField;
 @synthesize nameField;
 
-- (void) updateConnector {
-    if ([SharedData instance].server && [[SharedData instance].server length] > 0 && [SharedData instance].port > 0) {
-        [con release];
-        con = [[Connector alloc] init];
-    }
-}
-
 - (void)didReceiveMemoryWarning
 {
     // Releases the view if it doesn't have a superview.
@@ -35,31 +28,11 @@
 {
     [super viewDidLoad];
     SharedData *s = [SharedData instance];
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSString *serverString = [defaults stringForKey: @"server"];
-    if (serverString != nil) {
-        s.server = serverString;
-        serverField.text = s.server;
-    }
-    NSString *portString = [defaults objectForKey: @"port"];
-    if (portString != nil) {
-        portField.text = portString;
-        s.port = [portField.text integerValue];
-    }
-    NSString *phoneNum = [defaults objectForKey: @"phoneNumber"];
-    if (phoneNum != nil) {
-        phoneNumber.text = phoneNum;
-        s.phoneNumber = phoneNum;
-    }
-    NSString *devName = [defaults objectForKey: @"deviceName"];
-    if (devName != nil) {
-        nameField.text = devName;
-        s.deviceName = devName;
-    }
-    NSInteger adjVal = [defaults integerForKey: @"autoAdjust"];
-    [autoUpdateControl setSelectedSegmentIndex: adjVal];
-    s.autoAdjust = (enum mapAdjust)adjVal;
-    [self updateConnector];
+    serverField.text = s.server;
+    portField.text = [NSString stringWithFormat: @"%d", s.port] ;
+    phoneNumber.text = s.phoneNumber;
+    nameField.text = s.deviceName;
+    [autoUpdateControl setSelectedSegmentIndex: s.autoAdjust];
 }
 
 - (void)viewDidUnload
@@ -92,7 +65,7 @@
     SharedData *s = [SharedData instance];
     if (textField == serverField) {
         [[SharedData instance] setServer: textField.text];
-        [self updateConnector];
+        [s updateConnector];
         [defaults setObject: s.server forKey:@"server"];
         return;
     }
@@ -100,7 +73,7 @@
         int a = [portField.text intValue];
         if (a != 0) {
             [[SharedData instance] setPort: a];
-            [self updateConnector];
+            [s updateConnector];
             [defaults setObject: [NSString stringWithFormat: @"%i", s.port] forKey:@"port"];
         }
         return;
