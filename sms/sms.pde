@@ -296,7 +296,7 @@ void wireCache() {
     if (kill->exists)
         address += 5;
     Wire.send((char)(address>>8));
-    Wire.send((char)(address));     
+    Wire.send((char)(address));
     printTag(to_int('L') -1, to_int('C')-1, wireSend);
     printTag(to_int('M') -1, to_int('C')-1, wireSend);
     printTag(to_int('K') -1, to_int('L')-1, wireSend);

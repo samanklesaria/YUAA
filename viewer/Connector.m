@@ -133,7 +133,6 @@
 }
 
 - (void) updateData: (char *)tag {
-    NSLog(@"Updating data");
     SharedData *s = [SharedData instance];
     if (strncmp(tag, "BB", 2) == 0) {
         bayCounter++;

@@ -6,14 +6,14 @@ import Foreign.C.Types
 import Foreign.C.String
 import qualified Data.ByteString as BS
 import System.IO
+import Control.Monad
 
 main = do
     streamServer serverSpec{address = (IP "" 9000)} (\h a-> do
         s <- mainString
-        let len = (160*120*3)
-        bs <- BS.packCStringLen (s,2*(len + 5))
+        l <- liftM fromIntegral getStrSize
+        bs <- BS.packCStringLen (s,l)
         BS.hPut h bs
-        BS.writeFile "/Users/sam/Desktop/bsfile" bs
         hFlush h
         sleepForever)
     sleepForever
@@ -21,3 +21,6 @@ main = do
 
 foreign import ccall "stringmaker.h mainString" 
      mainString :: IO CString
+
+foreign import ccall "stringmaker.h getStrSize" 
+     getStrSize :: IO CInt
