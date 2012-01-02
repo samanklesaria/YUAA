@@ -179,7 +179,7 @@
         double doubleVal = [strVal doubleValue];
         if (doubleVal != 0) {
             [SharedData logString: [NSString stringWithFormat:@"Updating tag %@ with value %@", strTag, strVal]];
-            if ([strTag isEqualToString: @"DL"])
+            if ([strTag isEqualToString: @"MS"])
                 [SharedData logString: [NSString stringWithFormat:@"Balloon log: %@", strVal]];
             else if ([strTag isEqualToString: @"YA"])
                 s.rotationZ = doubleVal;

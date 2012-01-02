@@ -13,6 +13,7 @@ main = do
         s <- mainString
         l <- liftM fromIntegral getStrSize
         bs <- BS.packCStringLen (s,l)
+        BS.writeFile "/Users/sam/Desktop/thestring" bs
         BS.hPut h bs
         hFlush h
         sleepForever)
