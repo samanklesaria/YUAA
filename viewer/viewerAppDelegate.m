@@ -21,6 +21,7 @@
     // Override point for customization after application launch.
     // Add the tab bar controller's current view as a subview of the window
     initCrc8();
+    initContentBuf();
     self.window.rootViewController = self.tabBarController;
     SharedData *s = [SharedData instance];
     s.lshift = 0.0f;

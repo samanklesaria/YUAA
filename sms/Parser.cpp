@@ -4,22 +4,17 @@
 #include <stdlib.h>
 #include <math.h>
 #include "Parser.h"
-// (160*120*3) must at least be this
-#define CBUFSIZ 57600
 
+#define CBUFSIZ (160*120*3)
+#define PICBUFSIZ (160*120*3)
+// (160*120*3) must at least be this
 char *contentbuf;
 int contentidx;
-
-long int info_counter = 0;
 
 data *craft_info[24][24];
 
 data *get_info(char a, char b) {
-  return craft_info[a][b];
-}
-
-long int info_size() {
-    return info_counter;
+    return craft_info[a][b];
 }
 
 void initContentBuf() {
@@ -30,17 +25,19 @@ void initContentBuf() {
 char tagbuf[2];
 int tagidx = 0;
 
-char numbuf[2];
+char numbuf[4];
 int numidx = 0;
-
-#define PICBUFSIZ (160*120*3)
+int lastlength;
 
 enum parserState {
    TAG,
    CONTENT,
    CHECKSUM,
-   PICTURE
+   MESSAGE,
+   SPECIAL
 };
+
+int specialCount;
 
 static enum parserState state = TAG;
 
@@ -58,19 +55,17 @@ void update_tag(int a, int b, char *str, int len) {
     data *d;
     if (craft_info[a - 1][b - 1]) {
         d = (craft_info[a - 1][b - 1]);
-        info_counter -= d->length + 5;
         free(d->content);
     } else d = (data *)malloc(sizeof(data));
     char *c = (char *)malloc(sizeof(char) * len);
-    strncpy(c, str, len);
+    memcpy(c, str, len);
     d->length = len;
     d->content = c;
     d->exists = 1;
     craft_info[a - 1][b - 1] = d;
-    info_counter += len + 5;
 }
 
-char crc8Table[255];
+char crc8Table[256];
 
 void initCrc8()
 {
@@ -107,27 +102,28 @@ void initCrc8()
 char crc8(const char* data, char initialChecksum, int length)
 {
     char checksum = initialChecksum;
+    
     int i;
-    for (i=0;i<length; i++)
-    {
-        checksum = crc8Table[checksum ^ *(data + i)];
+    for (i=0;i<length; i++) {
+        unsigned char index = (checksum ^ *(data + i));
+        checksum = *(crc8Table + index);
     }
     return checksum;
 }
 
 
-char* createProtocolMessage(const char* tag, const char* data)
-{
-    int len = (int)strlen(data);
-    
+char* createProtocolMessage(const char* tag, const char* data, int len)
+{   
     //Find checksum
     char checksum = crc8(tag, 0, 2);
     checksum = crc8(data, checksum, len);
     
-    //Length = tag + data + ':' + checksum + '\0'
-    int messageLength = (int)strlen(tag) + len + 4;
+    int messageLength = 2 + len + 3;
     char* message = (char *)malloc(sizeof(char) * messageLength);
-    sprintf(message, "%s%s:%.2x", tag, data, (unsigned char)checksum);
+    memcpy(message, tag, 2);
+    memcpy(message + 2, data, len);
+    sprintf(message + 2 + len, ":%.2x", (unsigned char)checksum);
+    
     return message;
 }
 
@@ -142,7 +138,9 @@ char *handle_char(char c) {
                 if (tagidx == 2) {
                     tagidx = 0;
                     printf("Handling tag %2s\n", tagbuf);
-                    if (tagbuf[0] == 'D' && tagbuf[1] == 'I') state = PICTURE;
+                    specialCount = PICBUFSIZ -1;
+                    if (tagbuf[0] == 'D' && tagbuf[1] == 'I') state = SPECIAL;
+                    else if (tagbuf[0] == 'M' && tagbuf[1] == 'S') state = MESSAGE;
                     else state = CONTENT;
                 }
             } else tagidx = 0;
@@ -152,9 +150,15 @@ char *handle_char(char c) {
             if (c == ':')
                 state = CHECKSUM;
             else {
-                if (contentidx < CBUFSIZ) {
-                    contentbuf[contentidx] = c;
-                    contentidx++;
+                if (isdigit(c) || c == '+' || c == '-' || c == '.') {
+                    if (contentidx < CBUFSIZ) {
+                        contentbuf[contentidx] = c;
+                        contentidx++;
+                    }
+                } else {
+                    state = TAG;
+                    contentidx = 0;
+                    return handle_char(c);
                 }
             }
             break;
@@ -162,39 +166,51 @@ char *handle_char(char c) {
         case CHECKSUM: {
             numbuf[numidx] = c;
             if (numidx == 0) {
-                numbuf[numidx] = c;
-                numidx++;
+                numbuf[numidx++] = c;
             } else {
+                state = TAG;
+                numidx = 0;
+                contentidx = 0;
                 char check;
                 if (sscanf(numbuf, "%2x", (unsigned int *)&check) == 1) {
                     char checksum = crc8(tagbuf,0,2);
                     checksum = crc8(contentbuf, checksum, contentidx);
                     printf("Checksum: %x, check: %x\n", (unsigned int)checksum, (unsigned int)check);
                     if (checksum == check) {
-                        state = TAG;
                         update_tag(to_int(tagbuf[0]), to_int(tagbuf[1]), contentbuf, contentidx);
-                        numidx = 0;
-                        contentidx = 0;
                         return tagbuf;
                     }
                 }
-                if (contentidx + 2 < CBUFSIZ) {
-                    strncpy(contentbuf + contentidx, numbuf, 2);
-                    contentidx += 2;
-                }
-                state = CONTENT;
+                return handle_char(c);
             }
             break;
         }
-        case PICTURE: {
-            if (contentidx == PICBUFSIZ) {
-                if (c == ':') state = CHECKSUM;
-                else state = TAG;
-                break;
+        case SPECIAL: {
+            if (contentidx == specialCount) {
+                state = TAG;
+                update_tag(to_int(tagbuf[0]), to_int(tagbuf[1]), contentbuf, contentidx);
+                numidx = 0;
+                contentidx = 0;
+                return tagbuf;
             }
             contentbuf[contentidx] = c;
             contentidx++;
             break;
+        }
+        case MESSAGE: {
+            numbuf[numidx++] = c;
+            if (numidx == 3) {
+                numidx = 0;
+                int result;
+                if (sscanf(numbuf, "%4x", (unsigned int *)&result) == 1) {
+                    if (lastlength) {
+                        if (lastlength == result) {
+                            specialCount = lastlength;
+                            state = SPECIAL;
+                        } else state = TAG;
+                    } else lastlength = result;
+                } else state = TAG;
+            }
         }
     }
     return NULL;

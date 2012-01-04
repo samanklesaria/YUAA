@@ -66,8 +66,8 @@
     NSMutableData *mydata = [NSMutableData dataWithCapacity: 5];
     int i = to_int(mytag[0]) - 1;
     int j = to_int(mytag[1]) - 1;
-    if ((craft_info[i][j])->exists) {
-        data *d = craft_info[i][j];
+    if (get_info(i,j)->exists) {
+        data *d = get_info(i,j);
         char checksum = crc8(mytag,0,2);
         checksum = crc8(d->content, checksum, d->length);
         [mydata appendBytes: mytag length: 2];
@@ -137,14 +137,14 @@
     if (strncmp(tag, "BB", 2) == 0) {
         bayCounter++;
         int b = to_int('B')-1;
-        data *db = craft_info[b][b];
+        data *db = get_info(b,b);
         int bayVal = [[[[NSString alloc] initWithBytes: db->content length: (NSUInteger)(db->length) encoding:NSASCIIStringEncoding] autorelease] intValue];
         if (bayVal == 1)
             [s.bayOpenData addObject: [NSNumber numberWithInt:bayCounter]];
         else
             [s.bayCloseData addObject: [NSNumber numberWithInt:bayCounter]];
     } else {
-        data *d = craft_info[to_int(tag[0])-1][to_int(tag[1])-1];
+        data *d = get_info(to_int(tag[0])-1, to_int(tag[1])-1);
         NSString *strTag = [[[NSString alloc] initWithBytes:tag length: 2 encoding:NSASCIIStringEncoding] autorelease];
         if ([strTag isEqualToString: @"DI"]) {
             int width = 160;

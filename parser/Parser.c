@@ -8,8 +8,19 @@
 #define CBUFSIZ (160*120*3)
 #define PICBUFSIZ (160*120*3)
 // (160*120*3) must at least be this
-char contentbuf[CBUFSIZ];
-int contentidx = 0;
+char *contentbuf;
+int contentidx;
+
+data *craft_info[24][24];
+
+data *get_info(char a, char b) {
+    return craft_info[a][b];
+}
+
+void initContentBuf() {
+    contentbuf = (char *)malloc(sizeof(char) * CBUFSIZ);
+    contentidx = 0;
+}
 
 char tagbuf[2];
 int tagidx = 0;
