@@ -1,27 +1,25 @@
-{-# LANGUAGE NoImplicitPrelude #-}
 module Main where
-import Prelude hiding (mapM)
 import System.Hardware.Serialport
-import Control.Monad hiding (mapM)
+import Control.Monad
 import System.Directory
 import Data.List (isPrefixOf)
-import Control.Concurrent.MVar
-import Data.Sequence ((|>), empty, Seq)
+import Control.Concurrent.Chan
 import Network.Fancy
 import System.IO
-import Data.Traversable
 
 main = do
-    str <- newMVar empty
-    let addChar c = modifyMVar_ str (return . (|> c))
-        readLoop p = do
+    chan <- newChan
+    let readLoop p = do
             mc <- recvChar p
             case mc of
-              (Just a) -> addChar a >> readLoop p
-              Nothing -> return ()
-    fpath <- liftM (head . filter (isPrefixOf "cu.usb")) (getDirectoryContents "/dev/")
+              (Just a) -> writeChan chan a >> readLoop p
+              Nothing -> readLoop p
+    fpath <- liftM (safeHead . filter (isPrefixOf "cu.usb")) (getDirectoryContents "/dev/")
     let readAgain = withSerial ("/dev/" ++ fpath) defaultSerialSettings readLoop
-    streamServer serverSpec{address = (IP "" 9000)} (\h a->
-        let serverloop = readMVar str >>= mapM (hPutChar h) >> hFlush h
-        in forever serverloop)
+    streamServer serverSpec{address = (IP "" 9000)} (\h a-> do
+        chan' <- dupChan chan
+        let serverloop = readChan chan' >>= hPutChar h >> hFlush h
+        forever serverloop)
     forever readAgain
+
+safeHead ls = if null ls then error "Can't find serial device" else head ls
