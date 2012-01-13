@@ -8,7 +8,7 @@
 
 #import "BalloonRenderer.h"
 #include "OpenGLCommon.h"
-#import "Arrow.h"
+#import "Box.h"
 #import "SharedData.h"
 
 @implementation BalloonRenderer
@@ -265,11 +265,11 @@ void drawPlaneBody() {
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 	//glEnableClientState(GL_NORMAL_ARRAY);
-	glVertexPointer(3, GL_FLOAT, sizeof(VertexData3D), &ArrowVertexData[0].vertex);
-	glNormalPointer(GL_FLOAT, sizeof(VertexData3D), &ArrowVertexData[0].normal);
+	glVertexPointer(3, GL_FLOAT, sizeof(VertexData3D), &BoxVertexData[0].vertex);
+	glNormalPointer(GL_FLOAT, sizeof(VertexData3D), &BoxVertexData[0].normal);
 	//glTexCoordPointer(2, GL_FLOAT, sizeof(TexturedVertexData3D), &ArrowVertexData[0].texCoord);
 	glScalef(0.5, 0.5, 0.5);
-    glDrawArrays(GL_TRIANGLES, 0, kArrowNumberOfVertices);
+    glDrawArrays(GL_TRIANGLES, 0, kBoxNumberOfVertices);
 	glDisableClientState(GL_VERTEX_ARRAY);
 	//glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 	glDisableClientState(GL_NORMAL_ARRAY);	

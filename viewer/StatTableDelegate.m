@@ -43,7 +43,10 @@
             NSString *tag = [a.statArray objectAtIndex:indexPath.row -2];
             StatPoint *stat = [a.balloonStats objectForKey: tag];
             NSNumber *n = [(NSDictionary *)[(NSArray *)[stat points] lastObject] objectForKey: @"y"];
-            str = [NSString stringWithFormat: @"%@ (%@)", [a.plistData objectForKey: [a.statArray objectAtIndex:indexPath.row -2]], n];
+            NSString *tagName = [a.statArray objectAtIndex:indexPath.row -2];
+            NSString *humanName = [a.plistData objectForKey: tagName];
+            NSString *realName = (humanName != NULL) ? humanName : tagName;
+            str = [NSString stringWithFormat: @"%@ (%@)", realName, n];
         }
     }
     NSString *cellid = @"Cell";

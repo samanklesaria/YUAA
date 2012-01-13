@@ -18,15 +18,13 @@
 #import "BalloonMapLogic.h"
 #import "PrefsViewController.h"
 
-@interface FlightViewController : UIViewController <ConnectorDelegate, MFMessageComposeViewControllerDelegate> {
+@interface FlightViewController : UIViewController <ConnectorDelegate, MFMessageComposeViewControllerDelegate, UIAlertViewDelegate> {
     MKMapView *map;
     UIBarButtonItem *tempButton;
     UIBarButtonItem *altitudeBtn;
     NSString *ftInfo;
     NSString *bayInfo;
     CGRect previousRect;
-    double lat;
-    double lon;
     bool bay;
     BalloonMapLogic *balloonLogic;
     PrefsViewController *prefs;
@@ -36,7 +34,6 @@
 - (IBAction)showAltTbl:(id)sender;
 - (IBAction)showTempTbl:(id)sender;
 - (IBAction)killBalloon:(id)sender;
-- (void) updateLoc;
 
 @property (nonatomic, retain) IBOutlet MKMapView *map;
 @property (nonatomic, retain) IBOutlet UIBarButtonItem *bayButton;

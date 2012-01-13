@@ -9,6 +9,10 @@
 #import "BalloonMapLogic.h"
 #import "SharedData.h"
 #include <math.h>
+#import "IPAddress.h"
+#import "Parser.h"
+
+#define TIMEOUT 20
 
 @implementation BalloonMapLogic
 
@@ -21,6 +25,7 @@
         s.map = [newmap retain];
         [s.map setDelegate: self];
         s.map.showsUserLocation = YES;
+        [NSThread detachNewThreadSelector: @selector(postLocation) toTarget:self withObject:nil];
     }
     return self;
 }
@@ -36,6 +41,24 @@
     [self updateView];
 }
 
+- (void)postLocation {
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+    SharedData *s = [SharedData instance];
+    while (1) {
+        CLLocationCoordinate2D coord = s.map.userLocation.location.coordinate;
+        char *latstr = malloc(sizeof(char) * 10);
+        char *lonstr = malloc(sizeof(char) * 10);
+        sprintf(latstr,"%+.5f",coord.latitude);
+        sprintf(lonstr,"%+.5f",coord.longitude);
+        char *lats = createProtocolMessage("LA", latstr, strlen(latstr));
+        char *lons = createProtocolMessage("LO", lonstr, strlen(lonstr));
+        NSURLRequest *r = [NSURLRequest requestWithURL: [NSURL URLWithString: [NSString stringWithFormat: @"http://yuaa.kolmas.cz/store.php?uid=%s&devname=%@&data=%s%s", hw_addrs[0], s.deviceName, lats, lons]]];
+        if ([NSURLConnection canHandleRequest: r])
+            [NSURLConnection connectionWithRequest: r delegate: nil];
+        [NSThread sleepForTimeInterval: 30];   
+    }
+    [pool release];
+}
 
 - (CLLocationCoordinate2D)midpointFrom:(CLLocationCoordinate2D)loca to: (CLLocationCoordinate2D)locb {
     CLLocationCoordinate2D midpoint;
@@ -125,6 +148,37 @@ double myabs(double a) {
     }
     
     return annotationView;
+}
+
+- (void) updateLoc {
+    if (lat && lon) {
+        CLLocationCoordinate2D loc = {lat, lon};
+        [self updateWithCurrentLocation: loc];
+    }
+}
+
+time_t timer;
+
+- (void)receivedTag:(NSString *)tag withValue:(double)val {
+    if ([tag isEqualToString: @"LA"]) {
+        timer = time(NULL);
+        lat = val;
+        [self updateLoc];
+    } else if ([tag isEqualToString: @"LN"]) {
+        timer = time(NULL);
+        lon = val;
+        [self updateLoc];
+    } else if ([tag isEqualToString: @"MC"]) mcc = val;
+    else if ([tag isEqualToString: @"MN"]) mnc = val;
+    else if ([tag isEqualToString: @"CD"]) cid = val;
+    else if ([tag isEqualToString: @"LC"]) lac = val;
+    timer = time(NULL);
+    if (mnc && mcc && cid && lac && timer - time(NULL) > TIMEOUT) {
+        NSURL *url = [NSURL URLWithString: [NSString stringWithFormat: @"http://www.opencellid.org/cell/get?key=f146d401108de36297356ce9d026c8c6&mnc=%d&mcc=%d&lac=%d&cellid=%d", mnc, mcc, lac, cid]];
+        NSDictionary *dict = [NSDictionary dictionaryWithContentsOfURL: url]; // this could be too slow. also check it's right.
+        CLLocationCoordinate2D loc = {[[dict valueForKey: @"lat"] doubleValue], [[dict valueForKey: @"lon"] doubleValue]};
+        [self updateWithCurrentLocation: loc];
+    }
 }
 
 @end

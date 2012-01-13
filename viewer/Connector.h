@@ -19,7 +19,8 @@
 
 @interface Connector : NSObject <NSStreamDelegate> {
     bool shouldEndConnection;
-    NSStream *mainstream;
+    NSInputStream *mainstream;
+    NSOutputStream *mainOutput;
     int bayCounter;
     bool erred;
 }
@@ -27,5 +28,6 @@
 - (void)updateData: (char *)tag;
 - (void)handleIO;
 - (NSString *)getTag: (char *)tag;
+- (void)sendMessage:(NSString *)str;
 
 @end

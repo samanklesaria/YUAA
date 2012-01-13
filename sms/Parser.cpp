@@ -13,8 +13,14 @@ int contentidx;
 
 data *craft_info[24][24];
 
+int info_count = 0;
+
 data *get_info(char a, char b) {
     return craft_info[a][b];
+}
+
+int info_size() {
+    return info_count;
 }
 
 void initContentBuf() {
@@ -55,6 +61,7 @@ void update_tag(int a, int b, char *str, int len) {
     data *d;
     if (craft_info[a - 1][b - 1]) {
         d = (craft_info[a - 1][b - 1]);
+        info_count -= (d->length + 5);
         free(d->content);
     } else d = (data *)malloc(sizeof(data));
     char *c = (char *)malloc(sizeof(char) * len);
@@ -63,6 +70,7 @@ void update_tag(int a, int b, char *str, int len) {
     d->content = c;
     d->exists = 1;
     craft_info[a - 1][b - 1] = d;
+    info_count += (d->length + 5);
 }
 
 char crc8Table[256];
@@ -118,7 +126,7 @@ char* createProtocolMessage(const char* tag, const char* data, int len)
     char checksum = crc8(tag, 0, 2);
     checksum = crc8(data, checksum, len);
     
-    int messageLength = 2 + len + 3;
+    int messageLength = 2 + len + 4;
     char* message = (char *)malloc(sizeof(char) * messageLength);
     memcpy(message, tag, 2);
     memcpy(message + 2, data, len);

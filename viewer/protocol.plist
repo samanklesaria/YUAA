@@ -5,11 +5,11 @@
 	<key>AL</key>
 	<string>Altitude</string>
 	<key>LO</key>
-	<string>GPS Estimated Longitude</string>
+	<string>GPS Longitude</string>
 	<key>LN</key>
-	<string>GSM Estimated longitude</string>
+	<string>GSM Longitude</string>
 	<key>LA</key>
-	<string>GPS Estimated Latitude</string>
+	<string>GPS Latitude</string>
 	<key>LT</key>
 	<string>GSM Estimated Longitude</string>
 	<key>VL</key>
@@ -27,6 +27,34 @@
 	<key>CO</key>
 	<string>Carbon Monoxide</string>
 	<key>GE</key>
-	<string>Geiger Counts in Last Minute</string>
+	<string>Geiger Counts</string>
+	<key>EV</key>
+	<string>East Velocity</string>
+	<key>NV</key>
+	<string>North Velocity</string>
+	<key>UV</key>
+	<string>Up Velocity</string>
+	<key>MC</key>
+	<string>Cellular mmc</string>
+	<key>CD</key>
+	<string>Cellcular cid</string>
+	<key>YA</key>
+	<string>Yaw</string>
+	<key>PI</key>
+	<string>Pitch</string>
+	<key>RO</key>
+	<string>Roll</string>
+	<key>AX</key>
+	<string>Acceleration X</string>
+	<key>AY</key>
+	<string>Acceleration Y</string>
+	<key>AZ</key>
+	<string>Acceleration Z</string>
+	<key>AP</key>
+	<string>Pressure Altitude</string>
+	<key>RH</key>
+	<string>Raw Humidity</string>
+	<key>LV</key>
+	<string>Livliness</string>
 </dict>
 </plist>

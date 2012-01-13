@@ -24,4 +24,6 @@ void parse_string(char *c);
 
 char *handle_char(char c);
 
+int info_size(void);
+
 void initContentBuf(void);

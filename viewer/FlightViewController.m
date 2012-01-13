@@ -137,21 +137,8 @@
     }
 }
 
-- (void) updateLoc {
-    if (lat && lon) {
-        CLLocationCoordinate2D loc = {lat, lon};
-        [balloonLogic updateWithCurrentLocation: loc];
-    }
-}
-
 - (void)receivedTag:(NSString *)tag withValue:(double)val {
-    if ([tag isEqualToString: @"LA"]) {
-        lat = val;
-        [self updateLoc];
-    } else if ([tag isEqualToString: @"LN"]) {
-        lon = val;
-        [self updateLoc];
-    } else if ([tag isEqualToString: @"TI"])
+    if ([tag isEqualToString: @"TI"])
         [tempButton setTitle: [NSString stringWithFormat:@"%2fº", val]];
     else if ([tag isEqualToString: @"AL"]) {
         ftInfo = [NSString stringWithFormat: @"%.2f ft " , val];
@@ -163,28 +150,37 @@
             bayInfo = @"(Bay Open)";
         [altitudeBtn setTitle: [ftInfo stringByAppendingString: bayInfo]];
     }
+    [balloonLogic receivedTag: tag withValue: val];
 }
 
 - (void)messageComposeViewController:(MFMessageComposeViewController *)controller didFinishWithResult:(MessageComposeResult)result {
     [self dismissModalViewControllerAnimated: YES];
 }
 
-- (IBAction)killBalloon:(id)sender {
-    if ([MFMessageComposeViewController canSendText]) {
-        if (texter == nil) {
-            texter = [[MFMessageComposeViewController alloc] init];
-            [texter setMessageComposeDelegate: self];
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if (buttonIndex != [alertView cancelButtonIndex]) {
+        [[SharedData instance].con sendMessage: [alertView textFieldAtIndex: 0].text];
+        if ([MFMessageComposeViewController canSendText]) {
+            if (texter == nil) {
+                texter = [[MFMessageComposeViewController alloc]init];
+                [texter setMessageComposeDelegate: self];
+            }
+            NSString *pnum = [[SharedData instance] phoneNumber];
+            if (pnum) {
+                [texter setRecipients: [NSArray arrayWithObject: pnum]];
+                [texter setBody: [alertView textFieldAtIndex: 0].text];
+            }
+            [self presentModalViewController: texter animated: YES];
         }
-        NSString *pnum = [[SharedData instance] phoneNumber];
-        if (pnum) {
-            [texter setRecipients: [NSArray arrayWithObject: pnum]];
-        }
-        [self presentModalViewController: texter animated: YES];
-    } else {
-        UIAlertView *err = [[UIAlertView alloc] initWithTitle: @"Not Supported" message: @"Texting is not supported on this device. Your balloon is as good as lost." delegate: nil cancelButtonTitle: @"Fuck" otherButtonTitles: nil];
-        [err show];
-        
     }
+}
+
+
+- (IBAction)killBalloon:(id)sender {
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle: @"Send Command" message: @"Type the AKH tags to be sent:" delegate: self cancelButtonTitle: @"Cancel" otherButtonTitles: @"OK",nil];
+    alert.alertViewStyle = UIAlertViewStylePlainTextInput;
+    [alert show];
 }
 
 @end

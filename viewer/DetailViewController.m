@@ -128,28 +128,35 @@
 }
 
 - (void)messageComposeViewController:(MFMessageComposeViewController *)controller didFinishWithResult:(MessageComposeResult)result {
+    
     [self.popoverController dismissPopoverAnimated:YES];
 }
-
-        
-- (IBAction)sendMessage:(id)sender {
-    if ([MFMessageComposeViewController canSendText]) {
-        if (texter == nil) {
-            texter = [[MFMessageComposeViewController alloc]init];
+ 
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if (buttonIndex != [alertView cancelButtonIndex]) {
+        [[SharedData instance].con sendMessage: [alertView textFieldAtIndex: 0].text];
+        if ([MFMessageComposeViewController canSendText]) {
+            if (texter == nil) {
+                texter = [[MFMessageComposeViewController alloc]init];
+                [texter setMessageComposeDelegate: self];
+            }
+            NSString *pnum = [[SharedData instance] phoneNumber];
+            if (pnum) {
+                [texter setRecipients: [NSArray arrayWithObject: pnum]];
+                [texter setBody: [alertView textFieldAtIndex: 0].text];
+            }
+            self.popoverController.contentViewController = texter;
+            [self.popoverController presentPopoverFromBarButtonItem:popupSource
+                                           permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
         }
-        NSString *pnum = [[SharedData instance] phoneNumber];
-        if (pnum) {
-            [texter setRecipients: [NSArray arrayWithObject: pnum]];
-            [texter setMessageComposeDelegate: self];
-        }
-        self.popoverController.contentViewController = texter;
-        [self.popoverController presentPopoverFromBarButtonItem:sender
-                                       permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
-    } else {
-        UIAlertView *err = [[UIAlertView alloc] initWithTitle: @"Not Supported" message: @"Texting is not supported on this device. Your balloon is as good as lost." delegate: nil cancelButtonTitle: @"Fuck" otherButtonTitles: nil];
-        [err show];
-        
     }
+}
+
+- (IBAction)sendMessage:(id)sender {
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle: @"Send Command" message: @"Type the AKH tags to be sent:" delegate: self cancelButtonTitle: @"Cancel" otherButtonTitles: @"OK",nil];
+    alert.alertViewStyle = UIAlertViewStylePlainTextInput;
+    popupSource = sender;
+    [alert show];
 }
 
 - (void)showController:(UIViewController *)controller withFrame: (CGRect)rect view: (UIView *)view title: (NSString *)title {
@@ -159,21 +166,8 @@
                                    permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
 }
 
-- (void) updateLoc {
-    if (lat && lon) {
-        CLLocationCoordinate2D loc = {lat, lon};
-        [balloonLogic updateWithCurrentLocation: loc];
-    }
-}
-
 - (void)receivedTag:(NSString *)tag withValue:(double)val {
-    if ([tag isEqualToString: @"LA"]) {
-        lat = val;
-        [self updateLoc];
-    } else if ([tag isEqualToString: @"LN"]) {
-        lon = val;
-        [self updateLoc];
-    }
+    [balloonLogic receivedTag: tag withValue: val];
 }
 
 @end

@@ -8,6 +8,9 @@
 
 #import "Connector.h"
 #import "IPAddress.h"
+#import <UIKit/UIKit.h>
+#import "ASIHTTPRequest.h"
+#import "ASIFormDataRequest.h"
 
 @implementation Connector
 
@@ -20,7 +23,6 @@
         bayCounter = 0;
         [NSThread detachNewThreadSelector:@selector(handleIO) toTarget:self withObject:nil]; 
     }
-    
     return self;
 }
 
@@ -41,22 +43,28 @@
     SharedData *mydata = [SharedData instance];
     CFHostRef host;
     CFReadStreamRef readStream;
+    CFWriteStreamRef writeStream;
     readStream = NULL;
     
     NSInputStream *inputStream;
+    NSOutputStream *outputStream;
     
     host = CFHostCreateWithName(NULL, (CFStringRef) mydata.server);
     if (host != NULL) {
-        while (readStream == NULL) {
-            (void) CFStreamCreatePairWithSocketToCFHost(NULL, host, mydata.port, &readStream, nil);
+        while (readStream == NULL || writeStream == NULL) {
+            (void) CFStreamCreatePairWithSocketToCFHost(NULL, host, mydata.port, &readStream, &writeStream);
         }
         CFRelease(host);
         inputStream = [(NSInputStream *)readStream autorelease];
+        outputStream = [(NSOutputStream *)writeStream autorelease]; 
         mainstream = inputStream;
+        mainOutput = outputStream;
         [mainstream setDelegate:self];
+        [mainOutput setDelegate:self];
         [mainstream scheduleInRunLoop:[NSRunLoop currentRunLoop]
                                forMode:NSDefaultRunLoopMode];
         [mainstream open];
+        [mainOutput open];
         [[NSRunLoop currentRunLoop] run];
     }
     [pool release];
@@ -78,7 +86,16 @@
         [mydata appendBytes: message length: 2];
         free(message);
     }
-    return [[[NSString alloc] initWithData: mydata encoding: NSASCIIStringEncoding] autorelease];
+    return [[[[NSString alloc] initWithData: mydata encoding: NSASCIIStringEncoding] autorelease] stringByAddingPercentEscapesUsingEncoding: NSASCIIStringEncoding];
+}
+
+- (NSData *)getImageTag {
+    SharedData *s = [SharedData instance];
+    return UIImageJPEGRepresentation([s.images lastObject], 1);
+}
+
+- (void)sendMessage:(NSString *)str {
+    [mainOutput write: [[str dataUsingEncoding: NSASCIIStringEncoding] bytes] maxLength: [str length]];
 }
 
 - (void)stream:(NSInputStream *)stream handleEvent:(NSStreamEvent)eventCode {
@@ -91,14 +108,24 @@
                 [stream read:&readloc maxLength:1];
                 char *newtag = handle_char((char)readloc);
                 if (newtag) {
-                    /*
-                    SharedData *s = [SharedData instance];
-                    // should use a post request instead, due to pictures
-                    NSURLRequest *r = [NSURLRequest requestWithURL: [NSURL URLWithString: [NSString stringWithFormat: @"http://yuaa.kolmas.cz/store.php?uid=%s&devname=%@&data=%@", hw_addrs[0], s.deviceName, [self getTag: newtag]]]];
-                    if ([NSURLConnection canHandleRequest: r])
-                        [NSURLConnection connectionWithRequest: r delegate: nil];
-                     */
                     [self updateData: newtag];
+                    if (strncmp(newtag, "DI", 2) == 0) {
+                        NSData *imageData = [self getImageTag];
+                        NSURL *url = [NSURL URLWithString: [NSString stringWithFormat: @"http://yuaa.tc.yale.edu/scripts/upload.php"]];
+                        ASIFormDataRequest *r = [ASIFormDataRequest requestWithURL:url];
+                        [r setPostValue: [NSString stringWithCString: hw_addrs[0] encoding: NSASCIIStringEncoding] forKey:@"uid"];
+                        [r setPostValue: @"berkeley" forKey: @"password"];
+                        [r setPostValue: @"balloon" forKey:@"devname"];
+                        [r setData:imageData withFileName:@"photo.jpg" andContentType:@"image/jpeg" forKey:@"photo"];
+                        [r setDelegate:self];
+                        [r startAsynchronous];
+                    } else {
+                        if (newtag && strncmp(newtag, "MS", 2) != 0) {
+                            NSURLRequest *r = [NSURLRequest requestWithURL: [NSURL URLWithString: [NSString stringWithFormat: @"http://yuaa.tc.yale.edu/scripts/store.php?uid=%s&password=berkeley&devname=%@&data=%@", hw_addrs[0], @"balloon", [self getTag: newtag]]]];
+                            if ([NSURLConnection canHandleRequest: r])
+                                [NSURLConnection connectionWithRequest: r delegate: nil];
+                        }
+                    }
                 }
             }
             break;
@@ -176,18 +203,25 @@
             return;
         }
         NSString *strVal = [[[NSString alloc] initWithBytes: d->content length: (NSUInteger)(d->length) encoding:NSASCIIStringEncoding] autorelease];
+        if ([strTag isEqualToString: @"MS"]) {
+            NSLog(@"Getting a message");
+            [strVal enumerateLinesUsingBlock: ^(NSString *str, BOOL *stop) {
+                [SharedData logString: str];
+            }];
+            return;
+        }
         double doubleVal = [strVal doubleValue];
         if (doubleVal != 0) {
-            [SharedData logString: [NSString stringWithFormat:@"Updating tag %@ with value %@", strTag, strVal]];
-            if ([strTag isEqualToString: @"MS"])
-                [SharedData logString: [NSString stringWithFormat:@"Balloon log: %@", strVal]];
-            else if ([strTag isEqualToString: @"YA"])
+            NSString *str = [NSString stringWithFormat:@"Updating tag %@ with value %@", strTag, strVal];
+            NSLog(@"%@", str);
+            [SharedData logString: str];
+            if ([strTag isEqualToString: @"YA"])
                 s.rotationZ = doubleVal;
             else if ([strTag isEqualToString: @"PI"])
                 s.rotationY = doubleVal;
             else if ([strTag isEqualToString: @"RO"])
                 s.rotationX = doubleVal;
-            else if (!([strTag isEqualToString: @"LA"] || [strTag isEqualToString: @"LN"])) {
+            else if (!([strTag isEqualToString: @"LA"] || [strTag isEqualToString: @"LN"] || [strTag isEqualToString: @"BB"])) {
                 StatPoint *stat = [s.balloonStats objectForKey: strTag];
                 if (![s.balloonStats objectForKey: strTag]) {
                     [s.statArray addObject: strTag];

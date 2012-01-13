@@ -14,6 +14,12 @@
     DataPoint *selectedPoint;
     DataPoint *currentPoint;
     CLLocationManager *locmanager;
+    int mcc;
+    int mnc;
+    int lac;
+    int cid;
+    double lat;
+    double lon;
 }
 
 - (id) initWithMap: (MKMapView *)map;
@@ -22,6 +28,9 @@
 - (MKCoordinateSpan)distanceFrom:(CLLocationCoordinate2D)loca to: (CLLocationCoordinate2D)locb;
 - (double)spanSize: (MKCoordinateSpan)rect;
 - (void) updateView;
+- (void) postLocation;
+- (void)receivedTag:(NSString *)tag withValue:(double)val;
+- (void)updateLoc;
 
 @end
 

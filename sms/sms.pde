@@ -9,15 +9,16 @@
 
 #define BUFFSIZE 100
 char at_buffer[BUFFSIZE];
+int buffidx;
 
 #define DELAYTIME 10000
 
 #define CMDLEN 30
 char cmd[CMDLEN];
 
-char number[11];
+char number[12];
 
-#define NUMLEN 200
+#define NUMLEN 220
 char numbers[NUMLEN];
 int numsidx = 0;
 
@@ -67,24 +68,34 @@ void serialSend(uint8_t *c, int i) {
     Serial1.write(c, i);
 }
 
+void displaySend(uint8_t *c, int i) {
+    Serial.write(c, i);
+}
+
+int maybe_read_byte(int (*avail)(), char (*reader)()) {
+  if ((*avail)() > 0) {
+          char c = (*reader)();
+          if (c == '\n') return 0;
+          if (c == '\r') {
+              at_buffer[buffidx] = '\0';
+              return 1;
+          }
+          if (!(buffidx == BUFFSIZE - 1)) at_buffer[buffidx++] = c;
+  }
+  return 0;
+}
+
+
 void read_from(int (*avail)(), char (*reader)()) {
-    int buffidx = 0;
+    buffidx = 0;
     while (1) {
-        if ((*avail)() > 0) {
-            char c = (*reader)();
-            if (c == '\n') continue;
-            if (c == '\r') {
-                at_buffer[buffidx] = '\0';
-                return;
-            }
-            if (!(buffidx == BUFFSIZE - 1)) at_buffer[buffidx++] = c;
-        }
+        if (maybe_read_byte(avail, reader)) return;
     }
 }
 
 void parseNumber() {
-  char *a = strchr(at_buffer, ',') + 1;
-  strncpy(number, a, min(10, strlen(at_buffer)));
+  char *a = strchr(at_buffer, '"') + 2;
+  strncpy(number, a, min(11, strlen(at_buffer)));
 } 
 
 void wait_for(char *a) {
@@ -93,25 +104,43 @@ void wait_for(char *a) {
         Serial.print("Waiting with line ");
         Serial.println(at_buffer);
         if (strstr(at_buffer,a)) return;
+        processor();
+    }
+}
+
+void processor() {
         if (strstr(at_buffer,"ERROR")) {
             Serial.println("Could not proceed with operation");
-            return;
+            longjmp(restarter, 0);
         };
         if (strstr(at_buffer,"+CMT")) {
+          Serial.println("Got a text");
           parseNumber();
           read_from(cellAvailable, cellRead);
-          if (strstr(a, KILLSIGNAL)) if (isErring()) {setErring(); killCall(); return; }
-          if (strstr(a, INFOSIGNAL)) { delay(1000); makeCall(); return; }
-          if (strstr(a, ADDSIGNAL)) { addNumber(); return; }
+          if (strstr(at_buffer, KILLSIGNAL)) if (isErring()) {setErring(); killCall(); }
+          if (strstr(at_buffer, INFOSIGNAL)) { delay(1000); makeCall(); }
+          if (strstr(at_buffer, ADDSIGNAL)) addNumber();
           Serial1.println("AT+CMGD=1,4");
           wait_for("OK");
         };
-        if (strstr(at_buffer,"+SIND: 1") && mode == 1) {
+        if (strstr(at_buffer,"+SIND") && mode == 1) {
+           Serial.println("Restarting");
            mode = 0;
            setupSim();
            longjmp(restarter, 0);
         };
-    }
+        if (strstr(at_buffer, "+CREG")) {
+              char *lac;
+              char *cid;
+              char *end_cid;
+              lac = strchr(at_buffer, ',') + 1;
+              cid = strchr(lac, ',') + 1;
+              Serial.print("lac/ cid: ");
+              Serial.println(lac);
+              update_tag(LACTAG, lac, cid - lac - 1);
+              update_tag(CIDTAG, cid, strlen(cid));
+              Serial.println("Done with Cregging");
+        };
 }
 
 void wait_for_byte(char a) {
@@ -136,16 +165,17 @@ void passthrough() {
 void printTag(int i, int j, void sender(uint8_t *c, int)) {
     if ((get_info(i,j))->exists) {
         data *d = get_info(i,j);
-        char *tag = (char *)malloc(sizeof(char) * 3);
+        char tag[3];
         tag[0] = to_char(i+1);
         tag[1] = to_char(j+1);
         tag[2] = '\0';
         char checksum = crc8(tag,0,2);
         checksum = crc8(d->content, checksum, d->length);
         sender((uint8_t *)tag,2);
-        sender((uint8_t*)(d->content), d->length);
+        if (d->length > 0)
+          sender((uint8_t*)(d->content), d->length);
         sender((uint8_t *)":",1);
-        char *message = (char *)malloc(sizeof(char) * 2);
+        char message[2];
         sprintf(message, "%.2x", (unsigned char)checksum);
         sender((uint8_t *)message,2);
         free(message);
@@ -159,7 +189,8 @@ void str_cache() {
     for (i=0; i < 23; i++) {
         int j;
         for (j=0; j < 23; j++) {
-            printTag(i,j, serialSend);
+            if (!((i == to_int('I') -1 && j == to_int('M') - 1) || (i == to_int('M') -1 && j == to_int('S') - 1)))
+              printTag(i,j, serialSend);
         }
     }
 }
@@ -172,10 +203,9 @@ void setErring() {
     update_tag(KILLTAG, "", 0);
 }
 
-// this should be so for all the numbers we use. Don't just use my phone.
 void startCall(char *phn) {
     Serial1.print("AT+CMGS=\"");
-    Serial1.write((uint8_t*)phn, 10);
+    Serial1.write((uint8_t*)phn, 11);
     Serial1.print("\"\r");
     Serial.println("Sent the r");
     wait_for_byte('>');
@@ -225,6 +255,8 @@ void store_lac_cid() {
     char *lac;
     char *cid;
     char *end_cid;
+    // this should give regular updates.
+    // have wait_for act on +CREG updates
     
     Serial1.println("AT+CREG=2");
     wait_for("OK");
@@ -267,36 +299,56 @@ void doServer() {
 static unsigned long timestamp = 0;
 
 void update_loc() {
-    store_mcc_mnc();
-    store_lac_cid();
-    setjmp(restarter);
+    int b = maybe_read_byte(cellAvailable, cellRead);
+    if (b) {
+       buffidx = 0;
+       Serial.print("Main waiting with line ");
+       Serial.println(at_buffer);
+       setjmp(restarter);
+       processor();
+    }
+    /*
     if (millis() - timestamp > DELAYTIME) {
       timestamp = millis();
-      if (isErring())
+      if (isErring()) {
+        setjmp(restarter);
         makeCall();
+      }
     }
-    doServer();
+    */
+    // setjmp(restarter);
+    // doServer();
 }
 
 void addNumber() {
+  Serial.print("Adding number ");
+  Serial.println(number);
   strcpy(numbers + numsidx, number);
-  numsidx += 10;
+  numsidx += 11;
+  startCall(number);
+  Serial1.print("Gotcha.
+  ");
+  endCall();
 }
 
 void wireCache() {
-    int16_t address = 0;
+    Serial.println("Got wire");
+    int16_t length = 0;
     data *lac = get_info(to_int('L') -1,to_int('C')-1);
     data *cid = get_info(to_int('M') -1,to_int('C')-1);
     data *kill = get_info(to_int('K') -1,to_int('L')-1);
+    // needs to be converted from hex. GRR
     
     if (lac->exists)
-        address += (lac->length + 5);
+        length += (lac->length + 5);
     if (cid->exists)
-        address += (cid->length + 5);
+        length += (cid->length + 5);
     if (kill->exists)
-        address += 5;
-    Wire.send((char)(address>>8));
-    Wire.send((char)(address));
+        length += 5;
+    Serial.println((char)(length>>8 & 0xFF));
+    Wire.send((char)(length>>8 & 0xFF));
+    Serial.println((char)(length & 0xFF));
+    Wire.send((char)(length & 0xFF));
     printTag(to_int('L') -1, to_int('C')-1, wireSend);
     printTag(to_int('M') -1, to_int('C')-1, wireSend);
     printTag(to_int('K') -1, to_int('L')-1, wireSend);
@@ -304,6 +356,7 @@ void wireCache() {
 
 void receiveEvent(int howMany)
 {
+  Serial.println("Receive wire");
   while(0 < Wire.available())
   {
     char c = Wire.receive();
@@ -312,6 +365,7 @@ void receiveEvent(int howMany)
 }
 
 void setupSim() {
+    mode = 0;
     wait_for("+SIND: 4");
     Serial.println("Connected fine");
     Serial1.println("AT+CMGF=1");
@@ -326,21 +380,35 @@ void setupSim() {
     // wait_for("OK");
     
     Serial1.println("AT+CNMI=3,3,0,0");
-    wait_for("OK");
+    /wait_for("OK");
     Serial.println("Everything set up");
     mode = 1;
+    
+    // store_mcc_mnc();
+    // Serial1.println("AT+CREG=2");
+    // wait_for("OK");
+    Serial.println("Done setting sim up");
 }
 
 void setup() {
     Serial.begin(9600);
     initCrc8();
     Serial1.begin(9600);
-    Wire.begin(42);
-    Wire.onReceive(receiveEvent);
-    Wire.onRequest(wireCache);
+    // Wire.begin(0x42);
+    setupSim();
+    buffidx = 0;
+    
+    // wait_for("PIGS");
+    // Serial.println("Done with setup");
+    // int numsidx = 11;
+    // strncpy(numbers, "16517477993", 11);
+    
+    // update_tag(LACTAG, "123",3);
+    // update_tag(CIDTAG, "4567", 4);
+    // Wire.onReceive(receiveEvent);
+    // Wire.onRequest(wireCache);
 }
 
 void loop() {
   update_loc();
-  delay(1000);
 }

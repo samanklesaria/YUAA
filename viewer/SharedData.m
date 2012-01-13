@@ -86,7 +86,6 @@
     }
 }
 
-/*
 - (void)dealloc {
     self.map = nil;
     self.logViewController = nil;
@@ -103,7 +102,6 @@
     self.balloonStats = nil;
     self.logData =  nil;
 }
-*/
 
 static SharedData *gInstance = NULL;
 
@@ -111,9 +109,8 @@ static SharedData *gInstance = NULL;
 + (void)logString:(NSString*)str
 {
     SharedData *a = [SharedData instance];
-    [a.logData addObject: str]; // space leak? oh well.
+    [a.logData addObject: str];
     [a.logViewController reloadLog];
-    // do we need to reloadData on the table?
 }
 
 + (SharedData *)instance

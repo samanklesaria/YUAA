@@ -13,13 +13,12 @@
 #import "Connector.h"
 #import "PrefsViewController.h"
 
-@interface DetailViewController : UIViewController <UIPopoverControllerDelegate, UISplitViewControllerDelegate, ConnectorDelegate, MFMessageComposeViewControllerDelegate> {
+@interface DetailViewController : UIViewController <UIPopoverControllerDelegate, UISplitViewControllerDelegate, ConnectorDelegate, MFMessageComposeViewControllerDelegate, NSURLConnectionDelegate, UIAlertViewDelegate> {
     IBOutlet MKMapView *map;
     BalloonMapLogic *balloonLogic;
-    double lat;
-    double lon;
     PrefsViewController *prefs;
     MFMessageComposeViewController *texter;
+    id popupSource;
 }
 
 - (IBAction)showSettings:(id)sender;

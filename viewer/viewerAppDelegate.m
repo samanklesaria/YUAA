@@ -25,9 +25,11 @@
     self.window.rootViewController = self.tabBarController;
     SharedData *s = [SharedData instance];
     s.lshift = 0.0f;
-    s.ushift = -2.0f;
-    // s.vshift = -4.0f;
-    s.vshift = -8.0f;
+    s.ushift = -0.1f;
+    s.vshift = -2.0f;
+    
+    // INTERACTIVE SHIFTING IS the only way to get the right parameters
+    
     StatView *statController = [[StatView alloc] initWithNibName:@"StatView" bundle:nil];
     [[self statusNavController] pushViewController:statController animated:NO];
     FlightViewController *mapController = [[FlightViewController alloc] initWithNibName:@"FlightViewController" bundle:nil];
