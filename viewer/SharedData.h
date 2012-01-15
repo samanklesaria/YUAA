@@ -17,6 +17,7 @@ enum mapAdjust {
 };
 
 @class LogViewController;
+@class PicViewController;
 @class Connector;
 
 @interface SharedData : NSObject {
@@ -31,9 +32,11 @@ enum mapAdjust {
     float lshift;
     float ushift;
     float vshift;
-    LogViewController * logViewController;
+    LogViewController *logViewController;
+    PicViewController *picViewController;
     MKMapView *map;
     Connector *con;
+    CFUUIDRef theId;
     
     // prefs
     NSString *server;
@@ -46,13 +49,17 @@ enum mapAdjust {
     float rotationX;
     float rotationY;
     float rotationZ;
-    NSMutableArray *images;
     NSMutableArray *bayOpenData;
     NSMutableArray *bayCloseData;
     NSMutableDictionary *balloonStats;
     NSMutableArray *statArray;
+    NSDate *lastIMUTime;
+    NSDate *lastImageTime;
 }
 
+@property (retain) NSDate *lastIMUTime;
+@property (retain) PicViewController *picViewController;
+@property CFUUIDRef theId;
 @property (retain) Connector *con;
 @property (retain) NSString *deviceName;
 @property (retain) MKMapView *map;
@@ -73,10 +80,10 @@ enum mapAdjust {
 @property enum mapAdjust autoAdjust;
 @property (retain) NSMutableArray *bayOpenData;
 @property (retain) NSMutableArray *bayCloseData;
-@property (retain) NSMutableArray *images;
 @property (retain) NSMutableArray *statArray;
 @property (retain) NSMutableDictionary *balloonStats;
 @property (retain) NSMutableArray *logData;
+@property (retain) NSDate *lastImageTime;
 
 + (SharedData *)instance;
 

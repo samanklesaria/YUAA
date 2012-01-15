@@ -11,6 +11,7 @@
 #import "PrefsViewController.h"
 #import "SharedData.h"
 #import "StatPoint.h"
+#import "PicViewController.h"
 #import <time.h>
 
 #define BUFSIZE 800
@@ -178,7 +179,7 @@
 
 
 - (IBAction)killBalloon:(id)sender {
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle: @"Send Command" message: @"Type the AKH tags to be sent:" delegate: self cancelButtonTitle: @"Cancel" otherButtonTitles: @"OK",nil];
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle: @"Send Command" message: @"Type the AKP tags to be sent:" delegate: self cancelButtonTitle: @"Cancel" otherButtonTitles: @"OK",nil];
     alert.alertViewStyle = UIAlertViewStylePlainTextInput;
     [alert show];
 }

@@ -56,5 +56,9 @@
 	<string>Raw Humidity</string>
 	<key>LV</key>
 	<string>Livliness</string>
+	<key>GS</key>
+	<string>Satellite Count</string>
+	<key>BB</key>
+	<string>Bio Bay</string>
 </dict>
 </plist>

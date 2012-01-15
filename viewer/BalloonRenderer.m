@@ -260,8 +260,19 @@ void setUpView(GLint backingWidth, GLuint backingHeight) {
 void drawPlaneBody() {
 	
     
+    //Gray
+	//glColor4f(0.1f, 0.1f, 0.1f, 1.0);
     
-    glColor4f(objectR, objectG, objectB, 1.0f);
+    
+    // Pink
+    //glColor4f(0.157f, 0.054f, 0.783f, 1.0f);
+    
+    //Blue ? 
+    
+    glColor4f(0.0,0.0, 1.0,1.0f);
+    
+    
+    //glColor4f(objectR, objectG, objectB, 1.0f);
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 	//glEnableClientState(GL_NORMAL_ARRAY);
@@ -271,7 +282,7 @@ void drawPlaneBody() {
 	glScalef(0.5, 0.5, 0.5);
     glDrawArrays(GL_TRIANGLES, 0, kBoxNumberOfVertices);
 	glDisableClientState(GL_VERTEX_ARRAY);
-	//glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 	glDisableClientState(GL_NORMAL_ARRAY);	
     
     
@@ -308,8 +319,8 @@ void drawPlaneBody() {
     glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, specular);
     glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 2.0);
 	
-	
-	glColor4f(0.1f, 0.1f, 0.1f, 1.0);
+
+    
     drawPlaneBody();
 	
 	// This application only creates a single color renderbuffer which is already bound at this point.

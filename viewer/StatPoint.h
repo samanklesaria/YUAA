@@ -13,8 +13,10 @@
     double maxval;
     NSMutableArray *points;
     NSMutableDictionary *bayNumToPoints;
+    NSDate *lastTime;
 }
 
+@property (retain) NSDate *lastTime;
 @property double minval;
 @property double maxval;
 @property (retain) NSMutableArray *points;

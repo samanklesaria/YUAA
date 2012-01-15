@@ -27,9 +27,9 @@
     initContentBuf();
     self.window.rootViewController = self.splitViewController;
     SharedData *s = [SharedData instance];
-    s.lshift = -3.2f;
-    s.ushift = -5.0f;
-    s.vshift = -14.5f;
+    s.lshift = -1.2f;
+    s.ushift = -1.5f;
+    s.vshift = -5.0f;
     [self.window makeKeyAndVisible];
     return YES;
 }

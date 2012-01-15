@@ -42,6 +42,8 @@
 
     [stDelegate release];
     stDelegate = nil;
+    [statList release];
+    statList = nil;
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -55,6 +57,7 @@
 
 - (void)dealloc {
     [stDelegate release];
+    [statList release];
     [super dealloc];
 }
 
@@ -62,6 +65,8 @@
     [[self navigationController] pushViewController:controller animated:YES];
     [controller setTitle: title];
 }
+
+// better way of doing this?
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection: (NSInteger)section {
     return [stDelegate tableView: tableView numberOfRowsInSection: section];

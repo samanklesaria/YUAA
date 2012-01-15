@@ -13,6 +13,7 @@
 @synthesize minval;
 @synthesize maxval;
 @synthesize points;
+@synthesize lastTime;
 
 - (id)init
 {

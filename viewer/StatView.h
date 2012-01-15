@@ -12,7 +12,7 @@
 #import "ControllerShower.h"
 
 @interface StatView : UIViewController <ControllerShower, UITableViewDataSource> {
-    UITableView *statList;
+    IBOutlet UITableView *statList;
     StatTableDelegate *stDelegate;
 }
 @end

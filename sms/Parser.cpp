@@ -36,11 +36,11 @@ int numidx = 0;
 int lastlength;
 
 enum parserState {
-   TAG,
-   CONTENT,
-   CHECKSUM,
-   MESSAGE,
-   SPECIAL
+    TAG,
+    CONTENT,
+    CHECKSUM,
+    MESSAGE,
+    SPECIAL
 };
 
 int specialCount;
@@ -109,6 +109,7 @@ void initCrc8()
 //Calls may be strung together. Use 0 as a default.
 char crc8(const char* data, char initialChecksum, int length)
 {
+    // printf("Doing crc8 for data: %s, from checksum %.2x, with length %d\n", data, (unsigned char)initialChecksum, length);
     char checksum = initialChecksum;
     
     int i;
@@ -145,7 +146,7 @@ char *handle_char(char c) {
                 tagidx++;
                 if (tagidx == 2) {
                     tagidx = 0;
-                    printf("Handling tag %2s\n", tagbuf);
+                    // printf("Handling tag %2s\n", tagbuf);
                     specialCount = PICBUFSIZ -1;
                     if (tagbuf[0] == 'D' && tagbuf[1] == 'I') state = SPECIAL;
                     else if (tagbuf[0] == 'M' && tagbuf[1] == 'S') state = MESSAGE;
@@ -178,17 +179,18 @@ char *handle_char(char c) {
             } else {
                 state = TAG;
                 numidx = 0;
-                contentidx = 0;
                 char check;
-                if (sscanf(numbuf, "%2x", (unsigned int *)&check) == 1) {
+                if (sscanf(numbuf, "%2x", &check) == 1) {
                     char checksum = crc8(tagbuf,0,2);
                     checksum = crc8(contentbuf, checksum, contentidx);
-                    printf("Checksum: %x, check: %x\n", (unsigned int)checksum, (unsigned int)check);
+                    // printf("Checksum: %x, check: %x\n", (unsigned char)checksum, (unsigned char)check);
                     if (checksum == check) {
                         update_tag(to_int(tagbuf[0]), to_int(tagbuf[1]), contentbuf, contentidx);
+                        contentidx = 0;
                         return tagbuf;
                     }
                 }
+                contentidx = 0;
                 return handle_char(c);
             }
             break;
@@ -201,13 +203,12 @@ char *handle_char(char c) {
                 contentidx = 0;
                 return tagbuf;
             }
-            contentbuf[contentidx] = c;
-            contentidx++;
+            contentbuf[contentidx++] = c;
             break;
         }
         case MESSAGE: {
             numbuf[numidx++] = c;
-            if (numidx == 3) {
+            if (numidx == 4) {
                 numidx = 0;
                 int result;
                 if (sscanf(numbuf, "%4x", (unsigned int *)&result) == 1) {
@@ -215,6 +216,7 @@ char *handle_char(char c) {
                         if (lastlength == result) {
                             specialCount = lastlength;
                             state = SPECIAL;
+                            break;
                         } else state = TAG;
                     } else lastlength = result;
                 } else state = TAG;

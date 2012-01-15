@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		221FF03F146F0973002B1991 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 221FF03E146F0973002B1991 /* CFNetwork.framework */; };
 		223045FA14820C1100A4EA48 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 223045F914820C1100A4EA48 /* CoreLocation.framework */; };
+		2243457314C1E097003F498F /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2243457214C1E097003F498F /* MainWindow.xib */; };
 		2244C52B146B7CE500E08F55 /* SharedData.m in Sources */ = {isa = PBXBuildFile; fileRef = 2244C52A146B7CE500E08F55 /* SharedData.m */; };
 		2244C52F146C56DC00E08F55 /* Parser.c in Sources */ = {isa = PBXBuildFile; fileRef = 2244C52D146C56DC00E08F55 /* Parser.c */; };
 		2244C531146CDDE000E08F55 /* icon_list_bullets.png in Resources */ = {isa = PBXBuildFile; fileRef = 2244C530146CDDE000E08F55 /* icon_list_bullets.png */; };
@@ -24,7 +25,6 @@
 		226C195714679E1B00A7F87A /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 226C195514679E1B00A7F87A /* InfoPlist.strings */; };
 		226C195914679E1C00A7F87A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 226C195814679E1C00A7F87A /* main.m */; };
 		226C195D14679E1D00A7F87A /* viewerAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 226C195C14679E1D00A7F87A /* viewerAppDelegate.m */; };
-		226C196014679E1E00A7F87A /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 226C195E14679E1E00A7F87A /* MainWindow.xib */; };
 		226C196314679E1E00A7F87A /* FlightViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 226C196214679E1E00A7F87A /* FlightViewController.m */; };
 		226C196914679E1F00A7F87A /* FlightViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 226C196714679E1F00A7F87A /* FlightViewController.xib */; };
 		226C197514679E7200A7F87A /* LogViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 226C197314679E7200A7F87A /* LogViewController.m */; };
@@ -66,7 +66,6 @@
 		22C5CD1D14749DF00017E928 /* RootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22C5CD1C14749DF00017E928 /* RootViewController.m */; };
 		22C5CD8B1476B5260017E928 /* StatPoint.m in Sources */ = {isa = PBXBuildFile; fileRef = 22C5CD8A1476B5260017E928 /* StatPoint.m */; };
 		22C5CD8F1476BBBD0017E928 /* Connector.m in Sources */ = {isa = PBXBuildFile; fileRef = 22C5CD8E1476BBBD0017E928 /* Connector.m */; };
-		22DCA73314A0FED00091A10E /* IPAddress.c in Sources */ = {isa = PBXBuildFile; fileRef = 22DCA73114A0FED00091A10E /* IPAddress.c */; };
 		22FE1DB4146851EA00403F43 /* DataPoint.m in Sources */ = {isa = PBXBuildFile; fileRef = 22FE1DB3146851EA00403F43 /* DataPoint.m */; };
 		22FE1E071468845200403F43 /* libCorePlot-CocoaTouch.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 22FE1E061468845200403F43 /* libCorePlot-CocoaTouch.a */; };
 		22FE1E141468855B00403F43 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 22FE1E131468855B00403F43 /* QuartzCore.framework */; };
@@ -81,6 +80,7 @@
 		221FF037146F0913002B1991 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		221FF03E146F0973002B1991 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		223045F914820C1100A4EA48 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		2243457214C1E097003F498F /* MainWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = MainWindow.xib; path = ../../MainWindow.xib; sourceTree = "<group>"; };
 		2244C529146B7CE500E08F55 /* SharedData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SharedData.h; sourceTree = "<group>"; };
 		2244C52A146B7CE500E08F55 /* SharedData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SharedData.m; sourceTree = "<group>"; };
 		2244C52D146C56DC00E08F55 /* Parser.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = Parser.c; path = ../parser/Parser.c; sourceTree = "<group>"; };
@@ -104,7 +104,6 @@
 		226C195A14679E1C00A7F87A /* viewer-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "viewer-Prefix.pch"; sourceTree = "<group>"; };
 		226C195B14679E1D00A7F87A /* viewerAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = viewerAppDelegate.h; sourceTree = "<group>"; };
 		226C195C14679E1D00A7F87A /* viewerAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = viewerAppDelegate.m; sourceTree = "<group>"; };
-		226C195F14679E1E00A7F87A /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainWindow.xib; sourceTree = "<group>"; };
 		226C196114679E1E00A7F87A /* FlightViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FlightViewController.h; sourceTree = "<group>"; };
 		226C196214679E1E00A7F87A /* FlightViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FlightViewController.m; sourceTree = "<group>"; };
 		226C196814679E1F00A7F87A /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/FlightViewController.xib; sourceTree = "<group>"; };
@@ -175,8 +174,6 @@
 		22C5CD8A1476B5260017E928 /* StatPoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StatPoint.m; sourceTree = "<group>"; };
 		22C5CD8D1476BBBD0017E928 /* Connector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Connector.h; sourceTree = "<group>"; };
 		22C5CD8E1476BBBD0017E928 /* Connector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Connector.m; sourceTree = "<group>"; };
-		22DCA73114A0FED00091A10E /* IPAddress.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = IPAddress.c; sourceTree = "<group>"; };
-		22DCA73214A0FED00091A10E /* IPAddress.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IPAddress.h; sourceTree = "<group>"; };
 		22FE1DB2146851EA00403F43 /* DataPoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataPoint.h; sourceTree = "<group>"; };
 		22FE1DB3146851EA00403F43 /* DataPoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataPoint.m; sourceTree = "<group>"; };
 		22FE1DB71468844400403F43 /* _CPTConstraintsFixed.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _CPTConstraintsFixed.h; sourceTree = "<group>"; };
@@ -308,7 +305,7 @@
 		221D017014749856006298BD /* iPod */ = {
 			isa = PBXGroup;
 			children = (
-				226C195E14679E1E00A7F87A /* MainWindow.xib */,
+				2243457214C1E097003F498F /* MainWindow.xib */,
 				221D017214749899006298BD /* viewerAppDelegate */,
 				229C9D6F14722A1800F22300 /* RotTabViewController */,
 				22FE1E491468CCF900403F43 /* FlightView */,
@@ -417,8 +414,6 @@
 			isa = PBXGroup;
 			children = (
 				229D250814A7DEDF00E3F017 /* notification.png */,
-				22DCA73114A0FED00091A10E /* IPAddress.c */,
-				22DCA73214A0FED00091A10E /* IPAddress.h */,
 				22B9B96314869A7A009B2829 /* ipad-hh.png */,
 				22B9B96114869A1F009B2829 /* big-hh.png */,
 				22B9B95F14869A11009B2829 /* hh-icon.png */,
@@ -814,7 +809,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				226C195714679E1B00A7F87A /* InfoPlist.strings in Resources */,
-				226C196014679E1E00A7F87A /* MainWindow.xib in Resources */,
 				226C196914679E1F00A7F87A /* FlightViewController.xib in Resources */,
 				226C197614679E7200A7F87A /* LogView.xib in Resources */,
 				226C19821467C3C100A7F87A /* icon_flag_1.png in Resources */,
@@ -836,6 +830,7 @@
 				22B9B96214869A1F009B2829 /* big-hh.png in Resources */,
 				22B9B96414869A7A009B2829 /* ipad-hh.png in Resources */,
 				229D250914A7DEDF00E3F017 /* notification.png in Resources */,
+				2243457314C1E097003F498F /* MainWindow.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -868,7 +863,6 @@
 				228E85A4147AAADD009B03ED /* Orientation.m in Sources */,
 				228E85B1147AF221009B03ED /* PicViewController.m in Sources */,
 				22636EC8147DE94E004B3851 /* BalloonMapLogic.m in Sources */,
-				22DCA73314A0FED00091A10E /* IPAddress.c in Sources */,
 				228CCD4014BAB556000020D9 /* ASIAuthenticationDialog.m in Sources */,
 				228CCD4114BAB556000020D9 /* ASIDataCompressor.m in Sources */,
 				228CCD4214BAB556000020D9 /* ASIDataDecompressor.m in Sources */,
@@ -890,14 +884,6 @@
 				226C195614679E1B00A7F87A /* en */,
 			);
 			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
-		226C195E14679E1E00A7F87A /* MainWindow.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				226C195F14679E1E00A7F87A /* en */,
-			);
-			name = MainWindow.xib;
 			sourceTree = "<group>";
 		};
 		226C196714679E1F00A7F87A /* FlightViewController.xib */ = {

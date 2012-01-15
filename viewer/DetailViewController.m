@@ -135,13 +135,14 @@
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
     if (buttonIndex != [alertView cancelButtonIndex]) {
         [[SharedData instance].con sendMessage: [alertView textFieldAtIndex: 0].text];
+        NSLog(@"Done sending message");
         if ([MFMessageComposeViewController canSendText]) {
             if (texter == nil) {
                 texter = [[MFMessageComposeViewController alloc]init];
                 [texter setMessageComposeDelegate: self];
             }
             NSString *pnum = [[SharedData instance] phoneNumber];
-            if (pnum) {
+            if (pnum && [pnum length] > 0) {
                 [texter setRecipients: [NSArray arrayWithObject: pnum]];
                 [texter setBody: [alertView textFieldAtIndex: 0].text];
             }
@@ -153,7 +154,7 @@
 }
 
 - (IBAction)sendMessage:(id)sender {
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle: @"Send Command" message: @"Type the AKH tags to be sent:" delegate: self cancelButtonTitle: @"Cancel" otherButtonTitles: @"OK",nil];
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle: @"Send Command" message: @"Type the AKP tags to be sent:" delegate: self cancelButtonTitle: @"OK" otherButtonTitles: @"Cancel",nil];
     alert.alertViewStyle = UIAlertViewStylePlainTextInput;
     popupSource = sender;
     [alert show];

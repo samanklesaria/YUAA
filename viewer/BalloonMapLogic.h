@@ -28,7 +28,6 @@
 - (MKCoordinateSpan)distanceFrom:(CLLocationCoordinate2D)loca to: (CLLocationCoordinate2D)locb;
 - (double)spanSize: (MKCoordinateSpan)rect;
 - (void) updateView;
-- (void) postLocation;
 - (void)receivedTag:(NSString *)tag withValue:(double)val;
 - (void)updateLoc;
 

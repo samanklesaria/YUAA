@@ -9,6 +9,7 @@
 #import "SharedData.h"
 #import "Connector.h"
 #import "StatPoint.h"
+#import "PicViewController.h"
 
 @implementation SharedData
 @synthesize map;
@@ -19,7 +20,6 @@
 @synthesize port;
 @synthesize autoAdjust;
 @synthesize logData;
-@synthesize images;
 @synthesize bayOpenData;
 @synthesize bayCloseData;
 @synthesize balloonStats;
@@ -35,17 +35,20 @@
 @synthesize ushift;
 @synthesize deviceName;
 @synthesize con;
+@synthesize theId;
+@synthesize picViewController;
+@synthesize lastIMUTime;
+@synthesize lastImageTime;
 
 - (id)init
 {
     self = [super init];
     if (self) {
-        logData = [[NSMutableArray alloc] initWithObjects:@"Starting app...", nil];
+        logData = [[NSMutableArray alloc] initWithObjects:@"App started", nil];
         autoAdjust = AUTO;
         grapher = [[Grapher alloc] initWithNibName:@"Grapher" bundle:nil];
         bayOpenData = [[NSMutableArray alloc] initWithCapacity:5];
         bayCloseData = [[NSMutableArray alloc] initWithCapacity:5];
-        images = [[NSMutableArray alloc] initWithCapacity:10];
         statArray = [[NSMutableArray alloc] initWithCapacity:50];
         balloonStats = [[NSMutableDictionary alloc] initWithCapacity:50];
         NSString *path = [[NSBundle mainBundle] bundlePath];
@@ -54,6 +57,8 @@
         rotationX = 0;
         rotationY = 0;
         rotationZ = 0;
+        theId = CFUUIDCreate(kCFAllocatorDefault);
+        picViewController = [[PicViewController alloc] initWithNibName:@"PicViewController" bundle:nil];
     }
     
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -97,10 +102,11 @@
     self.server = nil;
     self.bayOpenData = nil;
     self.bayCloseData = nil;
-    self.images = nil;
+    self.picViewController = nil;
     self.statArray = nil;
     self.balloonStats = nil;
     self.logData =  nil;
+    self.picViewController = nil;
 }
 
 static SharedData *gInstance = NULL;
@@ -108,9 +114,15 @@ static SharedData *gInstance = NULL;
 
 + (void)logString:(NSString*)str
 {
+    NSLog(@"%@", str);
     SharedData *a = [SharedData instance];
     [a.logData addObject: str];
+    if ([a.logViewController isBeingPresented]) NSLog(@"I am being presented");
+    /*
+    NSLog(@"I am logging");
+    [a.logData addObject: str];
     [a.logViewController reloadLog];
+     */
 }
 
 + (SharedData *)instance

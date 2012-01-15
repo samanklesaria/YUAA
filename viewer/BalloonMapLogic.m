@@ -9,7 +9,6 @@
 #import "BalloonMapLogic.h"
 #import "SharedData.h"
 #include <math.h>
-#import "IPAddress.h"
 #import "Parser.h"
 
 #define TIMEOUT 20
@@ -25,7 +24,6 @@
         s.map = [newmap retain];
         [s.map setDelegate: self];
         s.map.showsUserLocation = YES;
-        [NSThread detachNewThreadSelector: @selector(postLocation) toTarget:self withObject:nil];
     }
     return self;
 }
@@ -39,25 +37,6 @@
 
 - (void) mapView: (MKMapView *)map didUpdateUserLocation: (MKUserLocation *)userLocation {
     [self updateView];
-}
-
-- (void)postLocation {
-    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    SharedData *s = [SharedData instance];
-    while (1) {
-        CLLocationCoordinate2D coord = s.map.userLocation.location.coordinate;
-        char *latstr = malloc(sizeof(char) * 10);
-        char *lonstr = malloc(sizeof(char) * 10);
-        sprintf(latstr,"%+.5f",coord.latitude);
-        sprintf(lonstr,"%+.5f",coord.longitude);
-        char *lats = createProtocolMessage("LA", latstr, strlen(latstr));
-        char *lons = createProtocolMessage("LO", lonstr, strlen(lonstr));
-        NSURLRequest *r = [NSURLRequest requestWithURL: [NSURL URLWithString: [NSString stringWithFormat: @"http://yuaa.kolmas.cz/store.php?uid=%s&devname=%@&data=%s%s", hw_addrs[0], s.deviceName, lats, lons]]];
-        if ([NSURLConnection canHandleRequest: r])
-            [NSURLConnection connectionWithRequest: r delegate: nil];
-        [NSThread sleepForTimeInterval: 30];   
-    }
-    [pool release];
 }
 
 - (CLLocationCoordinate2D)midpointFrom:(CLLocationCoordinate2D)loca to: (CLLocationCoordinate2D)locb {
@@ -85,6 +64,7 @@ double myabs(double a) {
 }
 
 - (void)updateWithCurrentLocation:(CLLocationCoordinate2D)location {
+    NSLog(@"GPS is %f, %f", location.latitude, location.longitude);
     SharedData *s = [SharedData instance];
     DataPoint *p = [[DataPoint alloc] initWithCoordinate:location];
     DataPoint *oldPoint = currentPoint;
@@ -151,8 +131,10 @@ double myabs(double a) {
 }
 
 - (void) updateLoc {
+    NSLog(@"About to test me with lat: %f, lon: %f", lat, lon);
     if (lat && lon) {
         CLLocationCoordinate2D loc = {lat, lon};
+        NSLog(@"I'm updating my location, really");
         [self updateWithCurrentLocation: loc];
     }
 }
@@ -163,10 +145,12 @@ time_t timer;
     if ([tag isEqualToString: @"LA"]) {
         timer = time(NULL);
         lat = val;
+        NSLog(@"I'm updating lat");
         [self updateLoc];
-    } else if ([tag isEqualToString: @"LN"]) {
+    } else if ([tag isEqualToString: @"LO"]) {
         timer = time(NULL);
         lon = val;
+         NSLog(@"I'm updating long");
         [self updateLoc];
     } else if ([tag isEqualToString: @"MC"]) mcc = val;
     else if ([tag isEqualToString: @"MN"]) mnc = val;

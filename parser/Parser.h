@@ -1,5 +1,4 @@
 typedef struct data {
-    int exists;
     int length;
     char *content;
 } data;
@@ -8,9 +7,11 @@ int to_int(char c);
 
 char to_char(int i);
 
-data *get_info(char a, char b);
+data *get_info(int a, int b);
 
 void update_tag(int a, int b, char *str, int len);
+
+void remove_tag(int a, int b);
 
 int update_cache(char *init);
 

@@ -17,7 +17,6 @@
     self = [super init];
     if (self) {
         orientation = [[Orientation alloc] initWithNibName:@"Orientation" bundle:nil];
-        pictures = [[PicViewController alloc] initWithNibName:@"PicViewController" bundle:nil];
     }
     return self;
 }
@@ -34,40 +33,78 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     SharedData *a = [SharedData instance];
     NSString *str;
-    if (indexPath.row == 0)
+    UITableViewCellAccessoryType mytype = UITableViewCellAccessoryDisclosureIndicator;
+    NSString *cellId;
+    UITableViewCellStyle cellStyle;
+    NSDate *updatedDate;
+    UITableViewCellSelectionStyle mySelect = UITableViewCellSelectionStyleBlue;
+    
+    if (indexPath.row == 0) {
         str = @"Orientation";
-    else {
-        if (indexPath.row == 1)
-             str = @"Pictures";
-        else {
-            NSString *tag = [a.statArray objectAtIndex:indexPath.row -2];
-            StatPoint *stat = [a.balloonStats objectForKey: tag];
-            NSNumber *n = [(NSDictionary *)[(NSArray *)[stat points] lastObject] objectForKey: @"y"];
-            NSString *tagName = [a.statArray objectAtIndex:indexPath.row -2];
-            NSString *humanName = [a.plistData objectForKey: tagName];
-            NSString *realName = (humanName != NULL) ? humanName : tagName;
-            str = [NSString stringWithFormat: @"%@ (%@)", realName, n];
+        if (a.lastIMUTime) {
+            cellId = @"SubCell";
+            cellStyle = UITableViewCellStyleSubtitle;
+            updatedDate = a.lastIMUTime;
+        } else {
+            cellId = @"Cell";
+            cellStyle = UITableViewCellStyleDefault;
         }
+    } else if (indexPath.row == 1) {
+        str = [NSString stringWithFormat: @"Images (%d)", [a.picViewController imagesCount]];
+        if ([a.picViewController imagesCount] == 0) {
+            mytype = UITableViewCellAccessoryNone;
+            mySelect = UITableViewCellSelectionStyleNone;
+        }
+        if (a.lastImageTime) {
+            cellId = @"SubCell";
+            cellStyle = UITableViewCellStyleSubtitle;
+            updatedDate = a.lastImageTime;
+        } else {
+            cellId = @"Cell";
+            cellStyle = UITableViewCellStyleDefault;
+        }
+    } else {
+        NSString *tag = [a.statArray objectAtIndex:indexPath.row -2];
+        StatPoint *stat = [a.balloonStats objectForKey: tag];
+        if (stat.lastTime) {
+            cellId = @"SubCell";
+            cellStyle = UITableViewCellStyleSubtitle;
+            updatedDate = stat.lastTime;
+        } else {
+            cellId = @"Cell";
+            cellStyle = UITableViewCellStyleDefault;
+        }
+        NSNumber *n = [(NSDictionary *)[(NSArray *)[stat points] lastObject] objectForKey: @"y"];
+        NSString *humanName = [a.plistData objectForKey: tag];
+        NSString *realName = (humanName != NULL) ? humanName : tag;
+        str = [NSString stringWithFormat: @"%@ (%@)", realName, n];
     }
-    NSString *cellid = @"Cell";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellid];
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellId];
     if (cell == nil) {
-        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellid] autorelease];
+        cell = [[[UITableViewCell alloc] initWithStyle:cellStyle reuseIdentifier:cellId] autorelease];
     }
     cell.textLabel.text = str;
-    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    cell.accessoryType = mytype;
+    // cell.selectionStyle = mySelect;
+    if (cellStyle == UITableViewCellStyleSubtitle) {
+        NSDateFormatter *df = [NSDateFormatter new];
+        [df setDateFormat: @"HH:mm:ss"];
+        cell.detailTextLabel.text = [@"Upated " stringByAppendingString: [df stringFromDate: updatedDate]];
+        [df release];
+    }
     return cell;
 }
 
 - (NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
     NSString *theText = [[cell textLabel] text];
+    SharedData *a = [SharedData instance];
     if (indexPath.row == 0) {
         [shower showController: orientation withFrame:cell.frame view:cell.superview title: theText];
     } else {
         if (indexPath.row == 1) {
-            [shower showController: pictures withFrame:cell.frame view:cell.superview title: theText];
-            [pictures updatePics];
+            if ([a.picViewController imagesCount] > 0)
+                [shower showController: a.picViewController withFrame:cell.frame view:cell.superview title: theText];
         } else {
             SharedData *a = [SharedData instance];
             NSString *theText = [[cell textLabel] text];

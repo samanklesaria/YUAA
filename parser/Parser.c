@@ -5,8 +5,8 @@
 #include <math.h>
 #include "Parser.h"
 
-#define CBUFSIZ (160*120*3)
-#define PICBUFSIZ (160*120*3)
+#define CBUFSIZ (60*80)
+#define PICBUFSIZ (60*80)
 // (160*120*3) must at least be this
 char *contentbuf;
 int contentidx;
@@ -15,7 +15,7 @@ data *craft_info[24][24];
 
 int info_count = 0;
 
-data *get_info(char a, char b) {
+data *get_info(int a, int b) {
     return craft_info[a][b];
 }
 
@@ -68,7 +68,6 @@ void update_tag(int a, int b, char *str, int len) {
     memcpy(c, str, len);
     d->length = len;
     d->content = c;
-    d->exists = 1;
     craft_info[a - 1][b - 1] = d;
     info_count += (d->length + 5);
 }
@@ -120,6 +119,9 @@ char crc8(const char* data, char initialChecksum, int length)
     return checksum;
 }
 
+void remove_tag(int a, int b) {
+    craft_info[a][b] = NULL;
+}
 
 char* createProtocolMessage(const char* tag, const char* data, int len)
 {   
@@ -146,9 +148,9 @@ char *handle_char(char c) {
                 tagidx++;
                 if (tagidx == 2) {
                     tagidx = 0;
-                    // printf("Handling tag %2s\n", tagbuf);
+                    printf("Handling tag %2s\n", tagbuf);
                     specialCount = PICBUFSIZ -1;
-                    if (tagbuf[0] == 'D' && tagbuf[1] == 'I') state = SPECIAL;
+                    if (tagbuf[0] == 'I' && tagbuf[1] == 'M') state = SPECIAL;
                     else if (tagbuf[0] == 'M' && tagbuf[1] == 'S') state = MESSAGE;
                     else state = CONTENT;
                 }
@@ -183,7 +185,7 @@ char *handle_char(char c) {
                 if (sscanf(numbuf, "%2x", &check) == 1) {
                     char checksum = crc8(tagbuf,0,2);
                     checksum = crc8(contentbuf, checksum, contentidx);
-                    // printf("Checksum: %x, check: %x\n", (unsigned char)checksum, (unsigned char)check);
+                    printf("Checksum: %x, check: %x\n", (unsigned char)checksum, (unsigned char)check);
                     if (checksum == check) {
                         update_tag(to_int(tagbuf[0]), to_int(tagbuf[1]), contentbuf, contentidx);
                         contentidx = 0;

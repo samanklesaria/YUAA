@@ -12,10 +12,15 @@
     UIImageView *image;
     bool handleSwipe;
     int imageIndex;
+    NSMutableArray *images;
 }
 
-- (void) updatePics;
+- (void)updatePics;
+- (void)addImage:(UIImage *)theImage;
+- (NSData *)getImageTag;
+- (int)imagesCount;
 
 @property (nonatomic, retain) IBOutlet UIImageView *image;
+@property (retain, nonatomic) IBOutlet UILabel *imageCounter;
 
 @end

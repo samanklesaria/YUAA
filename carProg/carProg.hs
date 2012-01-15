@@ -11,26 +11,23 @@ import System.Posix.Time
 
 -- to make this work, just use parsing tags and make them thread safe.
 -- otherise shared resource trouble
+
+-- suppress errors
+
 main = do
-    e <- epochTime
     chan <- newChan
+    e <- epochTime
     logPath <- openFile ("./" ++ show e) AppendMode
     fpath <- liftM (safeHead . filter (isPrefixOf "cu.usb")) (getDirectoryContents "/dev/")
-    let putLogPath x = do
-        b <- hIsOpen logPath
-        if b then hPutChar logPath x >> hFlush logPath else return ()
     s <- openSerial ("/dev/" ++ fpath) defaultSerialSettings
     streamServer serverSpec{address = (IP "" 9000)} (\h a-> do
         chan' <- dupChan chan
-        let serverloop = do
-            b <- hIsOpen h
-            if b then readChan chan' >>= hPutChar h >> hFlush h else return ()
+        let serverloop = readChan chan' >>= hPutChar h >> hFlush h
         forkIO $ forever serverloop
-        let readerloop = do
-            b <- hIsOpen h
-            if b then hGetChar h >>= sendChar s else return ()
+        let readerloop = hGetChar h >>= sendChar s
         forever readerloop)
-    forever (recvChar s >>= maybe (return ()) (\x-> putLogPath x >> writeChan chan x))
+    forever (recvChar s >>= maybe (return ()) (\x->
+        hPutChar logPath x >> hFlush logPath >> writeChan chan x))
     closeSerial s
     hClose logPath
 

@@ -23,7 +23,6 @@
     stDelegate.shower = self;
     [[SharedData instance] setTable: [self tableView]];
 }
-
 		
 - (void)viewWillAppear:(BOOL)animated
 {
