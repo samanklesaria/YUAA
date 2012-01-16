@@ -11,6 +11,7 @@
 #import "ASIHTTPRequest.h"
 #import "ASIFormDataRequest.h"
 #import "PicViewController.h"
+#import "Orientation.h"
 
 @implementation Connector
 
@@ -253,8 +254,7 @@
             return;
         }
         NSString *strVal = [[[NSString alloc] initWithBytes: d->content length: (NSUInteger)(d->length) encoding:NSASCIIStringEncoding] autorelease];
-        NSString *str = [NSString stringWithFormat: @"Updating tag %@ with value %@", strTag, strVal];
-        [SharedData logString: str];
+        [SharedData logString: [NSString stringWithFormat: @"Updating tag %@ with value %@", strTag, strVal]];
         if ([strTag isEqualToString: @"MS"]) {
             [SharedData logString: @"Getting a message"];
             [strVal enumerateLinesUsingBlock: ^(NSString *str, BOOL *stop) {
@@ -268,14 +268,17 @@
             if ([strTag isEqualToString: @"YA"]) {
                 s.rotationZ = doubleVal;
                 s.lastIMUTime = [NSDate date];
+                [s.orientation render];
             }
             else if ([strTag isEqualToString: @"PI"]) {
                 s.rotationY = doubleVal;
                 s.lastIMUTime = [NSDate date];
+                [s.orientation render];
             }
             else if ([strTag isEqualToString: @"RO"]) {
                 s.rotationX = doubleVal;
                 s.lastIMUTime = [NSDate date];
+                [s.orientation render];
             }
             else if (!([strTag isEqualToString: @"LA"] || [strTag isEqualToString: @"LO"] || [strTag isEqualToString: @"BB"])) {
                 StatPoint *stat = [s.balloonStats objectForKey: strTag];

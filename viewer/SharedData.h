@@ -19,6 +19,7 @@ enum mapAdjust {
 @class LogViewController;
 @class PicViewController;
 @class Connector;
+@class Orientation;
 
 @interface SharedData : NSObject {
     // arrays
@@ -34,6 +35,7 @@ enum mapAdjust {
     float vshift;
     LogViewController *logViewController;
     PicViewController *picViewController;
+    Orientation *orientation;
     MKMapView *map;
     Connector *con;
     CFUUIDRef theId;
@@ -57,6 +59,7 @@ enum mapAdjust {
     NSDate *lastImageTime;
 }
 
+@property (retain) Orientation *orientation;
 @property (retain) NSDate *lastIMUTime;
 @property (retain) PicViewController *picViewController;
 @property CFUUIDRef theId;

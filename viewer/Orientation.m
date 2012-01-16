@@ -30,6 +30,10 @@
     // Release any cached data, images, etc that aren't in use.
 }
 
+-(void)render {
+    [glView drawView:self];
+}
+
 #pragma mark - View lifecycle
 
 - (void)viewDidLoad

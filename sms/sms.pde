@@ -130,15 +130,7 @@ void processor() {
            longjmp(restarter, 0);
         };
         if (strstr(at_buffer, "+CREG")) {
-              char *lac;
-              char *cid;
-              char *end_cid;
-              lac = strchr(at_buffer, ',') + 1;
-              cid = strchr(lac, ',') + 1;
-              Serial.print("lac/ cid: ");
-              Serial.println(lac);
-              update_tag(LACTAG, lac, cid - lac - 1);
-              update_tag(CIDTAG, cid, strlen(cid));
+              store_lac_cid();
               Serial.println("Done with Cregging");
         };
 }
@@ -252,24 +244,26 @@ void store_mcc_mnc() {
 }
 
 void store_lac_cid() {
-    char *lac;
-    char *cid;
-    char *end_cid;
-    // this should give regular updates.
-    // have wait_for act on +CREG updates
-    
-    Serial1.println("AT+CREG=2");
-    wait_for("OK");
-    Serial1.println("AT+CREG?");
-    read_from(cellAvailable, cellRead);
-    read_from(cellAvailable, cellRead);
-    lac = strchr(at_buffer, ',') + 1;
-    cid = strchr(lac, ',') + 1;
-    Serial.print("lac/ cid: ");
+    char *start = strchr(at_buffer, ',') + 1;
+    Serial.print("String is ");
+    Serial.println(start);
+    char lacstr[6];
+    long int lac;
+    char cidstr[6];
+    long int cid;
+    sscanf(start,"0x%x,0x%X", &lac, &cid);
+    Serial.print("Lac is ");
     Serial.println(lac);
-    update_tag(LACTAG, lac, cid - lac - 1);
-    update_tag(CIDTAG, cid, strlen(cid));
-    wait_for("OK");
+    Serial.print("Cid is ");
+    Serial.println(cid);
+    sprintf(lacstr, "%d", lac);
+    sprintf(cidstr, "%d", cid);
+    Serial.print("LacString is ");
+    Serial.println(lacstr);
+    Serial.print("CidString is ");
+    Serial.println(cidstr);
+    update_tag(LACTAG, lacstr, strlen(lacstr));
+    update_tag(CIDTAG, cidstr, strlen(cidstr));
 }
 
 void doServer() {
@@ -326,8 +320,7 @@ void addNumber() {
   strcpy(numbers + numsidx, number);
   numsidx += 11;
   startCall(number);
-  Serial1.print("Gotcha.
-  ");
+  Serial1.print("Gotcha");
   endCall();
 }
 
@@ -380,13 +373,13 @@ void setupSim() {
     // wait_for("OK");
     
     Serial1.println("AT+CNMI=3,3,0,0");
-    /wait_for("OK");
+    wait_for("OK");
     Serial.println("Everything set up");
     mode = 1;
     
-    // store_mcc_mnc();
-    // Serial1.println("AT+CREG=2");
-    // wait_for("OK");
+    store_mcc_mnc();
+    Serial1.println("AT+CREG=2");
+    wait_for("OK");
     Serial.println("Done setting sim up");
 }
 
@@ -398,7 +391,7 @@ void setup() {
     setupSim();
     buffidx = 0;
     
-    // wait_for("PIGS");
+    wait_for("PIGS");
     // Serial.println("Done with setup");
     // int numsidx = 11;
     // strncpy(numbers, "16517477993", 11);
@@ -410,5 +403,6 @@ void setup() {
 }
 
 void loop() {
-  update_loc();
+  delay(1000);
+  // update_loc();
 }

@@ -12,15 +12,6 @@
 @implementation StatTableDelegate
 @synthesize shower;
 
-- (id)init
-{
-    self = [super init];
-    if (self) {
-        orientation = [[Orientation alloc] initWithNibName:@"Orientation" bundle:nil];
-    }
-    return self;
-}
-
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     SharedData *a = [SharedData instance];
     return [[a statArray] count] + 2;
@@ -100,7 +91,7 @@
     NSString *theText = [[cell textLabel] text];
     SharedData *a = [SharedData instance];
     if (indexPath.row == 0) {
-        [shower showController: orientation withFrame:cell.frame view:cell.superview title: theText];
+        [shower showController: a.orientation withFrame:cell.frame view:cell.superview title: theText];
     } else {
         if (indexPath.row == 1) {
             if ([a.picViewController imagesCount] > 0)

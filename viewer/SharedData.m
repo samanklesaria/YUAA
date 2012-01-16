@@ -38,6 +38,7 @@
 @synthesize theId;
 @synthesize picViewController;
 @synthesize lastIMUTime;
+@synthesize orientation;
 @synthesize lastImageTime;
 
 - (id)init
@@ -59,6 +60,7 @@
         rotationZ = 0;
         theId = CFUUIDCreate(kCFAllocatorDefault);
         picViewController = [[PicViewController alloc] initWithNibName:@"PicViewController" bundle:nil];
+        orientation = [[Orientation alloc] initWithNibName:@"Orientation" bundle:nil];
     }
     
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -114,15 +116,9 @@ static SharedData *gInstance = NULL;
 
 + (void)logString:(NSString*)str
 {
-    NSLog(@"%@", str);
     SharedData *a = [SharedData instance];
     [a.logData addObject: str];
-    if ([a.logViewController isBeingPresented]) NSLog(@"I am being presented");
-    /*
-    NSLog(@"I am logging");
-    [a.logData addObject: str];
     [a.logViewController reloadLog];
-     */
 }
 
 + (SharedData *)instance

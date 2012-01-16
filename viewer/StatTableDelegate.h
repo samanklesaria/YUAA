@@ -14,7 +14,6 @@
 
 @interface StatTableDelegate : NSObject  <UITableViewDataSource, UITableViewDelegate> {
     id <ControllerShower> shower;
-    Orientation *orientation;
 }
 
 @property (retain) id  <ControllerShower> shower;
