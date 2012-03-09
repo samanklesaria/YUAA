@@ -20,7 +20,7 @@
 
 @class DetailViewController;
 
-@interface ipad_viewerAppDelegate : NSObject <UIApplicationDelegate, PrefsResponder, ConnectorDelegate> {
+@interface ipad_viewerAppDelegate : NSObject <UIApplicationDelegate, PrefsResponder, ConnectorDelegate, LogChangeProtocol> {
     IBOutlet DetailViewController *mapViewController;
     IBOutlet StatViewController *statViewController;
     IBOutlet PrefsViewController *prefsViewController;

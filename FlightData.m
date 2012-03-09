@@ -24,6 +24,7 @@
 @synthesize lastLocTime;
 @synthesize lat;
 @synthesize lon;
+@synthesize akpLogData;
 
 - (id)init
 {

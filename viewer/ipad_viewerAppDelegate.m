@@ -24,6 +24,8 @@
     
     logViewController = [[LogViewController alloc] initWithNibName:@"LogViewController" bundle:nil];
     logViewController.logData = f.parseLogData;
+    logViewController.textView.text = f.akpLogData;
+    logViewController.delegate = self;
     mapViewController.log = logViewController;
     
     connector = [[Connector alloc] initWithProcessor: processor prefs: prefs];
@@ -52,6 +54,21 @@
 -(void)gettingTags: (bool)b {
     [statViewController view];
     [statViewController setGettingTags: b];
+}
+
+- (void) newLogType: (int) type {
+    FlightData *f = [FlightData instance];
+    switch (type) {
+        case 0:
+            logViewController.logData = f.parseLogData;
+            break;
+        case 1:
+            logViewController.logData = f.netLogData;
+            break;
+        case 2:
+            NSLog(@"AKP Time");
+            break;
+    }
 }
 
 - (void)mapChosen: (int)type {

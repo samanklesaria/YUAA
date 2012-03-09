@@ -21,7 +21,7 @@
 #import "EAGLView.h"
 #import "BalloonRenderer.h"
 
-@interface viewerAppDelegate : NSObject <UIApplicationDelegate, UITabBarControllerDelegate, ConnectorDelegate, PrefsResponder> {
+@interface viewerAppDelegate : NSObject <UIApplicationDelegate, UITabBarControllerDelegate, ConnectorDelegate, PrefsResponder, LogChangeProtocol> {
     IBOutlet PrefsViewController *prefsViewController;
     
     IBOutlet UINavigationController *statNav;

@@ -103,9 +103,14 @@
                 [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
                 erred = 0;
                 while ([stream hasBytesAvailable]) {
-                    uint8_t readloc;
-                    [stream read:&readloc maxLength:1];
-                    [processor updateData: readloc];
+                    uint8_t readloc[256];
+                    int len = [stream read:readloc maxLength:256];
+                    NSString *toAppend = [[NSString alloc] initWithBytes: readloc length: len encoding:NSASCIIStringEncoding];
+                    FlightData *f = [FlightData instance];
+                    [f.akpLogData appendString: toAppend];
+                    int i;
+                    for (i=0; i < len; i++)
+                        [processor updateData: readloc[i]];
                 }
                 break;
             }

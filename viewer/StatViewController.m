@@ -121,7 +121,7 @@
 }
 
 - (void) setGettingTags: (BOOL) b {
-    tagStatus.text = b ? @"Getting tags" : @"Not getting tags";
+    tagStatus.text = b ? @"Using LAN" : @"Using remote server";
 }
 
 - (void)showController:(UIViewController *)controller withFrame: (CGRect)rect view: (UIView *)view title: (NSString *)title {

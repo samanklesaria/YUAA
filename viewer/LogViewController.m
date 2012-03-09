@@ -11,6 +11,8 @@
 @implementation LogViewController
 @synthesize logTable;
 @synthesize logData;
+@synthesize delegate;
+@synthesize textView;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -35,17 +37,23 @@
 {
     [super viewDidLoad];
     [self reloadLog];
-    [NSThread detachNewThreadSelector:@selector(timedReloader) toTarget:self withObject:nil];
+    [NSTimer scheduledTimerWithTimeInterval: 0.2 target: self selector:@selector(reloadLog) userInfo:nil repeats:YES];
+    // [NSThread detachNewThreadSelector:@selector(timedReloader) toTarget:self withObject:nil];
 }
 
 - (void)timedReloader {
-    [NSTimer scheduledTimerWithTimeInterval: 0.5 target: self selector:@selector(reloadLog) userInfo:nil repeats:YES];
+    [NSTimer scheduledTimerWithTimeInterval: 0.2 target: self selector:@selector(reloadLog) userInfo:nil repeats:YES];
     [[NSRunLoop currentRunLoop] run];
+}
+
+- (IBAction)logTypeChanged:(id)sender {
+    [delegate newLogType: ((UISegmentedControl *)sender).selectedSegmentIndex];
 }
 
 - (void)viewDidUnload
 {
     [self setLogTable:nil];
+    [self setTextView:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -69,6 +77,8 @@
 
 - (void)dealloc {
     [logTable release];
+    [delegate release];
+    [textView release];
     [super dealloc];
 }
 
@@ -97,9 +107,19 @@
 }
 
 -(void)reloadLog {
-    if (displayed && [logData count]) {
-        [logTable reloadData];
-        [logTable scrollToRowAtIndexPath: [NSIndexPath indexPathForRow: [logData count] - 1 inSection: 0] atScrollPosition: UITableViewScrollPositionTop animated: NO];
+    if (displayed) {
+        if (self.textView.hidden) {
+            [logTable reloadData];
+            if ([logData count])
+                [logTable scrollToRowAtIndexPath: [NSIndexPath indexPathForRow: [logData count] - 1 inSection: 0] atScrollPosition: UITableViewScrollPositionTop animated: NO];
+        } else {
+            FlightData *f = [FlightData instance];
+            textView.text = f.akpLogData;
+            NSRange range;
+            range = NSMakeRange ([f.akpLogData length], 0);
+            [textView scrollRangeToVisible: range];
+            // THIS IS AWFUL. WE have to replace the text every time.
+        }
     }
 }
 
