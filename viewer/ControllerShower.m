@@ -16,13 +16,13 @@
 {
     self = [self init];
     if (self) {
-        graphView = g;
+        graphView = [g retain];
         [graphView view];
-        orientation = o;
-        picViewController = p;
+        orientation = [o retain];
+        picViewController = [p retain];
         graphLogic = [[GraphLogic alloc] initWithGraphView:graphView.graphView];
-        connector = c;
-        shower = s;
+        connector = [c retain];
+        shower = [s retain];
     }
     return self;
 }
@@ -56,6 +56,16 @@
     UIAlertView *alert = [[[UIAlertView alloc] initWithTitle: @"Send Command" message: @"Type the AKP tags to be sent:" delegate: self cancelButtonTitle: @"Cancel" otherButtonTitles: @"Ok",nil] autorelease];
     alert.alertViewStyle = UIAlertViewStylePlainTextInput;
     [alert show];
+}
+
+- (void) dealloc {
+    [orientation release];
+    [graphLogic release];
+    [graphView release];
+    [connector release];
+    [picViewController release];
+    [shower release];
+    [super dealloc];
 }
 
 @end

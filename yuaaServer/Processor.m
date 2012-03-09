@@ -15,15 +15,17 @@
 {
     self = [super init];
     if (self) {
-        prefs = p;
-        [NSThread detachNewThreadSelector: @selector(posterThread) toTarget:self withObject:nil];
         prepCrc();
+        myUrl = [[NSURL URLWithString: @"http://yuaa.tc.yale.edu/scripts/get.php"] retain];
+        storeUrl = [[NSURL URLWithString: @"http://yuaa.tc.yale.edu/scripts/store.php"] retain];
+        prefs = [p retain];
+        [NSThread detachNewThreadSelector: @selector(posterThread) toTarget:self withObject:nil];
     }
     return self;
 }
 
 - (void) posterThread {
-    [NSTimer scheduledTimerWithTimeInterval: 3 target:self selector:@selector(postTags) userInfo:nil repeats:YES];
+    [NSTimer scheduledTimerWithTimeInterval: 2 target:self selector:@selector(postTags) userInfo:nil repeats:YES];
     [[NSRunLoop currentRunLoop] run];
 }
 
@@ -85,8 +87,7 @@
             if ([delegate respondsToSelector: @selector(receivedPicture)])
                 [delegate receivedPicture];
 
-            NSURL *url = [NSURL URLWithString: @"http://yuaa.tc.yale.edu/scripts/upload.php"];
-            ASIFormDataRequest *r = [ASIFormDataRequest requestWithURL:url];
+            ASIFormDataRequest *r = [ASIFormDataRequest requestWithURL:storeUrl];
             [r setPostValue: prefs.uuid forKey:@"uid"];
             [r setPostValue: @"berkeley" forKey: @"password"];
             [r setPostValue: @"Balloon" forKey:@"devname"];
@@ -179,30 +180,45 @@
             [delegate gettingTags: NO];
         gotTags = NO;
     }
-    if (cacheStringIndex > 0) {
-        NSString *cache = [[[NSString alloc] initWithBytes: cachedString length: cacheStringIndex encoding:NSASCIIStringEncoding] autorelease];
-        NSURL *url = [NSURL URLWithString: @"http://yuaa.tc.yale.edu/scripts/store.php"];
-        ASIFormDataRequest *r = [ASIFormDataRequest requestWithURL:url];
+    if (gotTags) {
+        if (cacheStringIndex > 0) {
+            NSString *cache = [[[NSString alloc] initWithBytes: cachedString length: cacheStringIndex encoding:NSASCIIStringEncoding] autorelease];
+            ASIFormDataRequest *r = [ASIFormDataRequest requestWithURL:storeUrl];
+            [r setPostValue: prefs.uuid forKey:@"uid"];
+            [r setPostValue: @"berkeley" forKey: @"password"];
+            [r setPostValue: @"Balloon" forKey:@"devname"];
+            [r setPostValue: cache forKey: @"data"];
+            [r setDelegate:self];
+            cacheStringIndex = 0;
+            NSLog(@"Putting tags on server");
+            [r startAsynchronous];
+        }
+    } else {
+        ASIFormDataRequest *r = [ASIFormDataRequest requestWithURL:myUrl];
         [r setPostValue: prefs.uuid forKey:@"uid"];
         [r setPostValue: @"berkeley" forKey: @"password"];
         [r setPostValue: @"Balloon" forKey:@"devname"];
-        [r setPostValue: cache forKey: @"data"];
         [r setDelegate:self];
-        cacheStringIndex = 0;
-        NSLog(@"Putting tags on server");
-        [r startAsynchronous];
     }
 }
 
 - (void)requestFinished:(ASIHTTPRequest *)request
 {
+    if ([delegate respondsToSelector: @selector(serverStatus:)])
+        [delegate serverStatus: YES];
     FlightData *flightData = [FlightData instance];
     [flightData.netLogData addObject: @"Request Succeeded: "];
     [[request responseString] enumerateLinesUsingBlock: ^(NSString *str, BOOL *stop) {
         [flightData.netLogData addObject: str];
     }];
-    if ([delegate respondsToSelector: @selector(serverStatus:)])
-        [delegate serverStatus: YES];
+    if ([request.url isEqual: myUrl]) {
+        NSData *responseData = [request responseData];
+        int i;
+        char *chars = (char *)[responseData bytes];
+        for (i=0; i < [responseData length]; i++) {
+            [self updateData: chars[i]];
+        }
+    }
 }
 
 - (void)requestFailed:(ASIHTTPRequest *)request
@@ -212,6 +228,14 @@
     [flightData.netLogData addObject: [[request error] description]];
     if ([delegate respondsToSelector:@selector(serverStatus:)])
         [delegate serverStatus: NO];
+}
+
+- (void) dealloc {
+    [prefs release];
+    [myUrl release];
+    [storeUrl release];
+    [lastUpdate release];
+    [super dealloc];
 }
 
 @end

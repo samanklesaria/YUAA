@@ -16,8 +16,8 @@
 - (id) initWithPrefs: (Prefs *)p map: (MKMapView *) m {
     self = [self init];
     if (self) {
-        prefs = p;
-        map = m;
+        prefs = [p retain];
+        map = [m retain];
         [map setDelegate: self];
         map.showsUserLocation = YES;
         [self updateView];
@@ -32,9 +32,9 @@
 }
 
 - (void) dealloc {
-    [selectedPoint release];
     [currentPoint release];
-    [locmanager release];
+    [map release];
+    [prefs release];
     [super dealloc];
 }
 
@@ -148,11 +148,6 @@ double myabs(double a) {
         annotationView.annotation = annotation;
     }
     [annotationView setPinColor:annotation == currentPoint? MKPinAnnotationColorGreen:MKPinAnnotationColorRed];
-    
-    if (selectedPoint == annotation) {
-        [annotationView setPinColor:MKPinAnnotationColorPurple];
-    }
-    
     return annotationView;
 }
 

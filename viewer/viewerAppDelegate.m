@@ -149,6 +149,8 @@
     [statViewController release];
     [balloonMapLogic release];
     [logViewController release];
+    [prefs release];
+    [processor release];
     [super dealloc];
 }
 

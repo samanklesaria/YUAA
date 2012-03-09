@@ -108,6 +108,7 @@
     [deviceNameField release];
     [postServerField release];
     [localServerField release];
+    self.prefs = nil;
     [portField release];
     [mapType release];
     [mapView release];

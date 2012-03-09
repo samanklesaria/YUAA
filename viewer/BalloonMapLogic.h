@@ -14,9 +14,7 @@
 
 @interface BalloonMapLogic : NSObject <MKMapViewDelegate> {
     Prefs *prefs;
-    DataPoint *selectedPoint;
     DataPoint *currentPoint;
-    CLLocationManager *locmanager;
     MKMapView *map;
 }
 

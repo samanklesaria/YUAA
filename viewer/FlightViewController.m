@@ -54,6 +54,7 @@
     [tempButton release];
     [ftInfo release];
     [bayInfo release];
+    self.controllerShower = nil;
     [super dealloc];
 }
 

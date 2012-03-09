@@ -44,6 +44,8 @@
         [mainstream release];
         mainstream = nil;
     }
+    [processor release];
+    [prefs release];
     [super dealloc];
 }
 

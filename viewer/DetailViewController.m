@@ -44,6 +44,8 @@
     [map release];
     [prefs release];
     [pc release];
+    self.controllerShower = nil;
+    self.log = nil;
     [super dealloc];
 }
 

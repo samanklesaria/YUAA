@@ -130,11 +130,14 @@
     [statViewController release];
     [mapViewController release];
     [prefsViewController release];
-    [mapViewController release];
-    [statViewController release];
-    [prefsViewController release];
-    [window release];
     [splitViewController release];
+    [controllerShower release];
+    [graphView release];
+    [orientation release];
+    [connector release];
+    [balloonMapLogic release];
+    [prefs release];
+    [logViewController release];
     [super dealloc];
 }
 

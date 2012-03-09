@@ -32,6 +32,9 @@
     int bayCounter;
     Prefs *prefs;
     
+    NSURL *myUrl;
+    NSURL *storeUrl;
+    
     int mcc;
     int mnc;
     int lac;
