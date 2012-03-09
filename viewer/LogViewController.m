@@ -10,12 +10,13 @@
 
 @implementation LogViewController
 @synthesize logTable;
+@synthesize logData;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        [SharedData instance].logViewController = self;
+        //
     }
     return self;
 }
@@ -34,7 +35,12 @@
 {
     [super viewDidLoad];
     [self reloadLog];
-    // Do any additional setup after loading the view from its nib.
+    [NSThread detachNewThreadSelector:@selector(timedReloader) toTarget:self withObject:nil];
+}
+
+- (void)timedReloader {
+    [NSTimer scheduledTimerWithTimeInterval: 0.5 target: self selector:@selector(reloadLog) userInfo:nil repeats:YES];
+    [[NSRunLoop currentRunLoop] run];
 }
 
 - (void)viewDidUnload
@@ -43,6 +49,15 @@
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
+}
+
+- (void) viewDidAppear:(BOOL)animated {
+    displayed = YES;
+    [self reloadLog];
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    displayed = NO;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -58,8 +73,7 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    SharedData *a = [SharedData instance];
-    return [[a logData] count];
+    return [logData count];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -67,7 +81,6 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    SharedData *a = [SharedData instance];
     
     static NSString *CellIdentifier = @"Cell";
     
@@ -79,15 +92,15 @@
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
     }
     
-    cell.textLabel.text = [a.logData objectAtIndex:indexPath.row];
+    cell.textLabel.text = [logData objectAtIndex:indexPath.row];
     return cell;
 }
 
-// Only do this when he's showing
 -(void)reloadLog {
-    NSLog(@"Reloading log");
-    [logTable reloadData];
-    [logTable scrollToRowAtIndexPath: [NSIndexPath indexPathForRow: [[SharedData instance].logData count] - 1 inSection: 0] atScrollPosition: UITableViewScrollPositionTop animated: NO];
+    if (displayed && [logData count]) {
+        [logTable reloadData];
+        [logTable scrollToRowAtIndexPath: [NSIndexPath indexPathForRow: [logData count] - 1 inSection: 0] atScrollPosition: UITableViewScrollPositionTop animated: NO];
+    }
 }
 
 @end

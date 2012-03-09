@@ -7,39 +7,95 @@
 //
 
 #import "viewerAppDelegate.h"
-#import "Parser.h"
 
 @implementation viewerAppDelegate
 
-@synthesize mapNavController = _mapNavController;
-@synthesize statusNavController = _navController;
-@synthesize window = _window;
-@synthesize tabBarController = _tabBarController;
-
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
-{
-    // Override point for customization after application launch.
-    // Add the tab bar controller's current view as a subview of the window
-    initCrc8();
-    initContentBuf();
-    self.window.rootViewController = self.tabBarController;
-    SharedData *s = [SharedData instance];
-    s.lshift = 0.0f;
-    s.ushift = -0.1f;
-    s.vshift = -2.0f;
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
-    // INTERACTIVE SHIFTING IS the only way to get the right parameters
+    prefs = [[Prefs alloc] init];
+    prefsViewController.prefs = prefs;
+    prefsViewController.delegate = self;
+    FlightData *f = [FlightData instance];
+    processor = [[Processor alloc] initWithPrefs: prefs];
+    processor.delegate = self;
     
-    StatView *statController = [[StatView alloc] initWithNibName:@"StatView" bundle:nil];
-    [[self statusNavController] pushViewController:statController animated:NO];
-    FlightViewController *mapController = [[FlightViewController alloc] initWithNibName:@"FlightViewController" bundle:nil];
-    [[self mapNavController] pushViewController:mapController animated:NO];
-    [self.window makeKeyAndVisible];
+    statViewController = [[StatViewController alloc] initWithNibName:@"StatViewController" bundle:nil];
+    statViewController.title = @"Stats";
+    [statNav pushViewController:statViewController animated:YES];
+    
+    flightViewController = [[FlightViewController alloc] initWithNibName:@"FlightViewController" bundle:nil];
+    flightViewController.title = @"Map";
+    [flightNav pushViewController:flightViewController animated:YES];
+    
+    connector = [[Connector alloc] initWithProcessor: processor prefs: prefs];
+    logViewController.logData = f.parseLogData;
+    
+    graphView = [[GraphViewController alloc] initWithNibName:@"GraphViewController" bundle:nil];
+    
+    orientation = [[Orientation alloc] initWithNibName:@"Orientation" bundle:nil];
+    
+    picView = [[PicViewController alloc] initWithNibName:@"PicViewController" bundle:nil];
+    
+    controllerShower = [[ControllerShower alloc] initWithConnector: connector shower:flightViewController graphView:graphView orientationView: orientation picView:picView];
+    flightViewController.controllerShower = controllerShower;
+    statViewController.controllerShower = controllerShower;
+    
+    [window makeKeyAndVisible];
+    
+    balloonMapLogic = [[BalloonMapLogic alloc] initWithPrefs:prefs map: flightViewController.map];
+    [self mapTrackingChanged: prefs.autoAdjust];
+    
     return YES;
-    
-    // use detachNewThreadSelector:toTarget:withObject:
-    // to start fetching from the server
-    // make sure to stop the connection when deallocating
+}
+
+- (void)mapChosen: (int)type {
+    switch (type) {
+        case 0: 
+            [flightViewController.map setMapType: MKMapTypeStandard];
+            break;
+        case 1: 
+            [flightViewController.map setMapType: MKMapTypeSatellite];
+            break;
+        case 2: 
+            [flightViewController.map setMapType: MKMapTypeHybrid];
+            break;
+    }
+}
+
+- (void)mapTrackingChanged: (bool)type {
+    if (type) {
+       [flightViewController.map setUserTrackingMode: MKUserTrackingModeFollowWithHeading animated: YES]; 
+    } else {
+        [flightViewController.map setUserTrackingMode: MKUserTrackingModeNone];
+        [balloonMapLogic updateView];
+    }
+}
+
+-(void)receivedTag:(NSString *)theData withValue:(double)val {
+    [flightViewController receivedTag: theData withValue: val]; 
+}
+
+-(void)receivedPicture {
+    [picView addedImage];
+}
+
+-(void)receivedLocation {
+    [balloonMapLogic updateLoc];
+}
+
+-(void)gettingTags: (bool)b {
+    NSLog(@"Getting tags: %d", b);
+    [statViewController view];
+    [statViewController setGettingTags: b];
+}
+
+- (BOOL)tabBarController:(UITabBarController *)tabBarController shouldSelectViewController:(UIViewController *)viewController {
+    if (viewController == flightNav) {
+        [controllerShower setShower: flightViewController];
+    } else if (viewController == statNav) {
+        [controllerShower setShower: statViewController];
+    }
+    return YES;
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application
@@ -83,25 +139,17 @@
 
 - (void)dealloc
 {
-    [_window release];
-    [_tabBarController release];
-    [_navController release];
-    [_mapNavController release];
+    [prefsViewController release];
+    [statNav release];
+    [flightNav release];
+    [window release];
+    [connector release];
+    [controllerShower release];
+    [flightViewController release];
+    [statViewController release];
+    [balloonMapLogic release];
+    [logViewController release];
     [super dealloc];
 }
-
-/*
-// Optional UITabBarControllerDelegate method.
-- (void)tabBarController:(UITabBarController *)tabBarController didSelectViewController:(UIViewController *)viewController
-{
-}
-*/
-
-/*
-// Optional UITabBarControllerDelegate method.
-- (void)tabBarController:(UITabBarController *)tabBarController didEndCustomizingViewControllers:(NSArray *)viewControllers changed:(BOOL)changed
-{
-}
-*/
 
 @end

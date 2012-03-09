@@ -17,8 +17,8 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         handleSwipe = NO;
+        displayed = NO;
         imageIndex = 0;
-        images = [[NSMutableArray alloc] initWithCapacity:10];
     }
     return self;
 }
@@ -44,43 +44,56 @@
     [gesture release];
 }
 
+- (void)viewDidAppear:(BOOL)animated {
+    FlightData *flightData = [FlightData instance];
+    imageIndex = [flightData.pictures count] - 1;
+    displayed = YES;
+    [self updatePics];
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    displayed = NO;
+}
+
 - (void)handleGesture: (UIPanGestureRecognizer *)gestureRecognizer {
     if (handleSwipe) {
-        if ([images count] > 0) {
+        FlightData *flightData = [FlightData instance];
+        if ([flightData.pictures count] > 0) {
             if ([gestureRecognizer translationInView: image].x < 0) {
-                if ([images count] <= ++imageIndex) imageIndex = 0;
+                if ([flightData.pictures count] <= ++imageIndex) imageIndex = 0;
             }
             if ([gestureRecognizer translationInView: image].x > 0) {
-                if (--imageIndex < 0) imageIndex = [images count] - 1;
+                if (--imageIndex < 0) imageIndex = [flightData.pictures count] - 1;
             }
-            image.image = [images objectAtIndex: imageIndex];
-             imageCounter.text = [NSString stringWithFormat: @"%d of %d", imageIndex + 1, [images count]];
+            image.image = [flightData.pictures objectAtIndex: imageIndex];
+             imageCounter.text = [NSString stringWithFormat: @"%d of %d", imageIndex + 1, [flightData.pictures count]];
         }
         handleSwipe = NO;
     }
 }
 
 - (void) updatePics {
-    NSLog(@"Updating pictures with imageIndex %d, image count: %d", imageIndex, [images count]);
-    if ([images count] > imageIndex) {
-        UIImage *im = [images objectAtIndex: imageIndex];
+    FlightData *flightData = [FlightData instance];
+    NSLog(@"Updating pictures with imageIndex %d, image count: %d", imageIndex, [flightData.pictures count]);
+    if ([flightData.pictures count] > imageIndex) {
+        UIImage *im = [flightData.pictures objectAtIndex: imageIndex];
         image.image = im;
     }
-    if ([images count] > 0)
-        imageCounter.text = [NSString stringWithFormat: @"%d of %d", imageIndex + 1, [images count]];
+    if ([flightData.pictures count] > 0)
+        imageCounter.text = [NSString stringWithFormat: @"%d of %d", imageIndex + 1, [flightData.pictures count]];
 }
 
-- (void) addImage:(UIImage *)theImage {
-    [images addObject: theImage];
-    [self updatePics];
-}
-
-- (NSData *)getImageTag {
-    if ([images count] > 0) return UIImageJPEGRepresentation([images lastObject], 1); else return NULL;
+- (void) addedImage {
+    FlightData *flightData = [FlightData instance];
+    if (imageIndex == [flightData.pictures count] -2) {
+        imageIndex++;
+    }
+    if (displayed) [self updatePics];
 }
 
 - (int)imagesCount {
-    return [images count];
+    FlightData *flightData = [FlightData instance];
+    return [flightData.pictures count];
 }
 
 

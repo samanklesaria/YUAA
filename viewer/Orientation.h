@@ -13,8 +13,6 @@
     EAGLView *glView;
 }
 
--(void)render;
-
 @property (nonatomic, retain) IBOutlet EAGLView *glView;
 
 

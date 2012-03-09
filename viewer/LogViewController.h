@@ -7,12 +7,16 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "SharedData.h"
 
 @interface LogViewController : UIViewController <UITableViewDataSource> {
     UITableView *logTable;
+    BOOL displayed;
+    NSArray *logData;
 }
 @property (nonatomic, retain) IBOutlet UITableView *logTable;
+@property (retain) NSArray *logData;
+
 - (void)reloadLog;
+- (void)timedReloader;
 
 @end

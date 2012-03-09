@@ -9,10 +9,8 @@
 #import "PrefsViewController.h"
 
 @implementation PrefsViewController
-@synthesize phoneNumber;
-@synthesize serverField;
-@synthesize portField;
-@synthesize nameField;
+@synthesize prefs;
+@synthesize delegate;
 
 - (void)didReceiveMemoryWarning
 {
@@ -27,24 +25,30 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    SharedData *s = [SharedData instance];
-    serverField.text = s.server;
-    portField.text = [NSString stringWithFormat: @"%d", s.port] ;
-    phoneNumber.text = s.phoneNumber;
-    nameField.text = s.deviceName;
-    [autoUpdateControl setSelectedSegmentIndex: s.autoAdjust];
+    
+    if (prefs.localServer != nil) {
+        localServerField.text = prefs.localServer;
+    }
+    if (prefs.port != 0) {
+        portField.text = [NSString stringWithFormat: @"%i", prefs.port];
+    }
+    if (prefs.deviceName != nil) {
+        deviceNameField.text = prefs.deviceName;
+    }
+    mapView.selectedSegmentIndex = prefs.autoAdjust;
 }
 
 - (void)viewDidUnload
 {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     [defaults synchronize];
-    [self setServerField:nil];
-    [self setPortField:nil];
-    [self setPhoneNumber:nil];
-    [autoUpdateControl release];
-    autoUpdateControl = nil;
-    [self setNameField:nil];
+    
+    [deviceNameField release];
+    [postServerField release];
+    [localServerField release];
+    [portField release];
+    [mapType release];
+    [mapView release];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -62,74 +66,51 @@
 
 - (void)textFieldDidEndEditing:(UITextField *)textField {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    SharedData *s = [SharedData instance];
-    if (textField == serverField) {
-        [[SharedData instance] setServer: textField.text];
-        [s updateConnector];
-        [defaults setObject: s.server forKey:@"server"];
-        return;
+    if (textField == localServerField) {
+        prefs.localServer = localServerField.text;
+        [defaults setObject: prefs.localServer forKey:@"server"];
     }
     if (textField == portField) {
         int a = [portField.text intValue];
         if (a != 0) {
-            [[SharedData instance] setPort: a];
-            [s updateConnector];
-            [defaults setObject: [NSString stringWithFormat: @"%i", s.port] forKey:@"port"];
+            prefs.port = a;
+            [defaults setObject: [NSString stringWithFormat: @"%i", prefs.port] forKey:@"port"];
         }
-        return;
     }
-    if (textField == phoneNumber) {
-        [[SharedData instance] setPhoneNumber: textField.text];
-        [defaults setObject: s.phoneNumber forKey:@"phoneNumber"];
-        return;
-    }
-    if (textField == nameField) {
-        [[SharedData instance] setDeviceName: textField.text];
-        [defaults setObject: s.deviceName forKey:@"deviceName"];
-        return;
+    if (textField == deviceNameField) {
+        prefs.deviceName = deviceNameField.text;
+        [defaults setObject: prefs.deviceName forKey:@"deviceName"];
     }
 }
 
 - (IBAction)mapChanged:(UISegmentedControl *)sender {
-    switch ([sender selectedSegmentIndex]) {
-        case 0: 
-            [[[SharedData instance] map] setMapType: MKMapTypeStandard];
-            break;
-        case 1: 
-            [[[SharedData instance] map] setMapType: MKMapTypeSatellite];
-            break;
-        case 2: 
-            [[[SharedData instance] map] setMapType: MKMapTypeHybrid];
-            break;
-    }
+    [delegate mapChosen: [sender selectedSegmentIndex]];
 }
 
 - (IBAction)updateChanged:(UISegmentedControl *)sender {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    SharedData *s = [SharedData instance];
+    prefs.autoAdjust = [sender selectedSegmentIndex];
     switch ([sender selectedSegmentIndex]) {
         case 0:
-            s.autoAdjust = AUTO;
-            [s.map setUserTrackingMode: MKUserTrackingModeNone];
+            [delegate mapTrackingChanged: NO];
             break;
         case 1:
-            s.autoAdjust = CAR;
-            [s.map setUserTrackingMode: MKUserTrackingModeFollowWithHeading animated: YES];
+            [delegate mapTrackingChanged: YES];
             break;
         case 2:
-            s.autoAdjust = MANUAL;
-            [s.map setUserTrackingMode: MKUserTrackingModeNone];
+            [delegate mapTrackingChanged: NO];
             break;  
     }
-    [defaults setInteger: (NSInteger)s.autoAdjust forKey: @"autoAdjust"];
+    [defaults setInteger: (NSInteger)[sender selectedSegmentIndex] forKey: @"autoAdjust"];
 }
 
 - (void)dealloc {
-    [serverField release];
+    [deviceNameField release];
+    [postServerField release];
+    [localServerField release];
     [portField release];
-    [phoneNumber release];
-    [autoUpdateControl release];
-    [nameField release];
+    [mapType release];
+    [mapView release];
     [super dealloc];
 }
 @end

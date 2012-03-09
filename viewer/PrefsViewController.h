@@ -7,23 +7,27 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "SharedData.h"
-#import <MapKit/MapKit.h>
-#import "Connector.h"
+#import "Prefs.h"
+
+@protocol PrefsResponder <NSObject>
+- (void)mapChosen: (int)type;
+- (void)mapTrackingChanged: (bool)type;
+@end
 
 @interface PrefsViewController : UIViewController <UITextFieldDelegate> {
-    UITextField *serverField;
-    UITextField *portField;
-    UITextField *phoneNumber;
-    IBOutlet UISegmentedControl *autoUpdateControl;
-    Connector *con;
+    
+    IBOutlet UISegmentedControl *mapView;
+    IBOutlet UISegmentedControl *mapType;
+    IBOutlet UITextField *portField;
+    IBOutlet UITextField *localServerField;
+    IBOutlet UITextField *postServerField;
+    IBOutlet UITextField *deviceNameField;
+    id <PrefsResponder> delegate;
+    Prefs *prefs;
 }
-
-@property (nonatomic, retain) IBOutlet UITextField *phoneNumber;
-@property (nonatomic, retain) IBOutlet UITextField *serverField;
-@property (nonatomic, retain) IBOutlet UITextField *portField;
-@property (retain, nonatomic) IBOutlet UITextField *nameField;
 
 - (IBAction)mapChanged:(UISegmentedControl *)sender;
 - (IBAction)updateChanged:(UISegmentedControl *)sender;
+@property (retain) Prefs *prefs;
+@property (retain) id delegate;
 @end

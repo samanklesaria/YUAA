@@ -10,6 +10,8 @@
 #import "BalloonRenderer.h"
 
 @implementation EAGLView
+@synthesize displaying;
+@synthesize renderer;
 
 + (Class)layerClass
 {
@@ -26,29 +28,35 @@
         eaglLayer.opaque = TRUE;
         eaglLayer.drawableProperties = [NSDictionary dictionaryWithObjectsAndKeys:
                                         [NSNumber numberWithBool:FALSE], kEAGLDrawablePropertyRetainedBacking, kEAGLColorFormatRGBA8, kEAGLDrawablePropertyColorFormat, nil];
-		renderer = [[BalloonRenderer alloc] init];
-		
-		if (!renderer)
+        renderer = [[BalloonRenderer alloc] init];
+        if (!renderer)
 		{
 			[self release];
 			return nil;
 		}
         displayLink = nil;
-		self.multipleTouchEnabled = YES;
+        self.multipleTouchEnabled = YES;
         self.exclusiveTouch = YES;
+        [NSThread detachNewThreadSelector: @selector(checkNeedsRender) toTarget:self withObject:nil];
     }
     return self;
 }
 
-- (void)drawView:(id)sender
+-(void) checkNeedsRender {
+    [NSTimer scheduledTimerWithTimeInterval: 0.2 target: self selector:@selector(drawIfOpen) userInfo:nil repeats:YES];
+    [[NSRunLoop currentRunLoop] run];
+}
+
+- (void)drawIfOpen
 {
-    [renderer render];
+    if (displaying) {
+        [renderer render];
+    }
 }
 
 - (void)layoutSubviews
 {
     [renderer resizeFromLayer:(CAEAGLLayer*)self.layer];
-    [self drawView:nil];
 }
 
 - (void)dealloc

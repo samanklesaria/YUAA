@@ -7,17 +7,17 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "FlightData.h"
 
 @interface PicViewController : UIViewController {
     UIImageView *image;
     bool handleSwipe;
     int imageIndex;
-    NSMutableArray *images;
+    BOOL displayed;
 }
 
 - (void)updatePics;
-- (void)addImage:(UIImage *)theImage;
-- (NSData *)getImageTag;
+- (void)addedImage;
 - (int)imagesCount;
 
 @property (nonatomic, retain) IBOutlet UIImageView *image;

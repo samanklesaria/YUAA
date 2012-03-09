@@ -12,10 +12,24 @@
 	<string></string>
 	<key>CFBundleIconFiles</key>
 	<array>
-		<string>big-hh.png</string>
-		<string>hh-icon.png</string>
-		<string>ipad-hh.png</string>
+		<string>iPhoneBig.png</string>
+		<string>iPhoneSmall.png</string>
+		<string>ipad.png</string>
 	</array>
+	<key>CFBundleIcons</key>
+	<dict>
+		<key>CFBundlePrimaryIcon</key>
+		<dict>
+			<key>CFBundleIconFiles</key>
+			<array>
+				<string>iPhoneBig.png</string>
+				<string>iPhoneSmall.png</string>
+				<string>ipad.png</string>
+			</array>
+			<key>UIPrerenderedIcon</key>
+			<false/>
+		</dict>
+	</dict>
 	<key>CFBundleIdentifier</key>
 	<string>yuaa.${PRODUCT_NAME:rfc1034identifier}</string>
 	<key>CFBundleInfoDictionaryVersion</key>

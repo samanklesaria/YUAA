@@ -7,25 +7,28 @@
 //
 
 #import "BalloonMapLogic.h"
-#import "SharedData.h"
 #include <math.h>
 #import "Parser.h"
-
-#define TIMEOUT 20
+#import "ASIFormDataRequest.h"
 
 @implementation BalloonMapLogic
 
-
-- (id)initWithMap: (MKMapView *)newmap
-{
-    self = [super init];
+- (id) initWithPrefs: (Prefs *)p map: (MKMapView *) m {
+    self = [self init];
     if (self) {
-        SharedData *s = [SharedData instance];
-        s.map = [newmap retain];
-        [s.map setDelegate: self];
-        s.map.showsUserLocation = YES;
+        prefs = p;
+        map = m;
+        [map setDelegate: self];
+        map.showsUserLocation = YES;
+        [self updateView];
+        [NSThread detachNewThreadSelector:@selector(poster) toTarget:self withObject:nil];
     }
     return self;
+}
+
+- (void) poster {
+    [NSTimer scheduledTimerWithTimeInterval: 2 target: self selector:@selector(postUserLocation) userInfo:nil repeats:YES];
+    [[NSRunLoop currentRunLoop] run];
 }
 
 - (void) dealloc {
@@ -38,6 +41,31 @@
 - (void) mapView: (MKMapView *)map didUpdateUserLocation: (MKUserLocation *)userLocation {
     [self updateView];
 }
+
+- (void) postUserLocation {
+    char latstr[20];
+    char lonstr[20];
+    CLLocationCoordinate2D coord = map.userLocation.location.coordinate;
+    if (coord.latitude && coord.longitude) {
+        sprintf(latstr,"%+.5f",coord.latitude);
+        sprintf(lonstr,"%+.5f",coord.longitude);
+        int latlen = strlen(latstr);
+        int lonlen = strlen(lonstr);
+        char *lats = malloc(sizeof(char) * (latlen + 6));
+        char *lons = malloc(sizeof(char) * (lonlen + 6));
+        createProtocolMessage(lats,"LA", latstr, latlen);
+        createProtocolMessage(lons,"LO", lonstr, lonlen);
+        NSURL *myLocUrl = [NSURL URLWithString: [NSString stringWithFormat: @"http://yuaa.tc.yale.edu/scripts/store.php"]];
+        ASIFormDataRequest *locReq = [ASIFormDataRequest requestWithURL:myLocUrl];
+        [locReq setPostValue: prefs.uuid forKey:@"uid"];
+        [locReq setPostValue: @"berkeley" forKey: @"password"];
+        [locReq setPostValue: [prefs deviceName] forKey:@"devname"];
+        [locReq setPostValue: [NSString stringWithFormat: @"%s%s", lats, lons] forKey: @"data"];
+        [locReq setDelegate:self];
+        [locReq startAsynchronous];
+    }
+}
+
 
 - (CLLocationCoordinate2D)midpointFrom:(CLLocationCoordinate2D)loca to: (CLLocationCoordinate2D)locb {
     CLLocationCoordinate2D midpoint;
@@ -64,26 +92,25 @@ double myabs(double a) {
 }
 
 - (void)updateWithCurrentLocation:(CLLocationCoordinate2D)location {
+    
     NSLog(@"GPS is %f, %f", location.latitude, location.longitude);
-    SharedData *s = [SharedData instance];
     DataPoint *p = [[DataPoint alloc] initWithCoordinate:location];
     DataPoint *oldPoint = currentPoint;
     currentPoint = p;    
     if (oldPoint != nil) {
-        [s.map removeAnnotation:oldPoint];
-        [s.map addAnnotation:oldPoint];
+        [map removeAnnotation:oldPoint];
+        [map addAnnotation:oldPoint];
     }
-    [s.map addAnnotation:p];
+    [map addAnnotation:p];
     [self updateView];
 }
 
 -(void) updateView {
-    SharedData *s = [SharedData instance];
-    if ([s autoAdjust] == AUTO) {
-        CLLocationCoordinate2D carloc = s.map.userLocation.location.coordinate;
+    if ([prefs autoAdjust] == 0) {
+        CLLocationCoordinate2D carloc = map.userLocation.location.coordinate;
         MKCoordinateSpan spanB;
-        spanB.latitudeDelta=0.2;
-        spanB.longitudeDelta=0.2;
+        spanB.latitudeDelta=0.02;
+        spanB.longitudeDelta=0.02;
         MKCoordinateRegion region;
         if (carloc.latitude && carloc.longitude) {
             if (currentPoint != nil) {
@@ -101,21 +128,20 @@ double myabs(double a) {
         } else {
             return;
         }
-        [s.map setRegion: [s.map regionThatFits: region] animated:TRUE];
+        [map setRegion: [map regionThatFits: region] animated:TRUE];
     }
 }
 
 - (MKAnnotationView *)mapView:(MKMapView *)mV viewForAnnotation:(DataPoint *)annotation{
-    SharedData *s = [SharedData instance];
     static NSString *defaultAnnotationID = @"datapoint";
     
     if ([annotation isKindOfClass:[MKUserLocation class]]) {
         return nil;
     }
     
-    MKPinAnnotationView *annotationView = (MKPinAnnotationView *)[s.map dequeueReusableAnnotationViewWithIdentifier:defaultAnnotationID];
+    MKPinAnnotationView *annotationView = (MKPinAnnotationView *)[map dequeueReusableAnnotationViewWithIdentifier:defaultAnnotationID];
     if (annotationView == nil) {
-        annotationView = [[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:defaultAnnotationID];
+        annotationView = [[[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:defaultAnnotationID] autorelease];
         annotationView.canShowCallout = YES;
         annotationView.calloutOffset = CGPointMake(-5, 5);
     } else {
@@ -131,38 +157,12 @@ double myabs(double a) {
 }
 
 - (void) updateLoc {
-    NSLog(@"About to test me with lat: %f, lon: %f", lat, lon);
-    if (lat && lon) {
-        CLLocationCoordinate2D loc = {lat, lon};
-        NSLog(@"I'm updating my location, really");
+    FlightData *f = [FlightData instance];
+    if (f.lat && f.lon) {
+        CLLocationCoordinate2D loc = {f.lat, f.lon};
         [self updateWithCurrentLocation: loc];
     }
 }
 
-time_t timer;
-
-- (void)receivedTag:(NSString *)tag withValue:(double)val {
-    if ([tag isEqualToString: @"LA"]) {
-        timer = time(NULL);
-        lat = val;
-        NSLog(@"I'm updating lat");
-        [self updateLoc];
-    } else if ([tag isEqualToString: @"LO"]) {
-        timer = time(NULL);
-        lon = val;
-         NSLog(@"I'm updating long");
-        [self updateLoc];
-    } else if ([tag isEqualToString: @"MC"]) mcc = val;
-    else if ([tag isEqualToString: @"MN"]) mnc = val;
-    else if ([tag isEqualToString: @"CD"]) cid = val;
-    else if ([tag isEqualToString: @"LC"]) lac = val;
-    timer = time(NULL);
-    if (mnc && mcc && cid && lac && timer - time(NULL) > TIMEOUT) {
-        NSURL *url = [NSURL URLWithString: [NSString stringWithFormat: @"http://www.opencellid.org/cell/get?key=f146d401108de36297356ce9d026c8c6&mnc=%d&mcc=%d&lac=%d&cellid=%d", mnc, mcc, lac, cid]];
-        NSDictionary *dict = [NSDictionary dictionaryWithContentsOfURL: url]; // this could be too slow. also check it's right.
-        CLLocationCoordinate2D loc = {[[dict valueForKey: @"lat"] doubleValue], [[dict valueForKey: @"lon"] doubleValue]};
-        [self updateWithCurrentLocation: loc];
-    }
-}
 
 @end

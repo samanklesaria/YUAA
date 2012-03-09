@@ -7,20 +7,40 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "SharedData.h"
-#import "StatView.h"
+#import "StatViewController.h"
 #import "FlightViewController.h"
+#import "PrefsViewController.h"
+#import "LogViewController.h"
+#import "Connector.h"
+#import "Processor.h"
+#import "BalloonMapLogic.h"
+#import "ControllerShower.h"
+#import "GraphViewController.h"
+#import "PicViewController.h"
+#import "Orientation.h"
+#import "EAGLView.h"
+#import "BalloonRenderer.h"
 
-@interface viewerAppDelegate : NSObject <UIApplicationDelegate, UITabBarControllerDelegate> {
-    UINavigationController *_navController;
-    UINavigationController *_mapNavController;
+@interface viewerAppDelegate : NSObject <UIApplicationDelegate, UITabBarControllerDelegate, ConnectorDelegate, PrefsResponder> {
+    IBOutlet PrefsViewController *prefsViewController;
+    
+    IBOutlet UINavigationController *statNav;
+    IBOutlet UINavigationController *flightNav;
+    IBOutlet LogViewController *logViewController;
+    IBOutlet UIWindow *window;
+    
+    Prefs *prefs;
+    Processor *processor;
+    
+    GraphViewController *graphView;
+    Orientation *orientation;
+    PicViewController *picView;
+    
+    Connector *connector;
+    ControllerShower *controllerShower;
+    FlightViewController *flightViewController;
+    StatViewController *statViewController;
+    BalloonMapLogic *balloonMapLogic;
 }
-@property (nonatomic, retain) IBOutlet UINavigationController *mapNavController;
-
-@property (nonatomic, retain) IBOutlet UINavigationController *statusNavController;
-
-@property (nonatomic, retain) IBOutlet UIWindow *window;
-
-@property (nonatomic, retain) IBOutlet UITabBarController *tabBarController;
 
 @end

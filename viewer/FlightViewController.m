@@ -7,11 +7,7 @@
 //
 
 #import "FlightViewController.h"
-#import "LogViewController.h"
-#import "PrefsViewController.h"
-#import "SharedData.h"
 #import "StatPoint.h"
-#import "PicViewController.h"
 #import <time.h>
 
 #define BUFSIZE 800
@@ -19,21 +15,9 @@
 @implementation FlightViewController
 @synthesize altitudeBtn;
 @synthesize map;
-@synthesize bayButton;
 @synthesize tempButton;
+@synthesize controllerShower;
 
-/*
-- (id)init
-{
-    self = [super init];
-    if (self) {
-
-    }
-    return self;
-}
- */
-
-// Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -41,8 +25,6 @@
     bayInfo = @"(Bay Open)";
     ftInfo = @"0 ft ";
     previousRect = [[self.tabBarController.view.subviews objectAtIndex:0] frame];
-    [SharedData instance].connectorDelegate = self;
-    balloonLogic = [[BalloonMapLogic alloc] initWithMap: map];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -63,12 +45,7 @@
     [self setMap:nil];
     [self setAltitudeBtn:nil];
     [self setTempButton:nil];
-    [self setBayButton:nil];
-    [[[SharedData instance] plistData] release];
     [super viewDidUnload];
-
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
 }
 
 - (void)dealloc {
@@ -81,28 +58,15 @@
 }
 
 - (IBAction)showAltTbl:(id)sender {
-    SharedData *mydata = [SharedData instance];
-    StatPoint *alt = [mydata.balloonStats objectForKey: @"AL"];
-    if (alt != NULL) {
-        [[self navigationController] pushViewController:mydata.grapher animated:YES];
-        [mydata.grapher showDataSource: alt named: @"Altitude"];
-    } else {
-        UIAlertView *err = [[UIAlertView alloc] initWithTitle: @"No Altitude Data" message: @"No altitude information has been received from the balloon." delegate: nil cancelButtonTitle: @"Okay" otherButtonTitles: nil];
-        [err show];
-    }
+    [controllerShower showGraphWithTag: @"AL" frame: CGRectZero view: nil title: @"Altitude"];
 }
 
 - (IBAction)showTempTbl:(id)sender {
-    SharedData *mydata = [SharedData instance];
-    StatPoint *alt = [mydata.balloonStats objectForKey: @"TI"];
-    if (alt != NULL) {
-        [[self navigationController] pushViewController:mydata.grapher animated:YES];
-        [mydata.grapher showDataSource: alt named: @"Temperature"];
-    } else {
-        UIAlertView *err = [[UIAlertView alloc] initWithTitle: @"No Temperature Data" message: @"No temperature information has been received from the balloon." delegate: nil cancelButtonTitle: @"Okay" otherButtonTitles: nil];
-        [err show];
-    }
-   
+        [controllerShower showGraphWithTag: @"TI" frame: CGRectZero view: nil title: @"Temperature"];   
+}
+
+- (IBAction)sendMessage:(id)sender {
+    [controllerShower sendMessage];
 }
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration;
@@ -145,43 +109,24 @@
         ftInfo = [NSString stringWithFormat: @"%.2f ft " , val];
         [altitudeBtn setTitle: [ftInfo stringByAppendingString: bayInfo]];
     } else if ([tag isEqualToString: @"BB"]) {
-        if (bay == 1)
+        if (bay == 1) {
             bayInfo = @"(Bay Closed)";
-        else
+            bay = 0;
+        } else {
             bayInfo = @"(Bay Open)";
+            bay = 1;
+        }
         [altitudeBtn setTitle: [ftInfo stringByAppendingString: bayInfo]];
     }
-    [balloonLogic receivedTag: tag withValue: val];
 }
 
-- (void)messageComposeViewController:(MFMessageComposeViewController *)controller didFinishWithResult:(MessageComposeResult)result {
+- (void)showController:(UIViewController *)controller withFrame: (CGRect)rect view: (UIView *)view title: (NSString *)title {
+    [[self navigationController] pushViewController:controller animated:YES];
+    [controller setTitle: title];
+}
+
+- (void) hideController {
     [self dismissModalViewControllerAnimated: YES];
-}
-
-
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-    if (buttonIndex != [alertView cancelButtonIndex]) {
-        [[SharedData instance].con sendMessage: [alertView textFieldAtIndex: 0].text];
-        if ([MFMessageComposeViewController canSendText]) {
-            if (texter == nil) {
-                texter = [[MFMessageComposeViewController alloc]init];
-                [texter setMessageComposeDelegate: self];
-            }
-            NSString *pnum = [[SharedData instance] phoneNumber];
-            if (pnum) {
-                [texter setRecipients: [NSArray arrayWithObject: pnum]];
-                [texter setBody: [alertView textFieldAtIndex: 0].text];
-            }
-            [self presentModalViewController: texter animated: YES];
-        }
-    }
-}
-
-
-- (IBAction)killBalloon:(id)sender {
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle: @"Send Command" message: @"Type the AKP tags to be sent:" delegate: self cancelButtonTitle: @"Cancel" otherButtonTitles: @"OK",nil];
-    alert.alertViewStyle = UIAlertViewStylePlainTextInput;
-    [alert show];
 }
 
 @end

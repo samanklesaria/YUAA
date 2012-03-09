@@ -9,27 +9,25 @@
 #import <Foundation/Foundation.h>
 #import <MapKit/MapKit.h>
 #import "DataPoint.h"
+#import "Prefs.h"
+#import "FlightData.h"
 
 @interface BalloonMapLogic : NSObject <MKMapViewDelegate> {
+    Prefs *prefs;
     DataPoint *selectedPoint;
     DataPoint *currentPoint;
     CLLocationManager *locmanager;
-    int mcc;
-    int mnc;
-    int lac;
-    int cid;
-    double lat;
-    double lon;
+    MKMapView *map;
 }
 
-- (id) initWithMap: (MKMapView *)map;
+- (id) initWithPrefs: (Prefs *)p map: (MKMapView *) m;
 - (void)updateWithCurrentLocation:(CLLocationCoordinate2D)location;
 - (CLLocationCoordinate2D)midpointFrom:(CLLocationCoordinate2D)loca to: (CLLocationCoordinate2D)locb;
 - (MKCoordinateSpan)distanceFrom:(CLLocationCoordinate2D)loca to: (CLLocationCoordinate2D)locb;
 - (double)spanSize: (MKCoordinateSpan)rect;
 - (void) updateView;
-- (void)receivedTag:(NSString *)tag withValue:(double)val;
 - (void)updateLoc;
+- (void)postUserLocation;
 
 @end
 

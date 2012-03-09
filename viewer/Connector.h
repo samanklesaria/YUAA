@@ -7,27 +7,23 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "SharedData.h"
-#import "LogViewController.h"
-#import "Parser.h"
-#import "StatPoint.h"
+#import "Prefs.h"
+#import "Processor.h"
 
-@protocol ConnectorDelegate
-@required
--(void)receivedTag:(NSString *)theData withValue:(double)val;
-@end
+@class BalloonMapLogic;
 
 @interface Connector : NSObject <NSStreamDelegate> {
-    bool shouldEndConnection;
     NSInputStream *mainstream;
     NSOutputStream *mainOutput;
-    int bayCounter;
     bool erred;
+    Prefs *prefs;
+    Processor *processor;
 }
 
-- (void)updateData: (char *)tag;
 - (void)handleIO;
-- (NSString *)getTag: (char *)tag;
+- (void)ioThread;
+- (id)initWithProcessor: (Processor *)p prefs: (Prefs *)pr;
+
 - (void)sendMessage:(NSString *)str;
 
 @end

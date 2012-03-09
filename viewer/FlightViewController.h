@@ -9,16 +9,12 @@
 #import <UIKit/UIKit.h>
 #import <MapKit/MapKit.h>
 #import "DataPoint.h"
-#import "Grapher.h"
-#import "SharedData.h"
 #import "Parser.h"
-#import <CFNetwork/CFSocketStream.h>
-#import <MessageUI/MFMessageComposeViewController.h>
 #import "Connector.h"
-#import "BalloonMapLogic.h"
-#import "PrefsViewController.h"
+#import "AbstractControllerShower.h"
+#import "ControllerShower.h"
 
-@interface FlightViewController : UIViewController <ConnectorDelegate, MFMessageComposeViewControllerDelegate, UIAlertViewDelegate> {
+@interface FlightViewController : UIViewController <ConnectorDelegate, AbstractControllerShower> {
     MKMapView *map;
     UIBarButtonItem *tempButton;
     UIBarButtonItem *altitudeBtn;
@@ -26,18 +22,16 @@
     NSString *bayInfo;
     CGRect previousRect;
     bool bay;
-    BalloonMapLogic *balloonLogic;
-    PrefsViewController *prefs;
-    MFMessageComposeViewController *texter;
+    ControllerShower *controllerShower;
 }
 
 - (IBAction)showAltTbl:(id)sender;
 - (IBAction)showTempTbl:(id)sender;
-- (IBAction)killBalloon:(id)sender;
 
+- (IBAction)sendMessage:(id)sender;
 @property (nonatomic, retain) IBOutlet MKMapView *map;
-@property (nonatomic, retain) IBOutlet UIBarButtonItem *bayButton;
 @property (nonatomic, retain) IBOutlet UIBarButtonItem *tempButton;
 @property (nonatomic, retain) IBOutlet UIBarButtonItem *altitudeBtn;
+@property (retain) ControllerShower *controllerShower;
 
 @end

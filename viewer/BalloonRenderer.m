@@ -9,7 +9,14 @@
 #import "BalloonRenderer.h"
 #include "OpenGLCommon.h"
 #import "Box.h"
-#import "SharedData.h"
+
+#if TARGET_OS_IPHONE || TARGET_IPHONE_SIMULATOR
+#import <UIKit/UIDevice.h>
+float latShift; 
+float upShift;
+float vertShift;
+#endif
+
 
 @implementation BalloonRenderer
 
@@ -290,6 +297,20 @@ void drawPlaneBody() {
 
 -(void)render
 {
+#if TARGET_OS_IPHONE || TARGET_IPHONE_SIMULATOR
+    switch ([[UIDevice currentDevice] userInterfaceIdiom]) {
+        case UIUserInterfaceIdiomPad:
+            latShift = -1.2f;
+            upShift = -1.5f;
+            vertShift = -5.0f;
+            break;
+        case UIUserInterfaceIdiomPhone:
+            latShift = 0.0f;
+            upShift = -0.1f;
+            vertShift = -2.0f;
+    }
+#endif
+
     // This application only creates a single context which is already set current at this point.
     // This call is redundant, but needed if dealing with multiple contexts.
     [EAGLContext setCurrentContext:context];
@@ -307,11 +328,12 @@ void drawPlaneBody() {
 	glLoadIdentity();
 	glScalef(0.5f, 0.5f, 0.5f);
 	
-    SharedData *s = [SharedData instance];
-	glTranslatef(s.lshift,s.ushift,s.vshift);
-	glRotatef(s.rotationY, 0.0f, 1.0f, 0.0f);
-	glRotatef(s.rotationX, 1.0f, 0.0f, 0.0f);
-    glRotatef(s.rotationZ, 0.0f, 0.0f, 1.0f);
+	glTranslatef(latShift,upShift,vertShift);
+    
+    FlightData *f = [FlightData instance];
+	glRotatef(f.rotationY, 0.0f, 1.0f, 0.0f); 
+	glRotatef(f.rotationX, 1.0f, 0.0f, 0.0f); 
+    glRotatef(f.rotationZ, 0.0f, 0.0f, 1.0f);
 	
 	GLfloat ambientAndDiffuse[] = {0.0, 0.1, 0.9, 1.0};
     glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, ambientAndDiffuse);

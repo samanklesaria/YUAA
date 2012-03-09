@@ -8,30 +8,81 @@
 
 #import "ipad_viewerAppDelegate.h"
 
-#import "RootViewController.h"
-#import "SharedData.h"
-#import "Parser.h"
-
 @implementation ipad_viewerAppDelegate
-
-@synthesize window = _window;
-@synthesize splitViewController = _splitViewController;
-@synthesize rootViewController = _rootViewController;
-@synthesize detailViewController = _detailViewController;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    // Override point for customization after application launch.
-    // Add the split view controller's view to the window and display.
-    initCrc8();
-    initContentBuf();
-    self.window.rootViewController = self.splitViewController;
-    SharedData *s = [SharedData instance];
-    s.lshift = -1.2f;
-    s.ushift = -1.5f;
-    s.vshift = -5.0f;
-    [self.window makeKeyAndVisible];
+    prefs = [[Prefs alloc] init];
+    prefsViewController.prefs = prefs;
+    mapViewController.prefs  = prefsViewController;
+    prefsViewController.delegate = self;
+    FlightData *f = [FlightData instance];
+    processor = [[Processor alloc] initWithPrefs: prefs];
+    processor.delegate = self;
+    
+    statViewController.title = @"Stats";
+    
+    logViewController = [[LogViewController alloc] initWithNibName:@"LogViewController" bundle:nil];
+    logViewController.logData = f.parseLogData;
+    mapViewController.log = logViewController;
+    
+    connector = [[Connector alloc] initWithProcessor: processor prefs: prefs];
+    logViewController.logData = f.parseLogData;
+    
+    graphView = [[GraphViewController alloc] initWithNibName:@"GraphViewController" bundle:nil];
+    
+    orientation = [[Orientation alloc] initWithNibName:@"Orientation" bundle:nil];
+    
+    picView = [[PicViewController alloc] initWithNibName:@"PicViewController" bundle:nil];
+    
+    controllerShower = [[ControllerShower alloc] initWithConnector: connector shower:mapViewController graphView:graphView orientationView: orientation picView:picView];
+    mapViewController.controllerShower = controllerShower;
+    statViewController.controllerShower = controllerShower;
+    
+    
+    window.rootViewController = splitViewController;
+    [window makeKeyAndVisible];
+    
+    balloonMapLogic = [[BalloonMapLogic alloc] initWithPrefs:prefs map: mapViewController.map];
+    [self mapTrackingChanged: prefs.autoAdjust];
+    
     return YES;
+}
+
+-(void)gettingTags: (bool)b {
+    [statViewController view];
+    [statViewController setGettingTags: b];
+}
+
+- (void)mapChosen: (int)type {
+    switch (type) {
+        case 0: 
+            [mapViewController.map setMapType: MKMapTypeStandard];
+            break;
+        case 1: 
+            [mapViewController.map setMapType: MKMapTypeSatellite];
+            break;
+        case 2: 
+            [mapViewController.map setMapType: MKMapTypeHybrid];
+            break;
+    }
+}
+
+- (void)mapTrackingChanged: (bool)type {
+    if (type) {
+        [mapViewController.map setUserTrackingMode: MKUserTrackingModeFollowWithHeading animated: YES]; 
+    } else {
+        [mapViewController.map setUserTrackingMode: MKUserTrackingModeNone];
+        [balloonMapLogic updateView];
+    }
+}
+
+-(void)receivedPicture {
+    [picView addedImage];
+}
+
+-(void)receivedLocation {
+    [balloonMapLogic updateLoc];
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application
@@ -75,10 +126,15 @@
 
 - (void)dealloc
 {
-    [_window release];
-    [_splitViewController release];
-    [_rootViewController release];
-    [_detailViewController release];
+    [window release];
+    [statViewController release];
+    [mapViewController release];
+    [prefsViewController release];
+    [mapViewController release];
+    [statViewController release];
+    [prefsViewController release];
+    [window release];
+    [splitViewController release];
     [super dealloc];
 }
 

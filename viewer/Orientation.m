@@ -13,32 +13,12 @@
 @implementation Orientation
 @synthesize glView;
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
+- (void)viewDidAppear:(BOOL)animated {
+    glView.displaying = YES;
 }
 
-- (void)didReceiveMemoryWarning
-{
-    // Releases the view if it doesn't have a superview.
-    [super didReceiveMemoryWarning];
-    
-    // Release any cached data, images, etc that aren't in use.
-}
-
--(void)render {
-    [glView drawView:self];
-}
-
-#pragma mark - View lifecycle
-
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
+- (void)viewDidDisappear:(BOOL)animated {
+    glView.displaying = NO;
 }
 
 - (void)viewDidUnload

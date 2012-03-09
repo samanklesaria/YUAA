@@ -10,6 +10,7 @@
 
 #import <OpenGLES/ES1/gl.h>
 #import <OpenGLES/ES1/glext.h>
+#import "FlightData.h"
 
 @interface BalloonRenderer : NSObject  <ESRenderer>
 {
@@ -24,7 +25,6 @@
     GLuint defaultFramebuffer, colorRenderbuffer;
 	GLuint depthRenderbuffer;
 	
-	GLuint texture;
 	
 	
 	float transZ;
@@ -39,6 +39,7 @@
 
 - (void)render;
 - (BOOL)resizeFromLayer:(CAEAGLLayer *)layer;
+
 @end
 
 void drawBackground(void);

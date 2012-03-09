@@ -7,18 +7,19 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "SharedData.h"
-#import <MessageUI/MFMessageComposeViewController.h>
-#import "BalloonMapLogic.h"
 #import "Connector.h"
 #import "PrefsViewController.h"
+#import "AbstractControllerShower.h"
+#import "LogViewController.h"
+#import "ControllerShower.h"
+#import <MapKit/MapKit.h>
 
-@interface DetailViewController : UIViewController <UIPopoverControllerDelegate, UISplitViewControllerDelegate, ConnectorDelegate, MFMessageComposeViewControllerDelegate, NSURLConnectionDelegate, UIAlertViewDelegate> {
+@interface DetailViewController : UIViewController <UIPopoverControllerDelegate, UISplitViewControllerDelegate> {
     IBOutlet MKMapView *map;
-    BalloonMapLogic *balloonLogic;
     PrefsViewController *prefs;
-    MFMessageComposeViewController *texter;
-    id popupSource;
+    LogViewController *logViewController;
+    ControllerShower *controllerShower;
+    UIPopoverController *pc;
 }
 
 - (IBAction)showSettings:(id)sender;
@@ -26,4 +27,8 @@
 - (IBAction)sendMessage:(id)sender;
 - (void)showController:(UIViewController *)controller withFrame: (CGRect)rect view: (UIView *)view title: (NSString *)title;
 
+@property (retain) ControllerShower *controllerShower;
+@property (retain) MKMapView *map;
+@property (retain) PrefsViewController *prefs;
+@property (retain) LogViewController *log;
 @end

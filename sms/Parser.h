@@ -1,29 +1,43 @@
-typedef struct data {
-    int exists;
+#ifndef PARSER_LOADED
+#define PARSER_LOADED
+
+#define CBUFSIZ (60*80)
+
+enum mode {
+    TAG,
+    CONTENT,
+    CHECKSUM,
+    MESSAGE,
+    SPECIAL
+};
+
+typedef struct result {
+    char *tag;
     int length;
     char *content;
-} data;
+} result;
 
-int to_int(char c);
+typedef struct parserState {
+    int contentidx;
+    char contentbuf[CBUFSIZ];
+    int tagidx;
+    char tagbuf[2];
+    char numbuf[4];
+    int numidx;
+    int lastlength;
+    enum mode state;
+    int specialCount;
+    unsigned char check;
+    unsigned char checksum;
+    result parserResult;
+} parserState;
 
-char to_char(int i);
-
-data *get_info(char a, char b);
-
-void update_tag(int a, int b, char *str, int len);
-
-int update_cache(char *init);
-
-void initCrc8(void);
+void prepCrc(void);
 
 char crc8(const char* data, char initialChecksum, int length);
 
-char *createProtocolMessage(const char* tag, const char* data, int len);
+char *createProtocolMessage(char *message, const char* tag, const char* data, int len);
 
-void parse_string(char *c);
+result *handle_char(char c, parserState *pp);
 
-char *handle_char(char c);
-
-int info_size(void);
-
-void initContentBuf(void);
+#endif
