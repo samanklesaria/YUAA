@@ -20,15 +20,17 @@
 #import <CorePlot/CorePlot.h>
 #import "GraphLogic.h"
 #import <WebKit/WebKit.h>
-#import "PicViewController.h"
+#import "ServerPicController.h"
+#import "Prefs.h"
+#import "FlightData.h"
+#import "PrefsResponder.h"
 
-@interface AppDelegate : NSObject <NSApplicationDelegate, SerialRestart, NSTableViewDelegate, NSTableViewDataSource> {
+@interface AppDelegate : NSObject <NSApplicationDelegate, PrefsResponder, NSTableViewDelegate, NSTableViewDataSource> {
     NetworkManage *networkManager;
     AMSerialPort *currentSerialPort;
-    parserState pState;
     IBOutlet NSPopUpButtonCell *sourceCell;
     NSPopover *popOver;
-    PrefsPopupController *prefs;
+    PrefsPopupController *prefsViewController;
     AKPSender *akpsend;
     IBOutlet NSTableView *sourceList;
     IBOutlet NSView *logText;
@@ -44,14 +46,14 @@
     IBOutlet WebView *webView;
     IBOutlet NSOpenGLView *openGLView;
     NSPopUpButtonCell *portList;
-    NSMutableArray *networkLog;
     NSArray *currentLog;
     NSDate *lastUpdate;
     IBOutlet CPTGraphHostingView *graphHostingView;
     GraphLogic *graphLogic;
     NSView *currentView;
+    IBOutlet ServerPicController *serverPicController;
     IBOutlet NSView *specialHost;
-    PicViewController *picViewController;
+    Prefs *prefs;
 }
 
 @property (assign) IBOutlet NSWindow *window;
@@ -60,6 +62,7 @@
 - (IBAction)showPrefs:(NSButton *)sender;
 - (IBAction)sendAKP:(id)sender;
 -(void)rebuildPortList;
-- (void)timedReloader;
-
+- (void)defibrillator;
+- (void) parseDemoFile;
 @end
+

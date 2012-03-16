@@ -95,7 +95,6 @@ result *handle_char(char c, parserState *p) {
                     }
                 } else {
                     (p->state) = TAG;
-                    printf("Invalid syntax. Restarting");
                     (p->contentidx) = 0;
                     return handle_char(c, p);
                 }

@@ -70,10 +70,10 @@
             NSData *imageData;
             
 #if TARGET_OS_IPHONE || TARGET_IPHONE_SIMULATOR || TARGET_OS_EMBEDDED
-            theValue = [NSValue valueWithBytes: cgImage objCType: @encode(CGImageRef)];
+            theValue = [UIImage imageWithCGImage: cgImage];
             imageData = UIImageJPEGRepresentation(theValue, 1);
 #else
-            theValue = [UIImage imageWithCGImage: cgImage];
+            theValue = [NSValue valueWithBytes: cgImage objCType: @encode(CGImageRef)];
             CFMutableDataRef      data = CFDataCreateMutable(NULL, 0);
             CGImageDestinationRef idst = CGImageDestinationCreateWithData(data, kUTTypeJPEG, 1, NULL);
             CGImageDestinationAddImage(idst, cgImage, NULL);

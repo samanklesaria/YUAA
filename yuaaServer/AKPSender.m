@@ -28,7 +28,8 @@
     if ([str length] > 0 && serialPort) {
         NSData *d = [str dataUsingEncoding:NSASCIIStringEncoding];
         [serialPort writeData:d error:NULL];
-        [networkLog addObject: [NSString stringWithFormat: @"Sending: %@", str]];
+        FlightData *f = [FlightData instance];
+        [f.netLogData addObject: [NSString stringWithFormat: @"Sending: %@", str]];
         [messageField setValue: @""];
     }
 }

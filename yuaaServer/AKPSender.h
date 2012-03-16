@@ -9,11 +9,11 @@
 #import <Cocoa/Cocoa.h>
 #import "AMSerialPort.h"
 #import "AMSerialPortAdditions.h"
+#import "FlightData.h"
 
 @interface AKPSender : NSViewController {
     IBOutlet NSTextField *messageField;
     AMSerialPort *serialPort;
-    NSMutableArray *networkLog;
 }
 
 - (void)showMe;

@@ -14,7 +14,7 @@
 #import "AbstractControllerShower.h"
 #import "ControllerShower.h"
 
-@interface FlightViewController : UIViewController <ConnectorDelegate, AbstractControllerShower> {
+@interface FlightViewController : UIViewController <ProcessorDelegate, AbstractControllerShower> {
     MKMapView *map;
     UIBarButtonItem *tempButton;
     UIBarButtonItem *altitudeBtn;

@@ -8,11 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "Prefs.h"
-
-@protocol PrefsResponder <NSObject>
-- (void)mapChosen: (int)type;
-- (void)mapTrackingChanged: (bool)type;
-@end
+#import "PrefsResponder.h"
 
 @interface PrefsViewController : UIViewController <UITextFieldDelegate> {
     

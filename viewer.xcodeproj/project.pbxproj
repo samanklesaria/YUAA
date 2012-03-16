@@ -10,8 +10,8 @@
 		22030BE71505864F00E247EE /* GraphLogic.m in Sources */ = {isa = PBXBuildFile; fileRef = 22030BE61505864F00E247EE /* GraphLogic.m */; };
 		22030BE81505864F00E247EE /* GraphLogic.m in Sources */ = {isa = PBXBuildFile; fileRef = 22030BE61505864F00E247EE /* GraphLogic.m */; };
 		22030BF81505B2BA00E247EE /* map.html in Resources */ = {isa = PBXBuildFile; fileRef = 22030BF71505B2BA00E247EE /* map.html */; };
-		22030BFC1505B54600E247EE /* ServerPicViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22030BFA1505B54600E247EE /* ServerPicViewController.m */; };
-		22030BFD1505B54600E247EE /* ServerPicViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 22030BFB1505B54600E247EE /* ServerPicViewController.xib */; };
+		22030BFC1505B54600E247EE /* ServerPicController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22030BFA1505B54600E247EE /* ServerPicController.m */; };
+		22030BFD1505B54600E247EE /* ServerPicController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 22030BFB1505B54600E247EE /* ServerPicController.xib */; };
 		2203DF2B14CAAB2B00E386FE /* ControllerShower.m in Sources */ = {isa = PBXBuildFile; fileRef = 2203DF2A14CAAB2B00E386FE /* ControllerShower.m */; };
 		2207253614F98BCE003A9375 /* PrefsPopupController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2207253414F98BCE003A9375 /* PrefsPopupController.m */; };
 		2207253714F98BCE003A9375 /* PrefsPopupController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2207253514F98BCE003A9375 /* PrefsPopupController.xib */; };
@@ -93,6 +93,7 @@
 		22B852B914F7F9B7008CBED6 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 22B852B714F7F9B7008CBED6 /* QuartzCore.framework */; };
 		22B852C114F81974008CBED6 /* CorePlot.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 22B852BC14F81281008CBED6 /* CorePlot.framework */; };
 		22B852C414F81AA4008CBED6 /* CorePlot.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 22B852BC14F81281008CBED6 /* CorePlot.framework */; };
+		22BAE97C1513F3A800F03ED2 /* demo in Resources */ = {isa = PBXBuildFile; fileRef = 22BAE97B1513F3A800F03ED2 /* demo */; };
 		22BC43FE1506BBCC00DE7B6D /* Prefs.m in Sources */ = {isa = PBXBuildFile; fileRef = 22BC43FD1506BBCC00DE7B6D /* Prefs.m */; };
 		22BC43FF1506BBCC00DE7B6D /* Prefs.m in Sources */ = {isa = PBXBuildFile; fileRef = 22BC43FD1506BBCC00DE7B6D /* Prefs.m */; };
 		22BC44031506DCD100DE7B6D /* FlightData.m in Sources */ = {isa = PBXBuildFile; fileRef = 22BC44021506DCD100DE7B6D /* FlightData.m */; };
@@ -142,9 +143,9 @@
 		22030BE51505864F00E247EE /* GraphLogic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GraphLogic.h; path = viewer/GraphLogic.h; sourceTree = "<group>"; };
 		22030BE61505864F00E247EE /* GraphLogic.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GraphLogic.m; path = viewer/GraphLogic.m; sourceTree = "<group>"; };
 		22030BF71505B2BA00E247EE /* map.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = map.html; sourceTree = "<group>"; };
-		22030BF91505B54600E247EE /* ServerPicViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ServerPicViewController.h; sourceTree = "<group>"; };
-		22030BFA1505B54600E247EE /* ServerPicViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ServerPicViewController.m; sourceTree = "<group>"; };
-		22030BFB1505B54600E247EE /* ServerPicViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ServerPicViewController.xib; sourceTree = "<group>"; };
+		22030BF91505B54600E247EE /* ServerPicController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ServerPicController.h; sourceTree = "<group>"; };
+		22030BFA1505B54600E247EE /* ServerPicController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ServerPicController.m; sourceTree = "<group>"; };
+		22030BFB1505B54600E247EE /* ServerPicController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ServerPicController.xib; sourceTree = "<group>"; };
 		2203DF2A14CAAB2B00E386FE /* ControllerShower.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ControllerShower.m; sourceTree = "<group>"; };
 		2203DF2C14CAAB9B00E386FE /* ControllerShower.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ControllerShower.h; sourceTree = "<group>"; };
 		2207253314F98BCE003A9375 /* PrefsPopupController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrefsPopupController.h; sourceTree = "<group>"; };
@@ -169,6 +170,7 @@
 		2244C548146CF24F00E08F55 /* protocol.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = protocol.plist; sourceTree = "<group>"; };
 		22636EC6147DE94E004B3851 /* BalloonMapLogic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BalloonMapLogic.h; sourceTree = "<group>"; };
 		22636EC7147DE94E004B3851 /* BalloonMapLogic.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BalloonMapLogic.m; sourceTree = "<group>"; };
+		22658D28150D4D2F00B15886 /* PrefsResponder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrefsResponder.h; sourceTree = "<group>"; };
 		226C194814679E1A00A7F87A /* viewer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = viewer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		226C194C14679E1A00A7F87A /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		226C194E14679E1A00A7F87A /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -271,6 +273,7 @@
 		22B852B614F7F9B7008CBED6 /* Quartz.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quartz.framework; path = SDKs/MacOSX10.7.sdk/System/Library/Frameworks/Quartz.framework; sourceTree = DEVELOPER_DIR; };
 		22B852B714F7F9B7008CBED6 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = SDKs/MacOSX10.7.sdk/System/Library/Frameworks/QuartzCore.framework; sourceTree = DEVELOPER_DIR; };
 		22B852BC14F81281008CBED6 /* CorePlot.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CorePlot.framework; path = viewer/CorePlot.framework; sourceTree = "<group>"; };
+		22BAE97B1513F3A800F03ED2 /* demo */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = demo; path = ../xcarProg/demo; sourceTree = "<group>"; };
 		22BC43FC1506BBCC00DE7B6D /* Prefs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Prefs.h; sourceTree = "<group>"; };
 		22BC43FD1506BBCC00DE7B6D /* Prefs.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Prefs.m; sourceTree = "<group>"; };
 		22BC44011506DCD100DE7B6D /* FlightData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FlightData.h; sourceTree = "<group>"; };
@@ -426,6 +429,7 @@
 		22030BE915058B2100E247EE /* Shared Logic */ = {
 			isa = PBXGroup;
 			children = (
+				22658D28150D4D2F00B15886 /* PrefsResponder.h */,
 				22BC44051506DCD600DE7B6D /* FlightData */,
 				22B0754E1479F4E0003FEC53 /* BalloonRenderer */,
 				22FE1E501468D1DF00403F43 /* Parser */,
@@ -496,14 +500,14 @@
 			name = viewerAppDelegate;
 			sourceTree = "<group>";
 		};
-		2222861615081B8C006131A4 /* PicViewController */ = {
+		2222861615081B8C006131A4 /* ServerPicController */ = {
 			isa = PBXGroup;
 			children = (
-				22030BF91505B54600E247EE /* ServerPicViewController.h */,
-				22030BFA1505B54600E247EE /* ServerPicViewController.m */,
-				22030BFB1505B54600E247EE /* ServerPicViewController.xib */,
+				22030BFA1505B54600E247EE /* ServerPicController.m */,
+				22030BF91505B54600E247EE /* ServerPicController.h */,
+				22030BFB1505B54600E247EE /* ServerPicController.xib */,
 			);
-			name = PicViewController;
+			name = ServerPicController;
 			sourceTree = "<group>";
 		};
 		2222861715081B96006131A4 /* PrefsPopupController */ = {
@@ -731,7 +735,7 @@
 				22B8526A14F7F6FF008CBED6 /* MainMenu.xib */,
 				22B852A014F7F763008CBED6 /* Network */,
 				2222861715081B96006131A4 /* PrefsPopupController */,
-				2222861615081B8C006131A4 /* PicViewController */,
+				2222861615081B8C006131A4 /* ServerPicController */,
 				2222861815081BC4006131A4 /* AKPSender */,
 				22B8525C14F7F6FF008CBED6 /* Supporting Files */,
 			);
@@ -741,6 +745,7 @@
 		22B8525C14F7F6FF008CBED6 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				22BAE97B1513F3A800F03ED2 /* demo */,
 				22030BF71505B2BA00E247EE /* map.html */,
 				22B8525D14F7F6FF008CBED6 /* yuaaServer-Info.plist */,
 				22B8525E14F7F6FF008CBED6 /* InfoPlist.strings */,
@@ -1103,7 +1108,8 @@
 				226DDF5714FB6320006563B8 /* protocol.plist in Resources */,
 				22DEBD0415053A9100C5BD0C /* AKPSender.xib in Resources */,
 				22030BF81505B2BA00E247EE /* map.html in Resources */,
-				22030BFD1505B54600E247EE /* ServerPicViewController.xib in Resources */,
+				22030BFD1505B54600E247EE /* ServerPicController.xib in Resources */,
+				22BAE97C1513F3A800F03ED2 /* demo in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1177,7 +1183,7 @@
 				2207253614F98BCE003A9375 /* PrefsPopupController.m in Sources */,
 				22DEBD0315053A9100C5BD0C /* AKPSender.m in Sources */,
 				22030BE81505864F00E247EE /* GraphLogic.m in Sources */,
-				22030BFC1505B54600E247EE /* ServerPicViewController.m in Sources */,
+				22030BFC1505B54600E247EE /* ServerPicController.m in Sources */,
 				22BC43FF1506BBCC00DE7B6D /* Prefs.m in Sources */,
 				22BC44041506DCD100DE7B6D /* FlightData.m in Sources */,
 			);

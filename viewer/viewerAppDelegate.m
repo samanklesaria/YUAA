@@ -91,7 +91,6 @@
 }
 
 - (void) newLogType: (int) type {
-    NSLog(@"I got called");
     FlightData *f = [FlightData instance];
     switch (type) {
         case 0:

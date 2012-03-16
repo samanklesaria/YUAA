@@ -15,6 +15,7 @@
     NSString *remoteServer;
     int autoAdjust;
     NSString *deviceName;
+    NSString *postServer;
 }
 
 @property (retain) NSString *uuid;
@@ -24,5 +25,6 @@
 @property bool autoUpdate;
 @property int autoAdjust;
 @property (retain) NSString *deviceName;
+@property (retain) NSString *postServer;
 
 @end

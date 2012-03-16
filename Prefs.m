@@ -16,6 +16,7 @@
 @synthesize autoAdjust;
 @synthesize autoUpdate;
 @synthesize deviceName;
+@synthesize postServer;
 
 - (id)init {
     self = [super init];
@@ -23,12 +24,12 @@
         CFUUIDRef myuid = CFUUIDCreate(kCFAllocatorDefault);
         uuid = (NSString *)CFUUIDCreateString(kCFAllocatorDefault, myuid);
         CFRelease(myuid);
-        
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
         localServer = [defaults stringForKey: @"server"];
-        port = [defaults integerForKey: @"port"];
+        port = (int)[defaults integerForKey: @"port"];
         deviceName = [defaults stringForKey: @"deviceName"];
-        autoAdjust = [defaults integerForKey: @"autoAdjust"];
+        autoAdjust = (int)[defaults integerForKey: @"autoAdjust"];
+        postServer = [defaults stringForKey: @"postServer"];
     }
     return self;
 }

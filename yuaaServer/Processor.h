@@ -14,7 +14,7 @@
 #import "StatPoint.h"
 #import "FlightData.h"
 
-@protocol ConnectorDelegate
+@protocol ProcessorDelegate
 @optional
 -(void)receivedTag:(NSString *)theData withValue:(double)val;
 -(void)receivedPicture;

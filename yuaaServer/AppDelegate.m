@@ -25,7 +25,6 @@
         processor = [[Processor alloc] init];
         df = [NSDateFormatter new];
         [df setDateFormat: @"HH:mm:ss"];
-        networkLog = [[NSMutableArray alloc] initWithCapacity: 128];
         return self;
     }
     return self;
@@ -33,19 +32,21 @@
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
+    prefsViewController = [[PrefsPopupController alloc] initWithNibName:@"PrefsPopupController" bundle:nil];
+    prefs = [[Prefs alloc] init];
+    prefsViewController.prefs = prefs;
+    prefsViewController.delegate = self;
+    [prefsViewController view];
+    [FlightData instance];
+    processor = [[Processor alloc] initWithPrefs: prefs];
+    processor.delegate = self;
     networkManager = [[NetworkManage alloc] initWithDelegate:self];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateConnections:) name:@"connectionUpdate" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(rebuildPortList) name:AMSerialPortListDidAddPortsNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(rebuildPortList) name:AMSerialPortListDidRemovePortsNotification object:nil];
     popOver = [[NSPopover alloc] init];
-    prefs = [[PrefsPopupController alloc] initWithNibName:@"PrefsPopupController" bundle:nil];
-    [prefs view];
-    portList = prefs.serialPortCell;
+    portList = prefsViewController.serialPortCell;
     akpsend = [[AKPSender alloc] initWithNibName:@"AKPSender" bundle:nil];
-    akpsend.networkLog = networkLog;
-    picViewController = [[PicViewController alloc] initWithNibName:@"PicViewController" bundle:nil];
-    [picViewController.view setHidden: YES];
-    [specialHost addSubview: picViewController.view];
     popOver.behavior = NSPopoverBehaviorSemitransient;
     [self rebuildPortList];
     [NSThread detachNewThreadSelector: @selector(defibrillator) toTarget:self withObject:nil];
@@ -60,25 +61,30 @@
 }
 
 -(void)restartSerial:(NSString *)port {
-    NSArray *a = [[AMSerialPortList sharedPortList] serialPorts];
-    for (AMSerialPort *s in a) {
-		//NSLog(@"S: %@",s);
-		if ([[s description] rangeOfString:port].length != 0) {
-			NSLog(@"Connecting to Arduino");
-            [currentSerialPort free];
-            [currentSerialPort autorelease];
-			currentSerialPort = [s retain];
-			[currentSerialPort setDelegate:self];
-			if (![currentSerialPort open]) {
-				NSLog(@"Error opening port.");
-				return;
-			} else {
-                akpsend.serialPort = currentSerialPort;
-				[currentSerialPort readDataInBackground];
-			}
-			break;
-		}
-	}
+    NSLog(@"Restaring serial");
+    if ([port isEqualToString: @"Test Data"]) {
+        [NSThread detachNewThreadSelector:@selector(parseDemoFile) toTarget:self withObject:nil];
+    } else {
+        NSArray *a = [[AMSerialPortList sharedPortList] serialPorts];
+        for (AMSerialPort *s in a) {
+            //NSLog(@"S: %@",s);
+            if ([[s description] rangeOfString:port].length != 0) {
+                NSLog(@"Connecting to Arduino");
+                [currentSerialPort free];
+                [currentSerialPort autorelease];
+                currentSerialPort = [s retain];
+                [currentSerialPort setDelegate:self];
+                if (![currentSerialPort open]) {
+                    NSLog(@"Error opening port.");
+                    return;
+                } else {
+                    akpsend.serialPort = currentSerialPort;
+                    [currentSerialPort readDataInBackground];
+                }
+                break;
+            }
+        }
+    }
 }
 
 - (void) defibrillator {
@@ -87,6 +93,7 @@
 }
 
 - (void) heartbeat {
+    [sourceList reloadData];
     if (lastUpdate)
         lastReceivedCell.title = [@"Last Update: " stringByAppendingString: [df stringFromDate: lastUpdate]];
     if (!currentLog) {
@@ -98,7 +105,8 @@
 
 -(void)updateConnections:(NSNotification *)notif {
     int number = [[notif object] intValue];
-    [networkLog addObject: @"Connections changed"];
+    FlightData *f = [FlightData instance];
+    [f.netLogData addObject: @"Connections changed"];
     [connectionField setStringValue:[NSString stringWithFormat:@"Connections: %i",number]];
 }
 
@@ -109,6 +117,7 @@
     for (int i=0;i<[a count];i++) {
         [portList addItemWithTitle:[(AMSerialPort *)[a objectAtIndex:i] name]];
     }
+    [portList addItemWithTitle: @"Test Data"];
 }
 
 - (void)serialPortReadData:(NSDictionary *)dDictionary {
@@ -125,16 +134,27 @@
     [[textForLog textStorage] endEditing];
     int i;
     for (i=0; i < [d length]; i++) {
-        result *b = handle_char(*(d_unsafe+i), &pState);
-        if (b) {
-            NSLog(@"I got called");
-            [processor updateData: b];
-        }
+            [processor updateData: *(d_unsafe+i)];
     }
     [port readDataInBackground];
 }
 
+- (void)parseDemoFile {
+    NSLog(@"Starting demo");
+    const char *filePath = [[[NSBundle mainBundle] pathForResource: @"demo" ofType: nil] cStringUsingEncoding:NSASCIIStringEncoding];
+    FILE *p = fopen(filePath, "r");
+    char c;
+    while (!feof(p)) {
+        c = fgetc(p);
+        [processor updateData: c];
+    }
+    fclose(p);
+    // should I update logs too? yeah, I should. 
+    
+}
+
 - (id)tableView:(NSTableView *)aTableView objectValueForTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex {
+    FlightData *f = [FlightData instance];
     if (aTableView == tableForLog) {
         return [currentLog objectAtIndex: rowIndex];
     } else {
@@ -148,8 +168,8 @@
             if (rowIndex == 2) {
                 return @"Pictures";
             }            
-            NSString *t = [processor.nameArray objectAtIndex:rowIndex -3];
-            NSString *humanName = [processor.plistData objectForKey: t];
+            NSString *t = [f.nameArray objectAtIndex:rowIndex -3];
+            NSString *humanName = [f.plistData objectForKey: t];
             NSString *result = (humanName != NULL) ? humanName : t;
             return result;
             
@@ -157,20 +177,20 @@
             NSDate *updatedDate;
             NSString *body;
             if (rowIndex == 0) {
-                updatedDate = processor.lastLocTime;
-                if (processor.lat && processor.lon) {
-                    body = [NSString stringWithFormat: @"Lat: %f, Lon: %f", processor.lat, processor.lon];
+                updatedDate = f.lastLocTime;
+                if (f.lat && f.lon) {
+                    body = [NSString stringWithFormat: @"Lat: %f, Lon: %f", f.lat, f.lon];
                 } else body = @"";
             } else if (rowIndex == 1) {
-                updatedDate = processor.lastIMUTime;
+                updatedDate = f.lastIMUTime;
                 body = [NSString stringWithFormat: @"Yaw: %.2f, Pitch: %.2f, Roll: %.2f",
-                        processor.rotationZ, processor.rotationY, processor.rotationX];
+                        f.rotationZ, f.rotationY, f.rotationX];
             } else if (rowIndex == 2) {
-                body = [NSString stringWithFormat: @"%d", [processor.pictures count]];
-                updatedDate = processor.lastImageTime;
+                body = [NSString stringWithFormat: @"%d", [f.pictures count]];
+                updatedDate = f.lastImageTime;
             } else {
-                NSString *tag = [processor.nameArray objectAtIndex:rowIndex -3];
-                StatPoint *stat = [processor.balloonStats objectForKey: tag];
+                NSString *tag = [f.nameArray objectAtIndex:rowIndex -3];
+                StatPoint *stat = [f.balloonStats objectForKey: tag];
                 if (stat.lastTime) {
                     updatedDate = stat.lastTime;
                 }
@@ -192,7 +212,8 @@
             [currentLog count];
         return 0;
     } else {
-        NSInteger a = [processor.nameArray count] + 3;
+        FlightData *f = [FlightData instance];
+        NSInteger a = [f.nameArray count] + 3;
         return a;
     }
 }
@@ -210,20 +231,37 @@
     } else {
         [logText setHidden: YES];
         [logTable setHidden: NO];
-        if ([logType isEqualToString: @"POST Log"]) currentLog = processor.postLogData;
-        if ([logType isEqualToString: @"Parsing Log"]) currentLog = processor.parseLogData;
-        if ([logType isEqualToString: @"Network Log"]) currentLog = networkLog;
+        FlightData *f = [FlightData instance];
+        if ([logType isEqualToString: @"Parsing Log"]) currentLog = f.parseLogData;
+        if ([logType isEqualToString: @"Network Log"]) currentLog = f.netLogData;
         
     }
+}
+
+
+- (void)mapChosen: (int)type {
+    // how do I do this?
+}
+
+- (void)mapTrackingChanged: (bool)type {
+    // how do I do this?
+}
+
+-(void)receivedPicture {
+    [serverPicController addedImage];
+}
+
+-(void)receivedLocation {
+    // how do i do this?
 }
 
 - (IBAction)showPrefs:(NSButton *)sender {
     [popOver close];
     NSSize mysize;
-    mysize.width = 243;
-    mysize.height = 98;
+    mysize.width = 258;
+    mysize.height = 121;
     popOver.contentSize = mysize;
-    popOver.contentViewController = prefs;
+    popOver.contentViewController = prefsViewController;
     [popOver showRelativeToRect:[sender bounds] ofView:sender preferredEdge:NSMaxXEdge];
 }
 
@@ -247,18 +285,24 @@
             currentView = webView;
             break;
         case 1:
+            NSLog(@"OpenGL Time");
             [openGLView setHidden: NO];
             currentView = openGLView;
             break;
         case 2:
-            [picViewController.view setHidden: NO];
-            currentView = picViewController.view;
+            NSLog(@"Picture Time");
+            [serverPicController.view setHidden: NO];
+            currentView = serverPicController.view;
             break;
         default:
             [graphHostingView setHidden: NO];
             currentView = graphHostingView;
-            // do more
+            FlightData *f = [FlightData instance];
+            NSString *tag = [f.nameArray objectAtIndex: i -2];
+            StatPoint *tmp = [f.balloonStats objectForKey: tag];
+            [graphLogic showDataSource: tmp named: tag];
     }
 }
+
 
 @end
