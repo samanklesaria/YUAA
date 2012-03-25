@@ -10,8 +10,6 @@
 		22030BE71505864F00E247EE /* GraphLogic.m in Sources */ = {isa = PBXBuildFile; fileRef = 22030BE61505864F00E247EE /* GraphLogic.m */; };
 		22030BE81505864F00E247EE /* GraphLogic.m in Sources */ = {isa = PBXBuildFile; fileRef = 22030BE61505864F00E247EE /* GraphLogic.m */; };
 		22030BF81505B2BA00E247EE /* map.html in Resources */ = {isa = PBXBuildFile; fileRef = 22030BF71505B2BA00E247EE /* map.html */; };
-		22030BFC1505B54600E247EE /* ServerPicController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22030BFA1505B54600E247EE /* ServerPicController.m */; };
-		22030BFD1505B54600E247EE /* ServerPicController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 22030BFB1505B54600E247EE /* ServerPicController.xib */; };
 		2203DF2B14CAAB2B00E386FE /* ControllerShower.m in Sources */ = {isa = PBXBuildFile; fileRef = 2203DF2A14CAAB2B00E386FE /* ControllerShower.m */; };
 		2207253614F98BCE003A9375 /* PrefsPopupController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2207253414F98BCE003A9375 /* PrefsPopupController.m */; };
 		2207253714F98BCE003A9375 /* PrefsPopupController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2207253514F98BCE003A9375 /* PrefsPopupController.xib */; };
@@ -74,12 +72,6 @@
 		22B8526214F7F6FF008CBED6 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 22B8526114F7F6FF008CBED6 /* main.m */; };
 		22B8526914F7F6FF008CBED6 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 22B8526814F7F6FF008CBED6 /* AppDelegate.m */; };
 		22B8526C14F7F6FF008CBED6 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 22B8526A14F7F6FF008CBED6 /* MainMenu.xib */; };
-		22B8529314F7F73E008CBED6 /* AMSerialPort_Deprecated.m in Sources */ = {isa = PBXBuildFile; fileRef = 22B8528714F7F73E008CBED6 /* AMSerialPort_Deprecated.m */; };
-		22B8529414F7F73E008CBED6 /* AMSerialPort.m in Sources */ = {isa = PBXBuildFile; fileRef = 22B8528914F7F73E008CBED6 /* AMSerialPort.m */; };
-		22B8529514F7F73E008CBED6 /* AMSerialPortAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 22B8528B14F7F73E008CBED6 /* AMSerialPortAdditions.m */; };
-		22B8529614F7F73E008CBED6 /* AMSerialPortList_Deprecated.m in Sources */ = {isa = PBXBuildFile; fileRef = 22B8528D14F7F73E008CBED6 /* AMSerialPortList_Deprecated.m */; };
-		22B8529714F7F73E008CBED6 /* AMSerialPortList.m in Sources */ = {isa = PBXBuildFile; fileRef = 22B8528F14F7F73E008CBED6 /* AMSerialPortList.m */; };
-		22B8529814F7F73E008CBED6 /* AMStandardEnumerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 22B8529214F7F73E008CBED6 /* AMStandardEnumerator.m */; };
 		22B8529E14F7F752008CBED6 /* NetworkManage.m in Sources */ = {isa = PBXBuildFile; fileRef = 22B8529B14F7F752008CBED6 /* NetworkManage.m */; };
 		22B8529F14F7F752008CBED6 /* NetworkConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 22B8529C14F7F752008CBED6 /* NetworkConnection.m */; };
 		22B852A714F7F8DC008CBED6 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 22B852A614F7F8DC008CBED6 /* Cocoa.framework */; };
@@ -118,6 +110,12 @@
 		22EA922E14F870EA00D83E7D /* ASIInputStream.m in Sources */ = {isa = PBXBuildFile; fileRef = 228CCD3C14BAB556000020D9 /* ASIInputStream.m */; };
 		22EA922F14F870EA00D83E7D /* ASINetworkQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 228CCD3E14BAB556000020D9 /* ASINetworkQueue.m */; };
 		22EA923714F8719200D83E7D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 22FE1E131468855B00403F43 /* QuartzCore.framework */; };
+		22F787BB151F83D600FB2F33 /* AMSerialPort.m in Sources */ = {isa = PBXBuildFile; fileRef = 22F787B0151F83D600FB2F33 /* AMSerialPort.m */; };
+		22F787BC151F83D600FB2F33 /* AMSerialPort_Deprecated.m in Sources */ = {isa = PBXBuildFile; fileRef = 22F787B2151F83D600FB2F33 /* AMSerialPort_Deprecated.m */; };
+		22F787BD151F83D600FB2F33 /* AMSerialPortAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 22F787B4151F83D600FB2F33 /* AMSerialPortAdditions.m */; };
+		22F787BE151F83D600FB2F33 /* AMSerialPortList.m in Sources */ = {isa = PBXBuildFile; fileRef = 22F787B6151F83D600FB2F33 /* AMSerialPortList.m */; };
+		22F787BF151F83D600FB2F33 /* AMSerialPortList_Deprecated.m in Sources */ = {isa = PBXBuildFile; fileRef = 22F787B8151F83D600FB2F33 /* AMSerialPortList_Deprecated.m */; };
+		22F787C0151F83D600FB2F33 /* AMStandardEnumerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 22F787BA151F83D600FB2F33 /* AMStandardEnumerator.m */; };
 		22FE1DB4146851EA00403F43 /* DataPoint.m in Sources */ = {isa = PBXBuildFile; fileRef = 22FE1DB3146851EA00403F43 /* DataPoint.m */; };
 		22FE1E071468845200403F43 /* libCorePlot-CocoaTouch.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 22FE1E061468845200403F43 /* libCorePlot-CocoaTouch.a */; };
 		22FE1E141468855B00403F43 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 22FE1E131468855B00403F43 /* QuartzCore.framework */; };
@@ -143,9 +141,6 @@
 		22030BE51505864F00E247EE /* GraphLogic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GraphLogic.h; path = viewer/GraphLogic.h; sourceTree = "<group>"; };
 		22030BE61505864F00E247EE /* GraphLogic.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GraphLogic.m; path = viewer/GraphLogic.m; sourceTree = "<group>"; };
 		22030BF71505B2BA00E247EE /* map.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = map.html; sourceTree = "<group>"; };
-		22030BF91505B54600E247EE /* ServerPicController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ServerPicController.h; sourceTree = "<group>"; };
-		22030BFA1505B54600E247EE /* ServerPicController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ServerPicController.m; sourceTree = "<group>"; };
-		22030BFB1505B54600E247EE /* ServerPicController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ServerPicController.xib; sourceTree = "<group>"; };
 		2203DF2A14CAAB2B00E386FE /* ControllerShower.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ControllerShower.m; sourceTree = "<group>"; };
 		2203DF2C14CAAB9B00E386FE /* ControllerShower.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ControllerShower.h; sourceTree = "<group>"; };
 		2207253314F98BCE003A9375 /* PrefsPopupController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrefsPopupController.h; sourceTree = "<group>"; };
@@ -244,20 +239,6 @@
 		22B8526714F7F6FF008CBED6 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		22B8526814F7F6FF008CBED6 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		22B8526B14F7F6FF008CBED6 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
-		22B8528514F7F73E008CBED6 /* AMSerialErrors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMSerialErrors.h; sourceTree = "<group>"; };
-		22B8528614F7F73E008CBED6 /* AMSerialPort_Deprecated.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMSerialPort_Deprecated.h; sourceTree = "<group>"; };
-		22B8528714F7F73E008CBED6 /* AMSerialPort_Deprecated.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AMSerialPort_Deprecated.m; sourceTree = "<group>"; };
-		22B8528814F7F73E008CBED6 /* AMSerialPort.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMSerialPort.h; sourceTree = "<group>"; };
-		22B8528914F7F73E008CBED6 /* AMSerialPort.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AMSerialPort.m; sourceTree = "<group>"; };
-		22B8528A14F7F73E008CBED6 /* AMSerialPortAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMSerialPortAdditions.h; sourceTree = "<group>"; };
-		22B8528B14F7F73E008CBED6 /* AMSerialPortAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AMSerialPortAdditions.m; sourceTree = "<group>"; };
-		22B8528C14F7F73E008CBED6 /* AMSerialPortList_Deprecated.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMSerialPortList_Deprecated.h; sourceTree = "<group>"; };
-		22B8528D14F7F73E008CBED6 /* AMSerialPortList_Deprecated.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AMSerialPortList_Deprecated.m; sourceTree = "<group>"; };
-		22B8528E14F7F73E008CBED6 /* AMSerialPortList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMSerialPortList.h; sourceTree = "<group>"; };
-		22B8528F14F7F73E008CBED6 /* AMSerialPortList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AMSerialPortList.m; sourceTree = "<group>"; };
-		22B8529014F7F73E008CBED6 /* AMSDKCompatibility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMSDKCompatibility.h; sourceTree = "<group>"; };
-		22B8529114F7F73E008CBED6 /* AMStandardEnumerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMStandardEnumerator.h; sourceTree = "<group>"; };
-		22B8529214F7F73E008CBED6 /* AMStandardEnumerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AMStandardEnumerator.m; sourceTree = "<group>"; };
 		22B8529A14F7F752008CBED6 /* NetworkManage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NetworkManage.h; sourceTree = "<group>"; };
 		22B8529B14F7F752008CBED6 /* NetworkManage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NetworkManage.m; sourceTree = "<group>"; };
 		22B8529C14F7F752008CBED6 /* NetworkConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NetworkConnection.m; sourceTree = "<group>"; };
@@ -293,6 +274,20 @@
 		22E85A0814D3B0F4000BB0EA /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default@2x.png"; path = "../Default@2x.png"; sourceTree = "<group>"; };
 		22EA922314F844F100D83E7D /* Processor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Processor.h; path = yuaaServer/Processor.h; sourceTree = "<group>"; };
 		22EA922414F844F100D83E7D /* Processor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Processor.m; path = yuaaServer/Processor.m; sourceTree = "<group>"; };
+		22F787AD151F83D600FB2F33 /* AMSDKCompatibility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMSDKCompatibility.h; sourceTree = "<group>"; };
+		22F787AE151F83D600FB2F33 /* AMSerialErrors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMSerialErrors.h; sourceTree = "<group>"; };
+		22F787AF151F83D600FB2F33 /* AMSerialPort.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMSerialPort.h; sourceTree = "<group>"; };
+		22F787B0151F83D600FB2F33 /* AMSerialPort.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AMSerialPort.m; sourceTree = "<group>"; };
+		22F787B1151F83D600FB2F33 /* AMSerialPort_Deprecated.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMSerialPort_Deprecated.h; sourceTree = "<group>"; };
+		22F787B2151F83D600FB2F33 /* AMSerialPort_Deprecated.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AMSerialPort_Deprecated.m; sourceTree = "<group>"; };
+		22F787B3151F83D600FB2F33 /* AMSerialPortAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMSerialPortAdditions.h; sourceTree = "<group>"; };
+		22F787B4151F83D600FB2F33 /* AMSerialPortAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AMSerialPortAdditions.m; sourceTree = "<group>"; };
+		22F787B5151F83D600FB2F33 /* AMSerialPortList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMSerialPortList.h; sourceTree = "<group>"; };
+		22F787B6151F83D600FB2F33 /* AMSerialPortList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AMSerialPortList.m; sourceTree = "<group>"; };
+		22F787B7151F83D600FB2F33 /* AMSerialPortList_Deprecated.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMSerialPortList_Deprecated.h; sourceTree = "<group>"; };
+		22F787B8151F83D600FB2F33 /* AMSerialPortList_Deprecated.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AMSerialPortList_Deprecated.m; sourceTree = "<group>"; };
+		22F787B9151F83D600FB2F33 /* AMStandardEnumerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMStandardEnumerator.h; sourceTree = "<group>"; };
+		22F787BA151F83D600FB2F33 /* AMStandardEnumerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AMStandardEnumerator.m; sourceTree = "<group>"; };
 		22FE1DB2146851EA00403F43 /* DataPoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataPoint.h; sourceTree = "<group>"; };
 		22FE1DB3146851EA00403F43 /* DataPoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataPoint.m; sourceTree = "<group>"; };
 		22FE1DB71468844400403F43 /* _CPTConstraintsFixed.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _CPTConstraintsFixed.h; sourceTree = "<group>"; };
@@ -500,16 +495,6 @@
 			name = viewerAppDelegate;
 			sourceTree = "<group>";
 		};
-		2222861615081B8C006131A4 /* ServerPicController */ = {
-			isa = PBXGroup;
-			children = (
-				22030BFA1505B54600E247EE /* ServerPicController.m */,
-				22030BF91505B54600E247EE /* ServerPicController.h */,
-				22030BFB1505B54600E247EE /* ServerPicController.xib */,
-			);
-			name = ServerPicController;
-			sourceTree = "<group>";
-		};
 		2222861715081B96006131A4 /* PrefsPopupController */ = {
 			isa = PBXGroup;
 			children = (
@@ -575,9 +560,9 @@
 			isa = PBXGroup;
 			children = (
 				228CCD4F14BAB681000020D9 /* libz.dylib */,
+				22F787AC151F83D600FB2F33 /* SerialPort */,
 				22FE1E061468845200403F43 /* libCorePlot-CocoaTouch.a */,
 				22FE1DB61468844400403F43 /* CorePlotHeaders */,
-				22B8529914F7F745008CBED6 /* ASMSerial */,
 				228CCD4814BAB55F000020D9 /* ASIHTTPRequest */,
 				22B852BC14F81281008CBED6 /* CorePlot.framework */,
 				22B852B614F7F9B7008CBED6 /* Quartz.framework */,
@@ -735,7 +720,6 @@
 				22B8526A14F7F6FF008CBED6 /* MainMenu.xib */,
 				22B852A014F7F763008CBED6 /* Network */,
 				2222861715081B96006131A4 /* PrefsPopupController */,
-				2222861615081B8C006131A4 /* ServerPicController */,
 				2222861815081BC4006131A4 /* AKPSender */,
 				22B8525C14F7F6FF008CBED6 /* Supporting Files */,
 			);
@@ -753,27 +737,6 @@
 				22B8526314F7F6FF008CBED6 /* yuaaServer-Prefix.pch */,
 			);
 			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
-		22B8529914F7F745008CBED6 /* ASMSerial */ = {
-			isa = PBXGroup;
-			children = (
-				22B8528514F7F73E008CBED6 /* AMSerialErrors.h */,
-				22B8528614F7F73E008CBED6 /* AMSerialPort_Deprecated.h */,
-				22B8528714F7F73E008CBED6 /* AMSerialPort_Deprecated.m */,
-				22B8528814F7F73E008CBED6 /* AMSerialPort.h */,
-				22B8528914F7F73E008CBED6 /* AMSerialPort.m */,
-				22B8528A14F7F73E008CBED6 /* AMSerialPortAdditions.h */,
-				22B8528B14F7F73E008CBED6 /* AMSerialPortAdditions.m */,
-				22B8528C14F7F73E008CBED6 /* AMSerialPortList_Deprecated.h */,
-				22B8528D14F7F73E008CBED6 /* AMSerialPortList_Deprecated.m */,
-				22B8528E14F7F73E008CBED6 /* AMSerialPortList.h */,
-				22B8528F14F7F73E008CBED6 /* AMSerialPortList.m */,
-				22B8529014F7F73E008CBED6 /* AMSDKCompatibility.h */,
-				22B8529114F7F73E008CBED6 /* AMStandardEnumerator.h */,
-				22B8529214F7F73E008CBED6 /* AMStandardEnumerator.m */,
-			);
-			name = ASMSerial;
 			sourceTree = "<group>";
 		};
 		22B852A014F7F763008CBED6 /* Network */ = {
@@ -861,6 +824,28 @@
 			);
 			name = Connector;
 			path = viewer;
+			sourceTree = "<group>";
+		};
+		22F787AC151F83D600FB2F33 /* SerialPort */ = {
+			isa = PBXGroup;
+			children = (
+				22F787AD151F83D600FB2F33 /* AMSDKCompatibility.h */,
+				22F787AE151F83D600FB2F33 /* AMSerialErrors.h */,
+				22F787AF151F83D600FB2F33 /* AMSerialPort.h */,
+				22F787B0151F83D600FB2F33 /* AMSerialPort.m */,
+				22F787B1151F83D600FB2F33 /* AMSerialPort_Deprecated.h */,
+				22F787B2151F83D600FB2F33 /* AMSerialPort_Deprecated.m */,
+				22F787B3151F83D600FB2F33 /* AMSerialPortAdditions.h */,
+				22F787B4151F83D600FB2F33 /* AMSerialPortAdditions.m */,
+				22F787B5151F83D600FB2F33 /* AMSerialPortList.h */,
+				22F787B6151F83D600FB2F33 /* AMSerialPortList.m */,
+				22F787B7151F83D600FB2F33 /* AMSerialPortList_Deprecated.h */,
+				22F787B8151F83D600FB2F33 /* AMSerialPortList_Deprecated.m */,
+				22F787B9151F83D600FB2F33 /* AMStandardEnumerator.h */,
+				22F787BA151F83D600FB2F33 /* AMStandardEnumerator.m */,
+			);
+			name = SerialPort;
+			path = SharedCode;
 			sourceTree = "<group>";
 		};
 		22FE1DB61468844400403F43 /* CorePlotHeaders */ = {
@@ -1108,7 +1093,6 @@
 				226DDF5714FB6320006563B8 /* protocol.plist in Resources */,
 				22DEBD0415053A9100C5BD0C /* AKPSender.xib in Resources */,
 				22030BF81505B2BA00E247EE /* map.html in Resources */,
-				22030BFD1505B54600E247EE /* ServerPicController.xib in Resources */,
 				22BAE97C1513F3A800F03ED2 /* demo in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1162,12 +1146,6 @@
 			files = (
 				22B8526214F7F6FF008CBED6 /* main.m in Sources */,
 				22B8526914F7F6FF008CBED6 /* AppDelegate.m in Sources */,
-				22B8529314F7F73E008CBED6 /* AMSerialPort_Deprecated.m in Sources */,
-				22B8529414F7F73E008CBED6 /* AMSerialPort.m in Sources */,
-				22B8529514F7F73E008CBED6 /* AMSerialPortAdditions.m in Sources */,
-				22B8529614F7F73E008CBED6 /* AMSerialPortList_Deprecated.m in Sources */,
-				22B8529714F7F73E008CBED6 /* AMSerialPortList.m in Sources */,
-				22B8529814F7F73E008CBED6 /* AMStandardEnumerator.m in Sources */,
 				22B8529E14F7F752008CBED6 /* NetworkManage.m in Sources */,
 				22B8529F14F7F752008CBED6 /* NetworkConnection.m in Sources */,
 				22EA922514F844F100D83E7D /* Processor.m in Sources */,
@@ -1183,9 +1161,14 @@
 				2207253614F98BCE003A9375 /* PrefsPopupController.m in Sources */,
 				22DEBD0315053A9100C5BD0C /* AKPSender.m in Sources */,
 				22030BE81505864F00E247EE /* GraphLogic.m in Sources */,
-				22030BFC1505B54600E247EE /* ServerPicController.m in Sources */,
 				22BC43FF1506BBCC00DE7B6D /* Prefs.m in Sources */,
 				22BC44041506DCD100DE7B6D /* FlightData.m in Sources */,
+				22F787BB151F83D600FB2F33 /* AMSerialPort.m in Sources */,
+				22F787BC151F83D600FB2F33 /* AMSerialPort_Deprecated.m in Sources */,
+				22F787BD151F83D600FB2F33 /* AMSerialPortAdditions.m in Sources */,
+				22F787BE151F83D600FB2F33 /* AMSerialPortList.m in Sources */,
+				22F787BF151F83D600FB2F33 /* AMSerialPortList_Deprecated.m in Sources */,
+				22F787C0151F83D600FB2F33 /* AMStandardEnumerator.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

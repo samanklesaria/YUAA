@@ -9,16 +9,16 @@
 #import <Foundation/Foundation.h>
 
 @interface StatPoint : NSObject {
-    double minval;
-    double maxval;
+    float minval;
+    float maxval;
     NSMutableArray *points;
     NSMutableDictionary *bayNumToPoints;
     NSDate *lastTime;
 }
 
 @property (retain) NSDate *lastTime;
-@property double minval;
-@property double maxval;
+@property float minval;
+@property float maxval;
 @property (retain) NSMutableArray *points;
 @property (retain) NSMutableDictionary *bayNumToPoints;
 

@@ -65,23 +65,15 @@ static unsigned long timestamp = 0;
 static unsigned long timeoutstamp = 0;
 
 int cellAvailable() {
-    Serial1.available();
-}
-
-char cellRead() {
-    Serial1.read();
-}
-
-int serialAvailable() {
     Serial.available();
 }
 
-char serialRead() {
+char cellRead() {
     Serial.read();
 }
 
 void serialPrint(char *c) {
-  Serial1.print(c);
+  Serial.print(c);
 }
 
 void wirePrint(char *c) {
@@ -116,20 +108,13 @@ void parseNumber() {
 void wait_for(char *a) {
     while (1) {
         read_from(cellAvailable, cellRead);
-        Serial.print("Waiting for ");
-        Serial.print(a);
-        Serial.print(" with line ");
-        Serial.println(at_buffer);
         if (strstr(at_buffer,a)) return;
         if (processor() == 1) return;
     }
 }
 
 int processor() {
-        Serial.print("Processing ");
-        Serial.println(at_buffer);
         if (strstr(at_buffer,"ERROR")) {
-            Serial.println("Could not proceed with operation");
             delay(1000);
             if (inSetup) {
               longjmp(init_restarter, 0);
@@ -138,36 +123,30 @@ int processor() {
             longjmp(restarter, 0);
         };
         if (strstr(at_buffer,"+CMT")) {
-          Serial.println("Got a text");
           parseNumber();
           read_from(cellAvailable, cellRead);
           if (strstr(at_buffer, KILLSIGNAL)) if (!isErring) {isErring = 1; killCall(); }
           if (strstr(at_buffer, INFOSIGNAL)) { delay(1000); makeCall(); }
           if (strstr(at_buffer, ADDSIGNAL)) addNumber();
-          Serial1.println("AT+CMGD=1,4");
+          Serial.println("AT+CMGD=1,4");
           wait_for("OK");
           return 0;
         };
         if (strstr(at_buffer, "+SIND: 4")) {
-          Serial.println("Conenction to sim regained.");
           setupSim();
           longjmp(restarter, 0);
         }
         if (strstr(at_buffer, "+CREG")) {
               store_lac_cid();
-              Serial.println("Done with Cregging");
               return 1;
         };
         return 0;
 }
 
 void wait_for_byte(char a) {
-    Serial.println(a, BYTE);
     while (1) {
-        if (Serial1.available() > 0) {
-            char inc = Serial1.read();
-            Serial.print("Waiting with char ");
-            Serial.println(inc, BYTE);
+        if (Serial.available() > 0) {
+            char inc = Serial.read();
             /*
             if (inc == '+') {
               // setupSim();
@@ -182,44 +161,35 @@ void wait_for_byte(char a) {
 void passthrough() {
     while (1) {
         read_from(cellAvailable, cellRead);
-        Serial.println(at_buffer);
     }
 }
 
 void startCall(char *phn) {
-    Serial1.print("AT+CMGS=\"");
-    Serial1.write((uint8_t*)phn, 11);
-    Serial1.print("\"\r");
-    Serial.println("Sent the r");
+    Serial.print("AT+CMGS=\"");
+    Serial.write((uint8_t*)phn, 11);
+    Serial.print("\"\r");
     wait_for_byte('>');
 }
 
 void endCall() {
-    Serial1.print(26, BYTE);
-    Serial.println("Should be sending"); // sometimes stalls if you text INF while here.
+    Serial.print(26, BYTE);
     wait_for("OK");
 }
 
 void makeCall () {
-  Serial.print("Making a call");
   delay(1000);
   int i;
   for (i = 0; i < numsidx; i += 11) {
-    Serial.print("I'm calling ");
-    Serial.write((uint8_t*)(numbers+i), 11);
-    Serial.println('\n');
     startCall(numbers + i);
     str_cache(serialPrint);
     endCall();
   }
-   Serial.println("I reached the end");
 }
 
 void killCall() {
   int i;
   for (i = 0; i < numsidx; i += 10) {
     startCall(numbers + i);
-    Serial1.print("Getting killed");
     endCall();
   }
 }
@@ -228,17 +198,15 @@ void killCall() {
 
 void store_mcc_mnc() {
   while (1) {
-    Serial1.println("AT+COPS=0");
+    Serial.println("AT+COPS=0");
     wait_for("OK");
-    Serial1.println("AT+COPS?");
+    Serial.println("AT+COPS?");
     read_from(cellAvailable, cellRead);
     read_from(cellAvailable, cellRead);
 
     char *firstComma = strchr(at_buffer,',');
     if (firstComma) {
       char *mcc_mnc = strchr(firstComma+1,',') + 1;
-      Serial.print("Mcc is ");
-      Serial.println(mcc_mnc);
       createProtocolMessage(mcc_buffer, "MC", mcc_mnc, 3);
       createProtocolMessage(mcc_buffer + 8, "MN", mcc_mnc + 3, 2);
       *(mcc_buffer + 14) = '\0';
@@ -268,12 +236,10 @@ void store_lac_cid() {
 }
 
 void addNumber() {
-  Serial.print("Adding number ");
-  Serial.println(number);
   strcpy(numbers + numsidx, number);
   numsidx += 11;
   startCall(number);
-  Serial1.print("Gotcha");
+  Serial.print("Gotcha");
   endCall();
 }
 
@@ -281,11 +247,8 @@ void update_loc() {
     int b = maybe_read_byte(cellAvailable, cellRead);
     if (b) {
        buffidx = 0;
-       Serial.print("Main waiting with line ");
-       Serial.println(at_buffer);
        setjmp(restarter);
        int a = processor();
-       Serial.println("Finished processing");
        if (a) return;
     }
     if (millis() - timestamp > DELAYTIME) {
@@ -307,7 +270,6 @@ void wireCache() {
 
 void receiveEvent(int howMany)
 {
-  Serial.println("Received some data");
   while(1 < Wire.available())
   {
     char c = Wire.receive();
@@ -332,50 +294,39 @@ void receiveEvent(int howMany)
     }
   }
   Wire.receive();    // receive byte as an integer
-  Serial.println("Done receiving data");
 }
 
 void setupSim() {
-    Serial.println("Setting up sim");
     inSetup = 1;
     setjmp(init_restarter);
-    Serial.println("Formatting"); // somehow we always get stuck here. no output ever gets printed
-    Serial1.println("AT+CMGF=1");
+    Serial.println("AT+CMGF=1");
     wait_for("OK");
     setjmp(init_restarter);
-    Serial.println("Deleting");
-    Serial1.println("AT+CMGD=1,4");
+    Serial.println("AT+CMGD=1,4");
     wait_for("OK");
     
     // Serial1.println("AT+SBAND=7");
     // wait_for("OK");
     
     setjmp(init_restarter);
-    Serial.println("Setting mcc/mnc");
     store_mcc_mnc();
     
     setjmp(init_restarter);
-    Serial.println("Configuring text message recieval.");
-    Serial1.println("AT+CNMI=3,3,0,0");
+    Serial.println("AT+CNMI=3,3,0,0");
     wait_for("OK");
-    Serial.println("Everything set up");
     
     setjmp(init_restarter);
-    Serial1.println("AT+CREG=2");
-    Serial.println("Configuring location updates.");
+    Serial.println("AT+CREG=2");
     wait_for("OK");
-    Serial.println("Done setting sim up");
     inSetup = 0;
 }
 
 void setup() {
     prepCrc();
     Serial.begin(9600);
-    Serial1.begin(9600);
     Wire.begin(4);
     setjmp(restarter);
     setupSim();
-    Serial.println("Done with setup");
     
     Wire.onReceive(receiveEvent);
     Wire.onRequest(wireCache);

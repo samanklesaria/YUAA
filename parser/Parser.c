@@ -42,7 +42,7 @@ void prepCrc()
 //Calls may be strung together. Use 0 as a default.
 char crc8(const char* data, char initialChecksum, int length)
 {
-    printf("Doing crc8 for data: %s, from checksum %.2x, with length %d\n", data, (unsigned char)initialChecksum, length);
+    // printf("Doing crc8 for data: %s, from checksum %.2x, with length %d\n", data, (unsigned char)initialChecksum, length);
     char checksum = initialChecksum;
     
     int i;
@@ -70,12 +70,11 @@ char* createProtocolMessage(char *message, const char* tag, const char* data, in
 result *handle_char(char c, parserState *p) {
     switch (p->state) {
         case TAG: {
-            if (isalpha(c)) {
+            if (isupper(c)) {
                 p->tagbuf[p->tagidx] = c;
                 (p->tagidx)++;
                 if (p->tagidx == 2) {
                     p->tagidx = 0;
-                    // printf("Handling tag %2s\n", p->tagbuf);
                     (p->specialCount) = CBUFSIZ -1;
                     if (p->tagbuf[0] == 'I' && p->tagbuf[1] == 'M') (p->state) = SPECIAL;
                     else if (p->tagbuf[0] == 'M' && p->tagbuf[1] == 'S') (p->state) = MESSAGE;
@@ -112,7 +111,7 @@ result *handle_char(char c, parserState *p) {
                 if (scanner == 1) {
                     p->checksum = crc8(p->tagbuf,0,2);
                     p->checksum = crc8((p->contentbuf), p->checksum, p->contentidx);
-                    printf("Checksum: %x, check: %x\n", p->checksum, p->check);
+                    // printf("Checksum: %x, check: %x\n", p->checksum, p->check);
                     if (p->checksum == p->check) {
                         p->parserResult.length = p->contentidx;
                         p->parserResult.content = (p->contentbuf);

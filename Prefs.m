@@ -26,11 +26,17 @@
         CFRelease(myuid);
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
         localServer = [defaults stringForKey: @"server"];
-        port = (int)[defaults integerForKey: @"port"];
+        port = [defaults integerForKey: @"port"];
         deviceName = [defaults stringForKey: @"deviceName"];
         autoAdjust = (int)[defaults integerForKey: @"autoAdjust"];
         postServer = [defaults stringForKey: @"postServer"];
     }
     return self;
+}
+
+- (void) dealloc {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults synchronize];
+    [super dealloc];
 }
 @end

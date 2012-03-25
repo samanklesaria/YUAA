@@ -100,6 +100,7 @@
 - (void)stream:(NSInputStream *)stream handleEvent:(NSStreamEvent)eventCode {
         switch(eventCode) {
             case NSStreamEventHasBytesAvailable: {
+                NSLog(@"Bytes are found!");
                 [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
                 erred = 0;
                 while ([stream hasBytesAvailable]) {

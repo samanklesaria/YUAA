@@ -35,6 +35,7 @@
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     prefs.port = [sender intValue];
     [defaults setObject: prefs.postServer forKey: @"port"];
+    [delegate restartPort: prefs.port];
 }
 
 - (IBAction)postUrlChanged:(NSTextFieldCell *)sender {
@@ -47,27 +48,6 @@
     prefs.deviceName = [sender stringValue];
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     [defaults setObject: prefs.deviceName forKey: @"deviceId"];
-}
-
-- (IBAction)mapTypeChanged:(NSPopUpButtonCell *)sender {
-     [delegate mapChosen: (int)[sender indexOfSelectedItem]];
-}
-
-- (IBAction)mapUpdateTypeChanged:(NSPopUpButtonCell *)sender {
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    prefs.autoAdjust = (int)[sender indexOfSelectedItem];
-    switch ([sender indexOfSelectedItem]) {
-        case 0:
-            [delegate mapTrackingChanged: NO];
-            break;
-        case 1:
-            [delegate mapTrackingChanged: YES];
-            break;
-        case 2:
-            [delegate mapTrackingChanged: NO];
-            break;  
-    }
-    [defaults setInteger: (NSInteger)[sender indexOfSelectedItem] forKey: @"autoAdjust"];
 }
 
 - (IBAction)serialPortChanged:(NSPopUpButtonCell *)sender {

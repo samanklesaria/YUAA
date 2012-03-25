@@ -17,6 +17,7 @@
 @class NetworkConnection;
 @protocol NetworkManageDelegate <NSObject>
 -(void)newConnection:(NetworkConnection *)conn;
+- (void)recieveData: (NSData *)d;
 @end
 
 @interface NetworkManage : NSObject {
@@ -28,8 +29,8 @@
 }
 
 -(void)broadcast:(NSString *)s;
-
--(id)initWithDelegate:(id)del;
+- (void)recieveData: (NSData *)d;
+-(id)initWithDelegate:(id)del port:(NSInteger)port;
 -(void)closeConnection:(NetworkConnection *)conn;
 -(void)writeData:(NSData *)d;
 

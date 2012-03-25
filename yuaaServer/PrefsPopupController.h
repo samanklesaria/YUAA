@@ -12,19 +12,15 @@
 
 @interface PrefsPopupController : NSViewController <NSPopoverDelegate> {
     id <PrefsResponder> delegate;
-    IBOutlet NSPopUpButtonCell *updateTypeCell;
     IBOutlet NSTextFieldCell *deviceIdCell;
     IBOutlet NSTextFieldCell *postUrlCell;
     IBOutlet NSTextFieldCell *serverPortCell;
     IBOutlet NSPopUpButtonCell *serialPortCell;
-    IBOutlet NSPopUpButtonCell *mapTypeCell;
     Prefs *prefs;
 }
 - (IBAction)serverPortChanged:(NSTextFieldCell *)sender;
 - (IBAction)postUrlChanged:(NSTextFieldCell *)sender;
 - (IBAction)deviceIdChanged:(NSTextFieldCell *)sender;
-- (IBAction)mapTypeChanged:(NSPopUpButtonCell *)sender;
-- (IBAction)mapUpdateTypeChanged:(NSPopUpButtonCell *)sender;
 
 - (IBAction)serialPortChanged:(NSPopUpButtonCell *)sender;
 

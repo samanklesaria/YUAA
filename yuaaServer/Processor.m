@@ -11,6 +11,10 @@
 @implementation Processor
 @synthesize delegate;
 
+- (NSData *) lastData {
+    return [[NSData alloc] initWithBytes: cachedString length: cacheStringIndex];
+}
+
 - (id)initWithPrefs: (Prefs *)p
 {
     self = [super init];
@@ -46,6 +50,7 @@
             cacheStringIndex += r->length + 5;
         }
         NSString *strTag = [[[NSString alloc] initWithBytes: r->tag length: 2 encoding:NSASCIIStringEncoding] autorelease];
+        NSLog(@"String tag is %@", strTag);
         if ([strTag isEqualToString: @"IM"]) {
             flightData.lastImageTime = [NSDate date];
             
@@ -73,16 +78,15 @@
             theValue = [UIImage imageWithCGImage: cgImage];
             imageData = UIImageJPEGRepresentation(theValue, 1);
 #else
-            theValue = [NSValue valueWithBytes: cgImage objCType: @encode(CGImageRef)];
+            // theValue = [NSValue valueWithBytes: cgImage objCType: @encode(CGImageRef)];
+            theValue = [[NSImage alloc] initWithCGImage: cgImage size: NSZeroSize];
             CFMutableDataRef      data = CFDataCreateMutable(NULL, 0);
             CGImageDestinationRef idst = CGImageDestinationCreateWithData(data, kUTTypeJPEG, 1, NULL);
             CGImageDestinationAddImage(idst, cgImage, NULL);
             CGImageDestinationFinalize(idst);
-            imageData = (NSData *)data;
-            CFRelease(cgImage);
+            imageData = (NSData *)data; 
 #endif
-            
-            
+            CFRelease(cgImage);
             [flightData.pictures addObject: theValue];
             if ([delegate respondsToSelector: @selector(receivedPicture)])
                 [delegate receivedPicture];
@@ -94,7 +98,6 @@
             [r setData:imageData withFileName:@"photo.jpg" andContentType:@"image/jpeg" forKey:@"photo"];
             [r setDelegate:self];
             [r startAsynchronous];
-            CFRelease(cgImage);
             return;
         }
         NSString *strVal = [[[NSString alloc] initWithBytes: r->content length: (NSUInteger)(r->length) encoding:NSASCIIStringEncoding] autorelease];
@@ -105,20 +108,20 @@
             }];
             return;
         }
-        [flightData.parseLogData addObject: [NSString stringWithFormat: @"\nUpdating tag %@ with value %@", strTag, strVal]];
-        double doubleVal = [strVal doubleValue];
-        if (doubleVal != 0 || [strTag isEqualToString: @"GS"]) {
+        [flightData.parseLogData addObject: [NSString stringWithFormat: @"Updating tag %@ with value %@", strTag, strVal]];
+        double floatVal = [strVal floatValue];
+        if (floatVal != 0 || [strTag isEqualToString: @"GS"]) {
             
             if ([strTag isEqualToString: @"YA"]) {
-                flightData.rotationZ = (float)doubleVal;
+                flightData.rotationZ = floatVal;
                 flightData.lastIMUTime = [NSDate date];
             }
             else if ([strTag isEqualToString: @"PI"]) {
-                flightData.rotationY = (float)doubleVal;
+                flightData.rotationY = floatVal;
                 flightData.lastIMUTime = [NSDate date];
             }
             else if ([strTag isEqualToString: @"RO"]) {
-                flightData.rotationX = (float)doubleVal;
+                flightData.rotationX = floatVal;
                 flightData.lastIMUTime = [NSDate date];
             }
             else if (!([strTag isEqualToString: @"LA"] || [strTag isEqualToString: @"LO"] || [strTag isEqualToString: @"BB"])) {
@@ -130,22 +133,22 @@
                     stat = [[[StatPoint alloc] init] autorelease];
                     [flightData.balloonStats setObject: stat forKey: strTag];
                 }
-                if (!stat.minval || stat.minval > doubleVal) stat.minval = doubleVal;
-                if (!stat.maxval || stat.maxval < doubleVal) stat.maxval = doubleVal;
+                if (!stat.minval || stat.minval > floatVal) stat.minval = floatVal;
+                if (!stat.maxval || stat.maxval < floatVal) stat.maxval = floatVal;
                 NSNumber *idx = [NSNumber numberWithInteger: [stat.points count]];
-                NSDictionary *point = [NSDictionary dictionaryWithObjectsAndKeys: idx, @"x", [NSNumber numberWithDouble: doubleVal] , @"y", NULL];
+                NSDictionary *point = [NSDictionary dictionaryWithObjectsAndKeys: idx, @"x", [NSNumber numberWithFloat: floatVal] , @"y", NULL];
                 // this seems really inefficiant. we could do better ^^
                 [stat.points performSelectorOnMainThread:@selector(addObject:) withObject:point waitUntilDone:NO];
                 stat.lastTime = [NSDate date];
                 [stat.bayNumToPoints setObject:point forKey: [NSNumber numberWithInt:bayCounter]];
             }
-            else if ([strTag isEqualToString: @"MC"]) mcc = (int)floor(doubleVal);
-            else if ([strTag isEqualToString: @"MN"]) mnc = (int)floor(doubleVal);
-            else if ([strTag isEqualToString: @"CD"]) cid = (int)floor(doubleVal);
-            else if ([strTag isEqualToString: @"LC"]) lac = (int)floor(doubleVal);
+            else if ([strTag isEqualToString: @"MC"]) mcc = (int)floor(floatVal);
+            else if ([strTag isEqualToString: @"MN"]) mnc = (int)floor(floatVal);
+            else if ([strTag isEqualToString: @"CD"]) cid = (int)floor(floatVal);
+            else if ([strTag isEqualToString: @"LC"]) lac = (int)floor(floatVal);
             else {
-                double valAbs = fabs(doubleVal);
-                double newVal = (((valAbs - floor(valAbs)) * 100) / 60 + floor(valAbs)) * (doubleVal>0?1.0:-1.0);
+                double valAbs = fabs(floatVal);
+                double newVal = (((valAbs - floor(valAbs)) * 100) / 60 + floor(valAbs)) * (floatVal>0?1.0:-1.0);
                 if ([strTag isEqualToString: @"LA"]) {
                     flightData.lat = newVal;
                     flightData.lastLocTime = [NSDate date];
@@ -159,7 +162,7 @@
                 [NSThread detachNewThreadSelector: @selector(updateWithURL:) toTarget:self withObject:url];
             }
             if ([delegate respondsToSelector: @selector(receivedTag:withValue:)])
-                [delegate receivedTag: strTag withValue: doubleVal];
+                [delegate receivedTag: strTag withValue: floatVal];
         }
     }
 }

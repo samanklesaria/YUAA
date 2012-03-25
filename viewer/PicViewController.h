@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "FlightData.h"
 
-@interface ServerPicController : UIViewController {
+@interface PicViewController : UIViewController {
     UIImageView *image;
     bool handleSwipe;
     int imageIndex;

@@ -8,10 +8,7 @@
 
 #import "NetworkConnection.h"
 
-#define WELCOME_STRING @"<WELCOME>"
-
 @implementation NetworkConnection
-@synthesize hasWrittenWelcome;
 - (id)initWithFileHandle:(NSFileHandle *)fh delegate:(id)dl
 {
     self = [super init];
@@ -25,40 +22,39 @@
         [fileHandle readInBackgroundAndNotify];
         
     }
-    
     return self;
 }
-
 
 -(void)dataReceived:(NSNotification *)notif {
     NSData *dat = [[notif userInfo] objectForKey:NSFileHandleNotificationDataItem];
     
     if ([dat length] == 0) {
-        NSLog(@"YOU JUST DISCONNECTED");
         [(NetworkManage *)delegate closeConnection:self];
-        [fileHandle closeFile];
     } else {
-        //We really don't care about incoming data...
+        [(NetworkManage *)delegate recieveData: dat];
     }
 }
 
 -(void)writeData:(NSData *)data {
-    if (fileHandle != nil) {
-        if (!hasWrittenWelcome) {
-            [fileHandle writeData:[WELCOME_STRING dataUsingEncoding:NSASCIIStringEncoding]];
-            hasWrittenWelcome = YES;
-        } 
-        [fileHandle writeData:data];
+    if ([fileHandle fileDescriptor]) {
+        @try {
+            [fileHandle writeData:data];
+        }
+        @catch (NSException *a) {
+            NSLog(@"I caught the error");
+        }
+        @finally {
+        }
     }
 }
 
 
-
 - (void)dealloc
 {
+    NSLog(@"Deallocating the connection");
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [delegate autorelease];
-    [fileHandle release];
+    [fileHandle autorelease];
     [super dealloc];
 }
 

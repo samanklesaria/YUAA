@@ -8,13 +8,13 @@
 
 #import "NetworkManage.h"
 
-#define PORT_NUMBER 3313
 @implementation NetworkManage
 @synthesize delegate;
-- (id)initWithDelegate:(id<NetworkManageDelegate>)del
+- (id)initWithDelegate:(id<NetworkManageDelegate>)del port: (NSInteger)port
 {
     self = [super init];
     if (self) {
+        NSLog(@"Using port %ld", port);
         NSLog(@"Initializing a network manager");
         // Initialization code here.
         connections = [[NSMutableArray alloc] init];
@@ -35,7 +35,7 @@
             memset(&addr, 0, sizeof(addr));
             addr.sin_len = sizeof(addr);
             addr.sin_family = AF_INET;
-            addr.sin_port = htons(PORT_NUMBER);
+            addr.sin_port = htons(port);
             addr.sin_addr.s_addr = htonl(INADDR_ANY);
             NSData *address = [NSData dataWithBytes:&addr length:sizeof(addr)];
             if( CFSocketSetAddress(socket, (CFDataRef)address) !=
@@ -84,6 +84,10 @@
     }
 }
 
+- (void)recieveData: (NSData *)d {
+    [delegate recieveData: d];
+}
+
 -(void)newConnection:(NSNotification *)notif {
     NSDictionary *userInfo = [notif userInfo];
     NSFileHandle *writeHandle = [userInfo objectForKey:NSFileHandleNotificationFileHandleItem];
@@ -118,6 +122,7 @@
 
 - (void)dealloc
 {
+    NSLog(@"Deallocating");
     if (connections) {
         for (id a in connections) {
             [a release];

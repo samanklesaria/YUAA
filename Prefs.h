@@ -11,7 +11,7 @@
 @interface Prefs : NSObject {
     NSString *uuid;
     NSString *localServer;
-    int port;
+    NSInteger port;
     NSString *remoteServer;
     int autoAdjust;
     NSString *deviceName;
@@ -20,7 +20,7 @@
 
 @property (retain) NSString *uuid;
 @property (retain) NSString *localServer;
-@property int port;
+@property NSInteger port;
 @property (retain) NSString *remoteServer;
 @property bool autoUpdate;
 @property int autoAdjust;

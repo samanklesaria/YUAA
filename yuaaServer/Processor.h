@@ -29,6 +29,7 @@
     char cachedString[1024];
     int cacheStringIndex;
     parserState pState;
+    
     int bayCounter;
     Prefs *prefs;
     
@@ -48,6 +49,7 @@
 - (void)updateData: (char) c;
 - (void)posterThread;
 - (id)initWithPrefs: (Prefs *)p;
+- (NSData *)lastData;
 
 @property (retain) id delegate;
 

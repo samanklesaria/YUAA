@@ -20,16 +20,17 @@
 #import <CorePlot/CorePlot.h>
 #import "GraphLogic.h"
 #import <WebKit/WebKit.h>
-#import "ServerPicController.h"
 #import "Prefs.h"
 #import "FlightData.h"
 #import "PrefsResponder.h"
+#import <Quartz/Quartz.h>
 
-@interface AppDelegate : NSObject <NSApplicationDelegate, PrefsResponder, NSTableViewDelegate, NSTableViewDataSource> {
+@interface AppDelegate : NSObject <NSApplicationDelegate, PrefsResponder, NSTableViewDelegate, NSTableViewDataSource, NetworkManageDelegate> {
     NetworkManage *networkManager;
     AMSerialPort *currentSerialPort;
     IBOutlet NSPopUpButtonCell *sourceCell;
     NSPopover *popOver;
+    NSFileHandle *log;
     PrefsPopupController *prefsViewController;
     AKPSender *akpsend;
     IBOutlet NSTableView *sourceList;
@@ -45,22 +46,31 @@
     Processor *processor;
     IBOutlet WebView *webView;
     IBOutlet NSOpenGLView *openGLView;
+    IBOutlet NSView *picView;
     NSPopUpButtonCell *portList;
     NSArray *currentLog;
     NSDate *lastUpdate;
     IBOutlet CPTGraphHostingView *graphHostingView;
     GraphLogic *graphLogic;
+    IBOutlet NSImageView *imageView;
     NSView *currentView;
-    IBOutlet ServerPicController *serverPicController;
     IBOutlet NSView *specialHost;
+    IBOutlet NSTextField *imageCounter;
     Prefs *prefs;
+    int imageIndex;
 }
-
-@property (assign) IBOutlet NSWindow *window;
-
+- (IBAction)goLeft:(id)sender;
+- (IBAction)goRight:(id)sender;
 - (IBAction)changeLogView:(NSPopUpButtonCell *)sender;
 - (IBAction)showPrefs:(NSButton *)sender;
 - (IBAction)sendAKP:(id)sender;
+
+@property (assign) IBOutlet NSWindow *window;
+
+- (void) scroller;
+-(void) showPictures;
+-(void) addedImage;
+- (void) updatePics;
 -(void)rebuildPortList;
 - (void)defibrillator;
 - (void) parseDemoFile;

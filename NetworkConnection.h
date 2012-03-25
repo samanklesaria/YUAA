@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "NetworkManage.h"
+
 @class NetworkManage;
 
 @interface NetworkConnection : NSObject {
@@ -15,13 +16,9 @@
     NSFileHandle *fileHandle;
     id delegate;
     
-    //NSMutableData *incomingData;
-    BOOL hasWrittenWelcome;
-    
+    //NSMutableData *incomingData;    
 }
 - (id)initWithFileHandle:(NSFileHandle *)fh delegate:(id)dl;
 -(void)writeData:(NSData *)data;
-
-@property (nonatomic, assign) BOOL hasWrittenWelcome;
 
 @end
