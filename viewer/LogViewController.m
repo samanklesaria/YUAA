@@ -47,7 +47,31 @@
 }
 
 - (IBAction)logTypeChanged:(id)sender {
-    [delegate newLogType: ((UISegmentedControl *)sender).selectedSegmentIndex];
+    logData = NULL;
+    NSInteger ind = ((UISegmentedControl *)sender).selectedSegmentIndex;
+    if (ind == 2) {
+        [logTable setHidden: YES];
+        [textView setHidden: NO];
+    } else {
+        FlightData *f = [FlightData instance];
+        logData = (ind == 0) ? f.parseLogData : f.netLogData;
+        [logTable setHidden: NO];
+        [textView setHidden: YES];
+    }
+    [self scroller];
+}
+
+- (void) scroller {
+    if (!logData) {
+        NSRange range;
+        range = NSMakeRange ([[textView text] length], 0);
+        [textView scrollRangeToVisible: range];
+    } else {
+        if ([logDataCopy count]) {
+        // [logTable performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:NO];
+            [logTable scrollToRowAtIndexPath: [NSIndexPath indexPathForRow: [logDataCopy count] - 1 inSection: 0] atScrollPosition: UITableViewScrollPositionBottom animated:NO];
+        }
+    }
 }
 
 - (void)viewDidUnload
@@ -83,7 +107,13 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return [logData count];
+    if (logData) {
+        logDataCopy = logData;
+        NSLog(@"The length is %d", [logDataCopy count]);
+        return [logDataCopy count];
+    } else {
+        return 0;
+    }
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -101,25 +131,13 @@
         [cell.textLabel setTextColor: [UIColor greenColor]];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
     }
-    
-    cell.textLabel.text = [logData objectAtIndex:indexPath.row];
+    cell.textLabel.text = [logDataCopy objectAtIndex:indexPath.row];
     return cell;
 }
 
 -(void)reloadLog {
-    if (displayed) {
-        if (self.textView.hidden) {
-            [logTable reloadData];
-            if ([logData count])
-                [logTable scrollToRowAtIndexPath: [NSIndexPath indexPathForRow: [logData count] - 1 inSection: 0] atScrollPosition: UITableViewScrollPositionTop animated: NO];
-        } else {
-            FlightData *f = [FlightData instance];
-            textView.text = f.akpLogData;
-            NSRange range;
-            range = NSMakeRange ([f.akpLogData length], 0);
-            [textView scrollRangeToVisible: range];
-            // THIS IS AWFUL. WE have to replace the text every time.
-        }
+    if (displayed && self.textView.hidden) {
+        [logTable reloadData];
     }
 }
 

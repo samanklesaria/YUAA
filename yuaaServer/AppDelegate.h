@@ -49,6 +49,7 @@
     IBOutlet NSView *picView;
     NSPopUpButtonCell *portList;
     NSArray *currentLog;
+    NSArray *currentLogCopy;
     NSDate *lastUpdate;
     IBOutlet CPTGraphHostingView *graphHostingView;
     GraphLogic *graphLogic;

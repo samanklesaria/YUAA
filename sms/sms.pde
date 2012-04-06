@@ -30,6 +30,8 @@
 
 // THIS IS THE REAL VERSION
 
+int introduced = 0;
+
 char at_buffer[BUFFSIZE];
 int buffidx;
 char cmd[CMDLEN];
@@ -49,11 +51,14 @@ int lon_len;
 char lon_buffer[16];
 int lat_len;
 
+char log_buffer[12];
+
 void str_cache(void printer(char *c)) {
   printer(mcc_buffer);
   printer(lac_buffer);
   printer(lat_buffer);
   printer(lon_buffer);
+  printer(log_buffer);
 }
 
 jmp_buf restarter;
@@ -114,6 +119,7 @@ void wait_for(char *a) {
 }
 
 int processor() {
+        createProtocolMessage(log_buffer, "CS", "1", 1);
         if (strstr(at_buffer,"ERROR")) {
             delay(1000);
             if (inSetup) {
@@ -165,6 +171,7 @@ void passthrough() {
 }
 
 void startCall(char *phn) {
+    createProtocolMessage(log_buffer, "CS", "2", 1);
     Serial.print("AT+CMGS=\"");
     Serial.write((uint8_t*)phn, 11);
     Serial.print("\"\r");
@@ -244,6 +251,7 @@ void addNumber() {
 }
 
 void update_loc() {
+    createProtocolMessage(log_buffer, "CS", "3", 1);
     int b = maybe_read_byte(cellAvailable, cellRead);
     if (b) {
        buffidx = 0;
@@ -255,6 +263,7 @@ void update_loc() {
        Serial.println("UPDATED");
       timestamp = millis();
       if (isErring) {
+        createProtocolMessage(log_buffer, "CS", "5", 1);
         setjmp(restarter);
         makeCall();
       }
@@ -262,9 +271,12 @@ void update_loc() {
 }
 
 void wireCache() {
-    int length = mcc_len + lac_len + lat_len + lon_len;
-    Wire.send((char)(length>>8 & 0xFF));
-    Wire.send((char)(length & 0xFF));
+    // int length = mcc_len + lac_len + lat_len + lon_len;
+    // Wire.send((char)(length>>8 & 0xFF));
+    // Wire.send((char)(length & 0xFF));
+    if (!introduced)
+      Wire.send("I am here");
+    introduced = 1;
     str_cache(wirePrint);
 }
 
@@ -318,18 +330,18 @@ void setupSim() {
     setjmp(init_restarter);
     Serial.println("AT+CREG=2");
     wait_for("OK");
+    createProtocolMessage(log_buffer, "CS", "4", 1);
     inSetup = 0;
 }
 
 void setup() {
-    prepCrc();
-    Serial.begin(9600);
     Wire.begin(4);
-    setjmp(restarter);
-    setupSim();
-    
+    Serial.begin(9600);
     Wire.onReceive(receiveEvent);
     Wire.onRequest(wireCache);
+    prepCrc();
+    setjmp(restarter);
+    setupSim();
     timestamp = millis();
 }
 

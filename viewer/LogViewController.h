@@ -9,14 +9,12 @@
 #import <UIKit/UIKit.h>
 #import "FlightData.h"
 
-@protocol LogChangeProtocol <NSObject>
-- (void) newLogType: (int) type;
-@end
-
 @interface LogViewController : UIViewController <UITableViewDataSource> {
     UITableView *logTable;
+    UITextView *textView;
     BOOL displayed;
     NSArray *logData;
+    NSArray *logDataCopy;
     id delegate;
 }
 @property (nonatomic, retain) IBOutlet UITableView *logTable;
@@ -26,6 +24,7 @@
 
 - (void)reloadLog;
 - (void)timedReloader;
+- (void)scroller;
 - (IBAction)logTypeChanged:(id)sender;
 
 @end

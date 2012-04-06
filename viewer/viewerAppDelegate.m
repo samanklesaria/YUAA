@@ -28,6 +28,7 @@
     [flightNav pushViewController:flightViewController animated:YES];
     
     connector = [[Connector alloc] initWithProcessor: processor prefs: prefs];
+    connector.delegate = self;
     logViewController.logData = f.parseLogData;
     logViewController.delegate = self;
     
@@ -47,6 +48,10 @@
     [self mapTrackingChanged: prefs.autoAdjust];
     
     return YES;
+}
+
+- (void)gotAkpString:(NSString *)akp {
+    [logViewController.textView setText: [logViewController.textView.text stringByAppendingString: akp]];
 }
 
 - (void)mapChosen: (int)type {
@@ -88,25 +93,6 @@
     NSLog(@"Getting tags: %d", b);
     [statViewController view];
     [statViewController setGettingTags: b];
-}
-
-- (void) newLogType: (int) type {
-    FlightData *f = [FlightData instance];
-    switch (type) {
-        case 0:
-            logViewController.textView.hidden = YES;
-            logViewController.logTable.hidden = NO;
-            logViewController.logData = f.parseLogData;
-            break;
-        case 1:
-            logViewController.textView.hidden = YES;
-            logViewController.logTable.hidden = NO;
-            logViewController.logData = f.netLogData;
-            break;
-        case 2:
-            logViewController.textView.hidden = NO;
-            logViewController.logTable.hidden = YES;
-    }
 }
 
 - (BOOL)tabBarController:(UITabBarController *)tabBarController shouldSelectViewController:(UIViewController *)viewController {

@@ -11,6 +11,7 @@
 #import "FlightData.h"
 
 @implementation Connector
+@synthesize delegate;
 
 - (id)initWithProcessor: (Processor *)p prefs: (Prefs *)pr
 {
@@ -106,9 +107,9 @@
                 while ([stream hasBytesAvailable]) {
                     uint8_t readloc[256];
                     int len = [stream read:readloc maxLength:256];
-                    NSString *toAppend = [[NSString alloc] initWithBytes: readloc length: len encoding:NSASCIIStringEncoding];
-                    FlightData *f = [FlightData instance];
-                    [f.akpLogData appendString: toAppend];
+                    NSString *toAppend = [[[NSString alloc] initWithBytes: readloc length: len encoding:NSASCIIStringEncoding] autorelease];
+                    NSLog(@"Connector is calling delegate %@", delegate);
+                    [delegate gotAkpString: toAppend];
                     int i;
                     for (i=0; i < len; i++)
                         [processor updateData: readloc[i]];

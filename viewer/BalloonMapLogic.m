@@ -153,10 +153,8 @@ double myabs(double a) {
 
 - (void) updateLoc {
     FlightData *f = [FlightData instance];
-    if (f.lat && f.lon) {
-        CLLocationCoordinate2D loc = {f.lat, f.lon};
-        [self updateWithCurrentLocation: loc];
-    }
+    CLLocationCoordinate2D loc = {f.lat, f.lon};
+    [self updateWithCurrentLocation: loc];
 }
 
 

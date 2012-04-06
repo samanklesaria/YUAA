@@ -11,7 +11,6 @@
 @interface FlightData : NSObject {
     NSMutableArray *netLogData;
     NSMutableArray *parseLogData;
-    NSMutableString *akpLogData;
     NSDictionary *plistData;
     NSMutableArray *pictures;
     NSMutableDictionary *balloonStats;
@@ -42,7 +41,6 @@
 @property (retain) NSDictionary *plistData;
 @property (retain) NSMutableArray *parseLogData;
 @property (retain) NSMutableArray *netLogData;
-@property (retain) NSMutableString *akpLogData;
 
 @property float rotationX;
 @property float rotationY;

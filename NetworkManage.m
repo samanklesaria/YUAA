@@ -22,49 +22,16 @@
         
         delegate = del;
         
-        int fd = -1;
-        CFSocketRef socket;
-        socket = CFSocketCreate(kCFAllocatorDefault, PF_INET, SOCK_STREAM,
-                                IPPROTO_TCP, 0, NULL, NULL);
-        if( socket ) {
-            fd = CFSocketGetNative(socket);
-            int yes = 1;
-            setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, (void *)&yes, sizeof(yes));
-            
-            struct sockaddr_in addr;
-            memset(&addr, 0, sizeof(addr));
-            addr.sin_len = sizeof(addr);
-            addr.sin_family = AF_INET;
-            addr.sin_port = htons(port);
-            addr.sin_addr.s_addr = htonl(INADDR_ANY);
-            NSData *address = [NSData dataWithBytes:&addr length:sizeof(addr)];
-            if( CFSocketSetAddress(socket, (CFDataRef)address) !=
-               kCFSocketSuccess ) {
-                NSLog(@"Could not bind to address");
-            }
-        } else {
-            NSLog(@"SUPER FAILURE");
-        }
-            
-        
-        fileHandle = [[NSFileHandle alloc] initWithFileDescriptor:fd closeOnDealloc:YES];
-        
-        NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
-        [nc addObserver:self selector:@selector(newConnection:) name:NSFileHandleConnectionAcceptedNotification object:nil];
+        NSSocketPort* serverSock = [[NSSocketPort alloc] initWithTCPPort: port];
+        int set = 1;
+        setsockopt([serverSock socket], SOL_SOCKET, SO_NOSIGPIPE, (void *)&set, sizeof(int));
+        fileHandle = [[NSFileHandle alloc] initWithFileDescriptor: [serverSock socket]
+                                                     closeOnDealloc: YES];
+        [serverSock release];
+        [[NSNotificationCenter defaultCenter] addObserver: self selector: @selector(newConnection:) 
+                                                     name: NSFileHandleConnectionAcceptedNotification
+                                                   object: fileHandle];
         [fileHandle acceptConnectionInBackgroundAndNotify];
-        
-        /*
-         NSSocketPort* serverSock = [[NSSocketPort alloc] initWithTCPPort: 1234];
-         socketHandle = [[NSFileHandle alloc] initWithFileDescriptor: [serverSock socket]
-         closeOnDealloc: NO];
-         
-         [[NSNotificationCenter defaultCenter] addObserver: self selector: @selector(newConnection:) 
-         name: NSFileHandleConnectionAcceptedNotification
-         object: socketHandle];
-         
-         [socketHandle acceptConnectionInBackgroundAndNotify];
-         */
-        
     }
     
     return self;
@@ -128,6 +95,7 @@
             [a release];
         }
     }
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"connectionUpdate" object:[NSNumber numberWithInt: 0]];
     [connections release];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [fileHandle release];

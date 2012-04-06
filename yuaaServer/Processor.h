@@ -23,9 +23,12 @@
 -(void)gettingTags: (bool)b;
 @end
 
+char* formattedString(char* format, ...);
+
 @interface Processor : NSObject {
     id delegate;
     
+    int okToSend;
     char cachedString[1024];
     int cacheStringIndex;
     parserState pState;
@@ -46,6 +49,7 @@
     NSDate *lastUpdate;
 }
 
+- (void)addLocationToCache;
 - (void)updateData: (char) c;
 - (void)posterThread;
 - (id)initWithPrefs: (Prefs *)p;

@@ -15,8 +15,9 @@
 
 - (void)dealloc
 {
+   [log closeFile];
+    [log release];
     [super dealloc];
-    [log closeFile];
 }
 
 - (id)init
@@ -34,14 +35,15 @@
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
-    NSString *path= @"/Users/sam/Library/Logs/YUAA.log";
+    NSString *path= @"~/Library/Logs/YUAA.log";
     NSFileManager *fm = [NSFileManager defaultManager];
     if (![fm isWritableFileAtPath: path]) {
         [fm createFileAtPath: path contents: [NSData data] attributes: nil];
     }
-    log = [NSFileHandle fileHandleForUpdatingAtPath: path];
+    log = [[NSFileHandle fileHandleForUpdatingAtPath: path] retain];
     
     prefsViewController = [[PrefsPopupController alloc] initWithNibName:@"PrefsPopupController" bundle:nil];
+    [prefsViewController view];
     prefs = [[Prefs alloc] init];
     prefsViewController.prefs = prefs;
     prefsViewController.delegate = self;
@@ -50,9 +52,9 @@
     processor = [[Processor alloc] initWithPrefs: prefs];
     processor.delegate = self;
     NSLog(@"Prefs.port is %ld", prefs.port);
-    if (prefs.port)
-        networkManager = [[NetworkManage alloc] initWithDelegate:self port: prefs.port];
-    // networkManager = [[NetworkManage alloc] initWithDelegate:self port: 9000];
+    // if (prefs.port)
+    //    networkManager = [[NetworkManage alloc] initWithDelegate:self port: prefs.port];
+    networkManager = [[NetworkManage alloc] initWithDelegate:self port: 1343];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateConnections:) name:@"connectionUpdate" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(rebuildPortList) name:AMSerialPortListDidAddPortsNotification object:nil];
@@ -77,11 +79,10 @@
 -(void)restartSerial:(NSString *)port {
     NSLog(@"Restaring serial");
     if (currentSerialPort) {
-        [currentSerialPort free];
-        //[currentSerialPort autorelease];
-        // NSLog(@"Serial port is %@", currentSerialPort);
+        [currentSerialPort autorelease];
     }
     if ([port isEqualToString: @"Test Data"]) {
+        currentSerialPort = nil;
         [NSThread detachNewThreadSelector:@selector(parseDemoFile) toTarget:self withObject:nil];
     } else {
         NSArray *a = [[AMSerialPortList sharedPortList] serialPorts];
@@ -93,7 +94,7 @@
                 [currentSerialPort setDelegate:self];
                 if (![currentSerialPort open]) {
                     NSLog(@"Error opening port.");
-                    currentSerialPort = nil;
+                    [currentSerialPort autorelease];
                     return;
                 } else {
                     akpsend.serialPort = currentSerialPort;
@@ -106,9 +107,11 @@
 }
 
 - (void) restartPort:(NSInteger)port {
+    /*
     NSLog(@"Restaring port");
     [networkManager release];
     networkManager = [[NetworkManage alloc] initWithDelegate:self port: port];
+     */
 }
 
 -(void)newConnection:(NetworkConnection *)conn {
@@ -137,8 +140,8 @@
         range = NSMakeRange ([[textForLog string] length], 0);
         [textForLog scrollRangeToVisible: range];
     } else {
-        [tableForLog performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:NO];
-        [tableForLog scrollRowToVisible: [currentLog count] -1];
+        // [tableForLog performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:NO];
+        [tableForLog scrollRowToVisible: [currentLogCopy count] -1 ];
     }
 }
 
@@ -185,7 +188,7 @@
     char c;
     char buffer[1024];
     int i = 0;
-    while (!feof(p)) {
+    while (!feof(p) && !currentSerialPort) {
         c = fgetc(p);
         [processor updateData: c];
         [lastUpdate autorelease];
@@ -213,7 +216,7 @@
 - (id)tableView:(NSTableView *)aTableView objectValueForTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex {
     FlightData *f = [FlightData instance];
     if (aTableView == tableForLog) {
-        NSString *str = [currentLog objectAtIndex: rowIndex];
+        NSString *str = [currentLogCopy objectAtIndex: rowIndex];
         return str;
     } else {
         if ([[aTableColumn identifier] isEqualToString: @"tag"]) {
@@ -232,7 +235,7 @@
             return result;
             
         } else {
-            NSDate *updatedDate;
+            NSDate *updatedDate = nil;
             NSString *body;
             if (rowIndex == 0) {
                 updatedDate = f.lastLocTime;
@@ -256,19 +259,21 @@
                 body = [n description];
             }
             
-            if (updatedDate) {
+            if (updatedDate != nil) {
                 return [NSString stringWithFormat: @"%@ (%@)", body, [df stringFromDate: updatedDate]];
-            }
-            return body;
+            } else
+                return body;
         }
     }
 }
         
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView {
     if (tableView == tableForLog) {
+        NSLog(@"I'm looking");
         if (currentLog) {
-            // NSLog(@"It is: %@", [FlightData instance].parseLogData);
-            return [currentLog count];
+            currentLogCopy = currentLog;
+            NSLog(@"Current log count is %ld", [currentLogCopy count]);
+            return [currentLogCopy count];
         }
         return 0;
     } else {
@@ -284,16 +289,16 @@
 
 - (IBAction)changeLogView:(NSPopUpButtonCell *)sender {
     NSString *logType = [[sourceCell selectedItem] title];
+    currentLog = NULL;
     if ([logType isEqualToString: @"Serial Data"]) {
         [logText setHidden: NO];
         [logTable setHidden: YES];
-        currentLog = NULL;
     } else {
-        [logText setHidden: YES];
-        [logTable setHidden: NO];
         FlightData *f = [FlightData instance];
         if ([logType isEqualToString: @"Parsing Log"]) currentLog = f.parseLogData;
         if ([logType isEqualToString: @"Network Log"]) currentLog = f.netLogData;
+        [logText setHidden: YES];
+        [logTable setHidden: NO];
         
     }
     [self scroller];

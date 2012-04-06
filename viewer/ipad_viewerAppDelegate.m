@@ -24,12 +24,12 @@
     
     logViewController = [[LogViewController alloc] initWithNibName:@"LogViewController" bundle:nil];
     logViewController.logData = f.parseLogData;
-    logViewController.textView.text = f.akpLogData;
     logViewController.delegate = self;
+    [logViewController view];
     mapViewController.log = logViewController;
     
     connector = [[Connector alloc] initWithProcessor: processor prefs: prefs];
-    logViewController.logData = f.parseLogData;
+    connector.delegate = self;
     
     graphView = [[GraphViewController alloc] initWithNibName:@"GraphViewController" bundle:nil];
     
@@ -51,24 +51,17 @@
     return YES;
 }
 
+- (void)gotAkpString:(NSString *)akp {
+    NSString *oldText = logViewController.textView.text;
+    NSString *newText = [oldText stringByAppendingString: akp];
+    if ([newText length] > 1024) newText = [newText substringFromIndex: ([newText length] - 1024)];
+    
+    [logViewController.textView performSelectorOnMainThread:@selector(setText:) withObject: newText waitUntilDone:NO];
+}
+
 -(void)gettingTags: (bool)b {
     [statViewController view];
     [statViewController setGettingTags: b];
-}
-
-- (void) newLogType: (int) type {
-    FlightData *f = [FlightData instance];
-    switch (type) {
-        case 0:
-            logViewController.logData = f.parseLogData;
-            break;
-        case 1:
-            logViewController.logData = f.netLogData;
-            break;
-        case 2:
-            NSLog(@"AKP Time");
-            break;
-    }
 }
 
 - (void)mapChosen: (int)type {

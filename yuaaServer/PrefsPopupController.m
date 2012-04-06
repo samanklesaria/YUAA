@@ -10,32 +10,35 @@
 
 @implementation PrefsPopupController
 @synthesize serialPortCell;
-@synthesize prefs;
 @synthesize delegate;
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-            if (prefs.postServer != nil) {
-                [postUrlCell setValue: prefs.postServer];
-            }
-            if (prefs.port != 0) {
-                [serialPortCell setValue: [NSString stringWithFormat: @"%i", prefs.port]];
-            }
-            if (prefs.deviceName != nil) {
-                [deviceIdCell setValue: prefs.deviceName];
-            }
-            
+- (Prefs *) prefs {
+    return prefs;
+}
+
+-(void) setPrefs:(Prefs *)p {
+    prefs = p;
+    NSLog(@"Setting prefs");
+    if (self.prefs.postServer != nil) {
+        [postUrlCell setObjectValue: prefs.postServer];
     }
-    return self;
+    if (prefs.port != 0) {
+        [serverPortCell setObjectValue: [NSString stringWithFormat: @"%i", prefs.port]];
+    }
+    if (prefs.deviceName != nil) {
+        [deviceIdCell setObjectValue: prefs.deviceName]; 
+    }
 }
 
 - (IBAction)serverPortChanged:(NSTextFieldCell *)sender {
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    prefs.port = [sender intValue];
-    [defaults setObject: prefs.postServer forKey: @"port"];
-    [delegate restartPort: prefs.port];
+    NSInteger portVal = [sender integerValue];
+    NSInteger tester = prefs.port;
+    if ((tester != portVal) && portVal) {
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        prefs.port = portVal;
+        [defaults setInteger: portVal forKey: @"port"];
+        [delegate restartPort: portVal];
+    }
 }
 
 - (IBAction)postUrlChanged:(NSTextFieldCell *)sender {

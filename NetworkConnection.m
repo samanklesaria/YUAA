@@ -15,7 +15,7 @@
     if (self) {
         
         fileHandle = [fh retain];
-        delegate = [dl retain];
+        delegate = dl;
         
         NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
         [nc addObserver:self selector:@selector(dataReceived:) name:NSFileHandleReadCompletionNotification object:fileHandle];
@@ -29,6 +29,7 @@
     NSData *dat = [[notif userInfo] objectForKey:NSFileHandleNotificationDataItem];
     
     if ([dat length] == 0) {
+        NSLog(@"Received null data");
         [(NetworkManage *)delegate closeConnection:self];
     } else {
         [(NetworkManage *)delegate recieveData: dat];
@@ -36,14 +37,15 @@
 }
 
 -(void)writeData:(NSData *)data {
-    if ([fileHandle fileDescriptor]) {
+    if (fileHandle) {
         @try {
             [fileHandle writeData:data];
         }
-        @catch (NSException *a) {
-            NSLog(@"I caught the error");
+        @catch (NSException *exception) {
+            
         }
         @finally {
+            
         }
     }
 }
@@ -53,8 +55,7 @@
 {
     NSLog(@"Deallocating the connection");
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-    [delegate autorelease];
-    [fileHandle autorelease];
+    [fileHandle release];
     [super dealloc];
 }
 

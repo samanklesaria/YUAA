@@ -8,11 +8,29 @@
 
 #import "Processor.h"
 
+//Mallocs a formatted string based on printf
+char* formattedString(char* format, ...)
+{
+    va_list args;
+    va_start(args, format);
+    //Include null byte in length
+    int length = 1 + vsnprintf(NULL, 0, format, args);
+    va_end(args);
+    
+    char* formatted = malloc(sizeof(char) * length);
+    va_start(args, format);
+    vsnprintf(formatted, length, format, args);
+    va_end(args);
+    
+    return formatted;
+}
+
+
 @implementation Processor
 @synthesize delegate;
 
 - (NSData *) lastData {
-    return [[NSData alloc] initWithBytes: cachedString length: cacheStringIndex];
+    return [[[NSData alloc] initWithBytes: cachedString length: cacheStringIndex] autorelease];
 }
 
 - (id)initWithPrefs: (Prefs *)p
@@ -40,12 +58,13 @@
             if ([delegate respondsToSelector:@selector(gettingTags:)])
                 [delegate gettingTags: YES];
             gotTags = YES;
+            okToSend++;
         }
         FlightData *flightData = [FlightData instance];
         [lastUpdate release];
         lastUpdate = [[NSDate date] retain];
-        NSLog(@"Updating DATA");
-        if (cacheStringIndex + (r->length + 5) < 1024 && strcmp(r->tag, "IM") != 0) {
+        if (cacheStringIndex + (r->length + 5) < 1024 && strncmp(r->tag, "IM", 2) != 0 && strncmp(r->tag, "LA", 2) != 0 && strncmp(r->tag, "LO", 2) != 0) {
+            NSLog(@"Updating with tag %2s", r->tag);
             createProtocolMessage(cachedString + cacheStringIndex, r->tag, r->content, r->length);
             cacheStringIndex += r->length + 5;
         }
@@ -78,13 +97,14 @@
             theValue = [UIImage imageWithCGImage: cgImage];
             imageData = UIImageJPEGRepresentation(theValue, 1);
 #else
-            // theValue = [NSValue valueWithBytes: cgImage objCType: @encode(CGImageRef)];
-            theValue = [[NSImage alloc] initWithCGImage: cgImage size: NSZeroSize];
-            CFMutableDataRef      data = CFDataCreateMutable(NULL, 0);
-            CGImageDestinationRef idst = CGImageDestinationCreateWithData(data, kUTTypeJPEG, 1, NULL);
+            CFMutableDataRef mutableImageData = CFDataCreateMutable(NULL, 0);
+            theValue = [[[NSImage alloc] initWithCGImage: cgImage size: NSZeroSize] autorelease];
+            CGImageDestinationRef idst = CGImageDestinationCreateWithData(mutableImageData, kUTTypeJPEG, 1, NULL);
             CGImageDestinationAddImage(idst, cgImage, NULL);
             CGImageDestinationFinalize(idst);
-            imageData = (NSData *)data; 
+            CFRelease(idst);
+            imageData = [NSData dataWithData: (NSMutableData *)mutableImageData];
+            CFRelease(mutableImageData);
 #endif
             CFRelease(cgImage);
             [flightData.pictures addObject: theValue];
@@ -98,6 +118,7 @@
             [r setData:imageData withFileName:@"photo.jpg" andContentType:@"image/jpeg" forKey:@"photo"];
             [r setDelegate:self];
             [r startAsynchronous];
+            [imageData release];
             return;
         }
         NSString *strVal = [[[NSString alloc] initWithBytes: r->content length: (NSUInteger)(r->length) encoding:NSASCIIStringEncoding] autorelease];
@@ -156,6 +177,10 @@
                     flightData.lon = newVal;
                     flightData.lastLocTime = [NSDate date];
                 }
+                if (flightData.lat && flightData.lon) {
+                    [self addLocationToCache];
+                    [delegate receivedLocation];
+                }
             }
             if (mnc && mcc && cid && lac) {
                 NSURL *url = [NSURL URLWithString: [NSString stringWithFormat: @"http://www.opencellid.org/cell/get?key=f146d401108de36297356ce9d026c8c6&mnc=%d&mcc=%d&lac=%d&cellid=%d", mnc, mcc, lac, cid]];
@@ -173,8 +198,25 @@
     flightData.lat = [[dict valueForKey: @"lat"] doubleValue];
     flightData.lon = [[dict valueForKey: @"lon"] doubleValue];
     flightData.lastLocTime = [NSDate date];
+    [self addLocationToCache];
     if ([delegate respondsToSelector:@selector(receivedLocation)])
         [delegate receivedLocation];
+}
+
+-(void)addLocationToCache {
+    FlightData *f = [FlightData instance];
+    char *latStr = formattedString("%f", f.lat);
+    int latLen = (int)strlen(latStr);
+    char *lonStr = formattedString("%f", f.lon);
+    int lonLen = (int)strlen(lonStr);
+    if ((cacheStringIndex + (latLen + 5) + (lonLen + 5)) < 1024) {
+        createProtocolMessage(cachedString + cacheStringIndex, "LA", latStr, latLen);
+        cacheStringIndex += latLen + 5;
+        createProtocolMessage(cachedString + cacheStringIndex, "LO", lonStr, lonLen);
+        cacheStringIndex += lonLen + 5;
+    }
+    free(latStr);
+    free(lonStr);
 }
 
 - (void)postTags {
@@ -183,7 +225,7 @@
             [delegate gettingTags: NO];
         gotTags = NO;
     }
-    if (gotTags) {
+    if (okToSend == 2) {
         if (cacheStringIndex > 0) {
             NSString *cache = [[[NSString alloc] initWithBytes: cachedString length: cacheStringIndex encoding:NSASCIIStringEncoding] autorelease];
             ASIFormDataRequest *r = [ASIFormDataRequest requestWithURL:storeUrl];
@@ -194,6 +236,7 @@
             [r setDelegate:self];
             cacheStringIndex = 0;
             NSLog(@"Putting tags on server");
+            okToSend = 0;
             [r startAsynchronous];
         }
     } else {
@@ -207,6 +250,7 @@
 
 - (void)requestFinished:(ASIHTTPRequest *)request
 {
+    okToSend++;
     if ([delegate respondsToSelector: @selector(serverStatus:)])
         [delegate serverStatus: YES];
     FlightData *flightData = [FlightData instance];
@@ -226,6 +270,7 @@
 
 - (void)requestFailed:(ASIHTTPRequest *)request
 {
+    okToSend++;
     FlightData *flightData = [FlightData instance];
     [flightData.netLogData addObject: @"Request Failed: "];
     [flightData.netLogData addObject: [[request error] description]];

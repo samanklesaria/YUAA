@@ -10,9 +10,15 @@
 #import "Prefs.h"
 #import "Processor.h"
 
+@protocol ConnectorDelegate
+@optional
+-(void)gotAkpString: (NSString *)akp;
+@end
+
 @class BalloonMapLogic;
 
 @interface Connector : NSObject <NSStreamDelegate> {
+    id delegate;
     NSInputStream *mainstream;
     NSOutputStream *mainOutput;
     bool erred;
@@ -25,5 +31,7 @@
 - (id)initWithProcessor: (Processor *)p prefs: (Prefs *)pr;
 
 - (void)sendMessage:(NSString *)str;
+
+@property (retain) id delegate;
 
 @end

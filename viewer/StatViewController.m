@@ -13,7 +13,8 @@
 @synthesize controllerShower;
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return [[[FlightData instance] nameArray] count] + 2;
+    NSInteger myint = [[[FlightData instance] nameArray] count] + 2;
+    return myint;
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -27,7 +28,9 @@
 }
 
 -(void) runReloadData {
-    [statList performSelectorOnMainThread: @selector(reloadData) withObject:statList waitUntilDone:NO];
+    if ([[self navigationController] topViewController] == self) {
+        [statList performSelectorOnMainThread: @selector(reloadData) withObject:statList waitUntilDone:NO];
+    }
 }
 
 -(void) renderAgain {

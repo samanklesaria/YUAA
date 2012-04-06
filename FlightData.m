@@ -24,7 +24,6 @@
 @synthesize lastLocTime;
 @synthesize lat;
 @synthesize lon;
-@synthesize akpLogData;
 
 - (id)init
 {
@@ -38,7 +37,6 @@
         NSString *filePath = [[NSBundle mainBundle] pathForResource:@"protocol" ofType:@"plist"];
         plistData = [[NSDictionary dictionaryWithContentsOfFile:filePath] retain];        
         netLogData = [[NSMutableArray alloc] initWithCapacity: 128];
-        akpLogData = [[NSMutableString alloc] initWithCapacity:1024];
         parseLogData = [[NSMutableArray alloc] initWithCapacity: 128];
     }
     return self;

@@ -63,7 +63,7 @@
 }
 
 - (IBAction)showTempTbl:(id)sender {
-        [controllerShower showGraphWithTag: @"TI" frame: CGRectZero view: nil title: @"Temperature"];   
+    [controllerShower showGraphWithTag: @"TI" frame: CGRectZero view: nil title: @"Temperature"];   
 }
 
 - (IBAction)sendMessage:(id)sender {
