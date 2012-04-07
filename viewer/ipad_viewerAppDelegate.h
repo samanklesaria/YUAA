@@ -28,6 +28,7 @@
     IBOutlet UISplitViewController *splitViewController;
     LogViewController *logViewController;
     
+    NSMutableString *oldString;
     Prefs *prefs;
     Processor *processor;
     

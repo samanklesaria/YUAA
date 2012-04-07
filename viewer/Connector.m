@@ -98,7 +98,25 @@
         [mainOutput write: [[str dataUsingEncoding: NSASCIIStringEncoding] bytes] maxLength: [str length]];
 }
 
+- (void)retryConnectionWithStream:(NSInputStream *)stream {
+    NSLog(@"I'm retrying the connection");
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+    NSLog(@"Error: %@", [[stream streamError] localizedDescription]);
+    if (!erred) {
+        [[FlightData instance].netLogData addObject: @"Streaming Error. Trying again."];
+        erred = 1;
+    }
+    [NSThread sleepForTimeInterval: 1];
+    [stream close];
+    [stream removeFromRunLoop:[NSRunLoop currentRunLoop]
+                      forMode:NSDefaultRunLoopMode];
+    [self handleIO];    
+}
+
+
 - (void)stream:(NSInputStream *)stream handleEvent:(NSStreamEvent)eventCode {
+    NSLog(@"Something happened!");
+    NSLog(@"Stream status is %d", [stream streamStatus]);
         switch(eventCode) {
             case NSStreamEventHasBytesAvailable: {
                 NSLog(@"Bytes are found!");
@@ -107,42 +125,32 @@
                 while ([stream hasBytesAvailable]) {
                     uint8_t readloc[256];
                     int len = [stream read:readloc maxLength:256];
-                    NSString *toAppend = [[[NSString alloc] initWithBytes: readloc length: len encoding:NSASCIIStringEncoding] autorelease];
-                    NSLog(@"Connector is calling delegate %@", delegate);
-                    [delegate gotAkpString: toAppend];
-                    int i;
-                    for (i=0; i < len; i++)
-                        [processor updateData: readloc[i]];
+                    if (readloc[0] == 4 && readloc[1] == 4 && readloc[2] == 4) { // idk. i shouldn't need to do this
+                        [stream close];
+                        
+                    } else {
+                        NSString *toAppend = [[[NSString alloc] initWithBytes: readloc length: len encoding:NSASCIIStringEncoding] autorelease];
+                        NSLog(@"Connector is calling delegate %@", delegate);
+                        [delegate gotAkpString: toAppend];
+                        int i;
+                        for (i=0; i < len; i++)
+                            [processor updateData: readloc[i]];
+                    }
                 }
                 break;
             }
             case NSStreamEventEndEncountered:
             {
-                NSLog(@"Got end");
-                [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
-                [[FlightData instance].netLogData addObject: @"Encountered end of input stream."];
-                [stream close];
-                [stream removeFromRunLoop:[NSRunLoop currentRunLoop]
-                                  forMode:NSDefaultRunLoopMode];
-                [self handleIO];
+                [self retryConnectionWithStream: stream];
                 break; 
             }
             case NSStreamEventErrorOccurred:
             {
-                NSLog(@"Err occurred");
-                [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
-                NSLog(@"Error: %@", [[stream streamError] localizedDescription]);
-                if (!erred) {
-                    [[FlightData instance].netLogData addObject: @"Streaming Error. Trying again."];
-                    erred = 1;
-                }
-                [NSThread sleepForTimeInterval: 1];
-                [stream close];
-                [stream removeFromRunLoop:[NSRunLoop currentRunLoop]
-                                  forMode:NSDefaultRunLoopMode];
-                [self handleIO];
+                [self retryConnectionWithStream: stream];
                 break;
             }
+            default:
+                NSLog(@"Event code was %d", eventCode);
         }
 }
 

@@ -54,8 +54,15 @@
 - (void)dealloc
 {
     NSLog(@"Deallocating the connection");
+    // [fileHandle writeData: 
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-    [fileHandle release];
+    unsigned char end[4] = {4, 4, 4, 4};
+    [fileHandle writeData: [NSData dataWithBytes: &end length:4]];
+    // close([fileHandle fileDescriptor]);
+    // [fileHandle closeFile];
+    [fileHandle closeFile];
+    [fileHandle autorelease];
+    NSLog(@"I should have closed the connection");
     [super dealloc];
 }
 

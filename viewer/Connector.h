@@ -26,6 +26,7 @@
     Processor *processor;
 }
 
+- (void)retryConnectionWithStream:(NSInputStream *)stream;
 - (void)handleIO;
 - (void)ioThread;
 - (id)initWithProcessor: (Processor *)p prefs: (Prefs *)pr;

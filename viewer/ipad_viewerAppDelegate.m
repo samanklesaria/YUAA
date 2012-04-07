@@ -12,6 +12,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    oldString = [[NSMutableString alloc] initWithCapacity: 1024];
     prefs = [[Prefs alloc] init];
     prefsViewController.prefs = prefs;
     mapViewController.prefs  = prefsViewController;
@@ -52,11 +53,18 @@
 }
 
 - (void)gotAkpString:(NSString *)akp {
-    NSString *oldText = logViewController.textView.text;
-    NSString *newText = [oldText stringByAppendingString: akp];
-    if ([newText length] > 1024) newText = [newText substringFromIndex: ([newText length] - 1024)];
-    
-    [logViewController.textView performSelectorOnMainThread:@selector(setText:) withObject: newText waitUntilDone:NO];
+    [oldString appendString: @"This is a test string"];
+    /*
+    [oldString appendString: akp];
+    int len = [oldString length] - 1024;
+    if (len > 0) {
+        NSRange rng;
+        rng.location = 0;
+        rng.length = len;
+        [oldString deleteCharactersInRange: rng];
+    }
+    [logViewController.textView performSelectorOnMainThread:@selector(setText:) withObject: oldString waitUntilDone:NO];
+     */
 }
 
 -(void)gettingTags: (bool)b {

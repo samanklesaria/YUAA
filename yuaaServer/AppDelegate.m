@@ -52,9 +52,8 @@
     processor = [[Processor alloc] initWithPrefs: prefs];
     processor.delegate = self;
     NSLog(@"Prefs.port is %ld", prefs.port);
-    // if (prefs.port)
-    //    networkManager = [[NetworkManage alloc] initWithDelegate:self port: prefs.port];
-    networkManager = [[NetworkManage alloc] initWithDelegate:self port: 1343];
+    if (prefs.port)
+        networkManager = [[NetworkManage alloc] initWithDelegate:self port: prefs.port];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateConnections:) name:@"connectionUpdate" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(rebuildPortList) name:AMSerialPortListDidAddPortsNotification object:nil];
@@ -107,11 +106,9 @@
 }
 
 - (void) restartPort:(NSInteger)port {
-    /*
     NSLog(@"Restaring port");
     [networkManager release];
     networkManager = [[NetworkManage alloc] initWithDelegate:self port: port];
-     */
 }
 
 -(void)newConnection:(NetworkConnection *)conn {

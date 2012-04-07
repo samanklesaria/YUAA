@@ -114,7 +114,7 @@ char* formattedString(char* format, ...)
             ASIFormDataRequest *r = [ASIFormDataRequest requestWithURL:storeUrl];
             [r setPostValue: prefs.uuid forKey:@"uid"];
             [r setPostValue: @"berkeley" forKey: @"password"];
-            [r setPostValue: @"Balloon" forKey:@"devname"];
+            [r setPostValue: @"balloon" forKey:@"devname"];
             [r setData:imageData withFileName:@"photo.jpg" andContentType:@"image/jpeg" forKey:@"photo"];
             [r setDelegate:self];
             [r startAsynchronous];
@@ -231,7 +231,7 @@ char* formattedString(char* format, ...)
             ASIFormDataRequest *r = [ASIFormDataRequest requestWithURL:storeUrl];
             [r setPostValue: prefs.uuid forKey:@"uid"];
             [r setPostValue: @"berkeley" forKey: @"password"];
-            [r setPostValue: @"Balloon" forKey:@"devname"];
+            [r setPostValue: @"balloon" forKey:@"devname"];
             [r setPostValue: cache forKey: @"data"];
             [r setDelegate:self];
             cacheStringIndex = 0;
@@ -243,7 +243,7 @@ char* formattedString(char* format, ...)
         ASIFormDataRequest *r = [ASIFormDataRequest requestWithURL:myUrl];
         [r setPostValue: prefs.uuid forKey:@"uid"];
         [r setPostValue: @"berkeley" forKey: @"password"];
-        [r setPostValue: @"Balloon" forKey:@"devname"];
+        [r setPostValue: @"balloon" forKey:@"devname"];
         [r setDelegate:self];
     }
 }
