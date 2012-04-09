@@ -101,7 +101,8 @@
 - (void)retryConnectionWithStream:(NSInputStream *)stream {
     NSLog(@"I'm retrying the connection");
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-    NSLog(@"Error: %@", [[stream streamError] localizedDescription]);
+    if ([stream streamError]) 
+        NSLog(@"Error: %@", [[stream streamError] localizedDescription]);
     if (!erred) {
         [[FlightData instance].netLogData addObject: @"Streaming Error. Trying again."];
         erred = 1;
@@ -127,6 +128,7 @@
                     int len = [stream read:readloc maxLength:256];
                     if (readloc[0] == 4 && readloc[1] == 4 && readloc[2] == 4) { // idk. i shouldn't need to do this
                         [stream close];
+                        [self retryConnectionWithStream: stream];
                         
                     } else {
                         NSString *toAppend = [[[NSString alloc] initWithBytes: readloc length: len encoding:NSASCIIStringEncoding] autorelease];
