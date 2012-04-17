@@ -124,6 +124,7 @@
 }
 
 - (void) setGettingTags: (BOOL) b {
+    NSLog(@"Trying to set text to %d", b);
     tagStatus.text = b ? @"Using LAN" : @"Using remote server";
 }
 

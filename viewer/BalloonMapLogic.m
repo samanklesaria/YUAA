@@ -12,6 +12,7 @@
 #import "ASIFormDataRequest.h"
 
 @implementation BalloonMapLogic
+@synthesize okToUpdate;
 
 - (id) initWithPrefs: (Prefs *)p map: (MKMapView *) m {
     self = [self init];
@@ -43,6 +44,7 @@
 }
 
 - (void) postUserLocation {
+    [self updateLoc];
     char latstr[20];
     char lonstr[20];
     CLLocationCoordinate2D coord = map.userLocation.location.coordinate;
@@ -111,25 +113,29 @@ double myabs(double a) {
         MKCoordinateSpan spanB;
         spanB.latitudeDelta=0.02;
         spanB.longitudeDelta=0.02;
-        MKCoordinateRegion region;
         if (carloc.latitude && carloc.longitude) {
             if (currentPoint != nil) {
                 CLLocationCoordinate2D center = [self midpointFrom:currentPoint.coordinate to:carloc];
                 MKCoordinateSpan spanA = [self distanceFrom: currentPoint.coordinate to: carloc];
-                region.span = ([self spanSize: spanB] > [self spanSize: spanA]) ? spanB : spanA;
-                region.center=center;
+                currentRegion.span = ([self spanSize: spanB] > [self spanSize: spanA]) ? spanB : spanA;
+                currentRegion.center=center;
             } else {
-                region.center = carloc;
-                region.span = spanB;
+                currentRegion.center = carloc;
+                currentRegion.span = spanB;
             }
         } else if (currentPoint != nil) {
-            region.center = currentPoint.coordinate;
-            region.span = spanB;
+            currentRegion.center = currentPoint.coordinate;
+            currentRegion.span = spanB;
         } else {
             return;
         }
-        [map setRegion: [map regionThatFits: region] animated:TRUE];
+        [self performSelectorOnMainThread: @selector(doUpdate) withObject:nil waitUntilDone:YES];
     }
+}
+
+- (void) doUpdate {
+    NSLog(@"lat %f lon %f latdelta %f londelta %f", currentRegion.center.latitude, currentRegion.center.longitude, currentRegion.span.latitudeDelta, currentRegion.span.longitudeDelta);
+    [map setRegion: [map regionThatFits: currentRegion] animated:TRUE];
 }
 
 - (MKAnnotationView *)mapView:(MKMapView *)mV viewForAnnotation:(DataPoint *)annotation{

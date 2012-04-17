@@ -109,7 +109,6 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     if (logData) {
         logDataCopy = logData;
-        NSLog(@"The length is %d", [logDataCopy count]);
         return [logDataCopy count];
     } else {
         return 0;

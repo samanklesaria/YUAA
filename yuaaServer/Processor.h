@@ -25,10 +25,13 @@
 
 char* formattedString(char* format, ...);
 
-@interface Processor : NSObject {
+@interface Processor : NSObject <NSXMLParserDelegate> {
     id delegate;
     
     int okToSend;
+    int okToGet;
+    BOOL cellNew;
+    BOOL threadAvailable;
     char cachedString[1024];
     int cacheStringIndex;
     parserState pState;
@@ -50,10 +53,11 @@ char* formattedString(char* format, ...);
 }
 
 - (void)addLocationToCache;
-- (void)updateData: (char) c;
+- (void)updateData: (char) c fromSerial: (int) fromSerial;
 - (void)posterThread;
 - (id)initWithPrefs: (Prefs *)p;
 - (NSData *)lastData;
+- (void) handleRequestFinished: (ASIHTTPRequest *) request;
 
 @property (retain) id delegate;
 

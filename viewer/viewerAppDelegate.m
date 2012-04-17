@@ -86,11 +86,12 @@
 }
 
 -(void)receivedLocation {
-    [balloonMapLogic updateLoc];
+    balloonMapLogic.okToUpdate = YES;
 }
 
 -(void)gettingTags: (bool)b {
     NSLog(@"Getting tags: %d", b);
+    NSLog(@"Statview controller is %@", statViewController);
     [statViewController view];
     [statViewController setGettingTags: b];
 }

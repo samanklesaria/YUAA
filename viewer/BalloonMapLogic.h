@@ -11,11 +11,14 @@
 #import "DataPoint.h"
 #import "Prefs.h"
 #import "FlightData.h"
+#import "ASIHTTPRequest.h"
 
 @interface BalloonMapLogic : NSObject <MKMapViewDelegate> {
     Prefs *prefs;
     DataPoint *currentPoint;
     MKMapView *map;
+    MKCoordinateRegion currentRegion;
+    BOOL okToUpdate;
 }
 
 - (id) initWithPrefs: (Prefs *)p map: (MKMapView *) m;
@@ -25,7 +28,9 @@
 - (double)spanSize: (MKCoordinateSpan)rect;
 - (void) updateView;
 - (void)updateLoc;
+- (void) doUpdate;
 - (void)postUserLocation;
+@property BOOL okToUpdate;
 
 @end
 

@@ -173,7 +173,7 @@
     lastUpdate = [[NSDate date] retain];
     int i;
     for (i=0; i < [d length]; i++) {
-            [processor updateData: *(d_unsafe+i)];
+            [processor updateData: *(d_unsafe+i) fromSerial: 1];
     }
     [port readDataInBackground];
 }
@@ -187,7 +187,7 @@
     int i = 0;
     while (!feof(p) && !currentSerialPort) {
         c = fgetc(p);
-        [processor updateData: c];
+        [processor updateData: c fromSerial: 0];
         [lastUpdate autorelease];
         lastUpdate = [[NSDate date] retain];
         buffer[i++] = c;

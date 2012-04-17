@@ -136,7 +136,7 @@
                         [delegate gotAkpString: toAppend];
                         int i;
                         for (i=0; i < len; i++)
-                            [processor updateData: readloc[i]];
+                            [processor updateData: readloc[i] fromSerial: 1];
                     }
                 }
                 break;
