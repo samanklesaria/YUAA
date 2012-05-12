@@ -53,8 +53,6 @@
 }
 
 - (void)gotAkpString:(NSString *)akp {
-    [oldString appendString: @"This is a test string"];
-    /*
     [oldString appendString: akp];
     int len = [oldString length] - 1024;
     if (len > 0) {
@@ -64,7 +62,7 @@
         [oldString deleteCharactersInRange: rng];
     }
     [logViewController.textView performSelectorOnMainThread:@selector(setText:) withObject: oldString waitUntilDone:NO];
-     */
+    [logViewController scroller];
 }
 
 -(void)gettingTags: (bool)b {

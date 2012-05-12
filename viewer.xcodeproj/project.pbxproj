@@ -1030,7 +1030,7 @@
 		226C193F14679E1900A7F87A /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0420;
+				LastUpgradeCheck = 0430;
 			};
 			buildConfigurationList = 226C194214679E1900A7F87A /* Build configuration list for PBXProject "viewer" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -1044,8 +1044,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				226C194714679E1A00A7F87A /* viewer */,
 				22B8525214F7F6FF008CBED6 /* yuaaServer */,
+				226C194714679E1A00A7F87A /* viewer */,
 			);
 		};
 /* End PBXProject section */
@@ -1214,7 +1214,8 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Almon Hall (PHPYQN4HS5)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Almon Hall (PHPYQN4HS5)";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -1229,6 +1230,8 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				PROVISIONING_PROFILE = "A85D2EC8-4CAE-42B4-9B07-3D08254F95EE";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "A85D2EC8-4CAE-42B4-9B07-3D08254F95EE";
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -1238,7 +1241,8 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Almon Hall (PHPYQN4HS5)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Almon Hall (PHPYQN4HS5)";
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_VERSION = com.apple.compilers.llvmgcc42;
@@ -1247,6 +1251,8 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				PROVISIONING_PROFILE = "A85D2EC8-4CAE-42B4-9B07-3D08254F95EE";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "A85D2EC8-4CAE-42B4-9B07-3D08254F95EE";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -1311,7 +1317,7 @@
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "yuaaServer/yuaaServer-Prefix.pch";
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				INFOPLIST_FILE = "yuaaServer/yuaaServer-Info.plist";
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
@@ -1341,7 +1347,7 @@
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "yuaaServer/yuaaServer-Prefix.pch";
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				INFOPLIST_FILE = "yuaaServer/yuaaServer-Info.plist";
 				MACOSX_DEPLOYMENT_TARGET = 10.7;

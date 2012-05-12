@@ -1,6 +1,3 @@
-#ifndef PARSER_LOADED
-#define PARSER_LOADED
-
 #define CBUFSIZ (60*80)
 
 enum mode {
@@ -11,13 +8,13 @@ enum mode {
     SPECIAL
 };
 
-typedef struct result {
+struct result {
     char *tag;
     int length;
     char *content;
-} result;
+};
 
-typedef struct parserState {
+struct parserState {
     int contentidx;
     char contentbuf[CBUFSIZ];
     int tagidx;
@@ -29,15 +26,5 @@ typedef struct parserState {
     int specialCount;
     unsigned char check;
     unsigned char checksum;
-    result parserResult;
-} parserState;
-
-void prepCrc(void);
-
-char crc8(const char* data, char initialChecksum, int length);
-
-char *createProtocolMessage(char *message, const char* tag, const char* data, int len);
-
-result *handle_char(char c, parserState *pp);
-
-#endif
+    struct result parserResult;
+};

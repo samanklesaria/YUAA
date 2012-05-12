@@ -21,6 +21,8 @@
         map = [m retain];
         [map setDelegate: self];
         map.showsUserLocation = YES;
+        oldPoints = [[NSMutableArray alloc] initWithCapacity: 30];
+        transitionPoints = [[NSMutableArray alloc] initWithCapacity: 30];
         [self updateView];
         [NSThread detachNewThreadSelector:@selector(poster) toTarget:self withObject:nil];
     }
@@ -94,8 +96,6 @@ double myabs(double a) {
 }
 
 - (void)updateWithCurrentLocation:(CLLocationCoordinate2D)location {
-    
-    NSLog(@"GPS is %f, %f", location.latitude, location.longitude);
     DataPoint *p = [[DataPoint alloc] initWithCoordinate:location];
     DataPoint *oldPoint = currentPoint;
     currentPoint = p;    
@@ -104,6 +104,19 @@ double myabs(double a) {
         [map addAnnotation:oldPoint];
     }
     [map addAnnotation:p];
+    if ([oldPoints count] == 30) {
+        [transitionPoints addObject: currentPoint];
+    } else {
+        [oldPoints addObject: currentPoint];
+    }
+    if ([transitionPoints count] == 30) {
+        [map removeAnnotations: oldPoints];
+        NSMutableArray *temp;
+        temp = oldPoints;
+        [temp removeAllObjects];
+        oldPoints = transitionPoints;
+        transitionPoints = temp;
+    }
     [self updateView];
 }
 
@@ -134,7 +147,6 @@ double myabs(double a) {
 }
 
 - (void) doUpdate {
-    NSLog(@"lat %f lon %f latdelta %f londelta %f", currentRegion.center.latitude, currentRegion.center.longitude, currentRegion.span.latitudeDelta, currentRegion.span.longitudeDelta);
     [map setRegion: [map regionThatFits: currentRegion] animated:TRUE];
 }
 

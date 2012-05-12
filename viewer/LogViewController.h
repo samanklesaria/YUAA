@@ -23,7 +23,6 @@
 @property (retain, nonatomic) IBOutlet UITextView *textView;
 
 - (void)reloadLog;
-- (void)timedReloader;
 - (void)scroller;
 - (IBAction)logTypeChanged:(id)sender;
 

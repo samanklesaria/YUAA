@@ -51,7 +51,16 @@
 }
 
 - (void)gotAkpString:(NSString *)akp {
-    [logViewController.textView setText: [logViewController.textView.text stringByAppendingString: akp]];
+    [oldString appendString: akp];
+    int len = [oldString length] - 1024;
+    if (len > 0) {
+        NSRange rng;
+        rng.location = 0;
+        rng.length = len;
+        [oldString deleteCharactersInRange: rng];
+    }
+    [logViewController.textView performSelectorOnMainThread:@selector(setText:) withObject: oldString waitUntilDone:NO];
+    [logViewController scroller];
 }
 
 - (void)mapChosen: (int)type {

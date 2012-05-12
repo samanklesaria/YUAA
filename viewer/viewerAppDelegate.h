@@ -31,6 +31,7 @@
     
     Prefs *prefs;
     Processor *processor;
+    NSMutableString *oldString;
     
     GraphViewController *graphView;
     Orientation *orientation;

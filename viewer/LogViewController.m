@@ -41,11 +41,6 @@
     // [NSThread detachNewThreadSelector:@selector(timedReloader) toTarget:self withObject:nil];
 }
 
-- (void)timedReloader {
-    [NSTimer scheduledTimerWithTimeInterval: 0.2 target: self selector:@selector(reloadLog) userInfo:nil repeats:YES];
-    [[NSRunLoop currentRunLoop] run];
-}
-
 - (IBAction)logTypeChanged:(id)sender {
     logData = NULL;
     NSInteger ind = ((UISegmentedControl *)sender).selectedSegmentIndex;
@@ -56,6 +51,7 @@
         FlightData *f = [FlightData instance];
         logData = (ind == 0) ? f.parseLogData : f.netLogData;
         [logTable setHidden: NO];
+        [self reloadLog];
         [textView setHidden: YES];
     }
     [self scroller];
@@ -137,6 +133,7 @@
 -(void)reloadLog {
     if (displayed && self.textView.hidden) {
         [logTable reloadData];
+        [self scroller];
     }
 }
 

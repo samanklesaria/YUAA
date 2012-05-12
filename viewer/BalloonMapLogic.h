@@ -16,6 +16,8 @@
 @interface BalloonMapLogic : NSObject <MKMapViewDelegate> {
     Prefs *prefs;
     DataPoint *currentPoint;
+    NSMutableArray *oldPoints;
+    NSMutableArray *transitionPoints;
     MKMapView *map;
     MKCoordinateRegion currentRegion;
     BOOL okToUpdate;
